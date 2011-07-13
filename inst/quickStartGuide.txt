@@ -1,0 +1,24 @@
+
+0. Start R
+
+1. Load the Package (rJava has to been installed):
+
+		> library(RNetLogo)
+
+2. Open NetLogo session:
+		> NLStart("C:/Program Files/NetLogo 4.1.2", nl.version=4)
+
+3. Load a model
+		> NLLoadModel("C:/Program Files/NetLogo 4.1.2/models/Sample Models/Earth Science/Fire.nlogo")
+
+4. Submit a command:
+		> NLCommand("setup")
+		> NLDoCommand(10, "go")
+
+5. Get a value:
+		> br.trees <- NLReport("burned-trees")
+		> print(br.trees)
+
+
+
+See the manual pages and the tutorial for deeper insights.
