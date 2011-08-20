@@ -1,0 +1,1277 @@
+\documentclass[article,nojss]{jss}
+\DeclareGraphicsExtensions{.pdf,.eps, .png}
+
+%\usepackage{natbib}
+%\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{amsmath}
+%\usepackage{url,hyperref}
+%\usepackage[breaklinks]{hyperref}
+
+\title{R meets NetLogo: Introduction to the RNetLogo Package}
+
+\Plaintitle{R meets NetLogo: Introduction to the RNetLogo Package}
+
+  
+\Keywords{NetLogo, R, agent based modelling, abm, 
+individual based modelling, ibm}
+
+\Plainkeywords{NetLogo, R, agent based modelling, abm, 
+individual based modelling, ibm}
+
+\author{
+  Jan C. Thiele\\
+  Department of\\
+  Ecoinformatics, Biometrics\\
+  and Forest Growth\\
+  University of G\"ottingen\\
+  Germany
+}
+
+\Plainauthor{Jan C. Thiele}
+
+\Abstract{
+The RNetLogo package delivers an interface to embed NetLogo into the 
+R environment with headless (no Graphical User Interface) and interactive GUI mode. 
+It provides functions to load models, execute commands, push values and to get 
+values from NetLogo reporters. The interface is mostly equivalent to 
+NetLogos' Mathematica Link \url{http://ccl.northwestern.edu/netlogo/docs/mathematica.html}. 
+}
+
+\Address{
+  Jan C. Thiele\\
+  Department of Ecoinformatics, Biometrics and Forest Growth\\
+  University of G\"ottingen\\
+  B\"usgenweg 4\\
+  37077 G\"ottingen, Germany\\
+  E-mail: \email{jthiele@gwdg.de}\\
+  URL: \url{http://www.uni-goettingen.de/en/72779.html}\\
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% R/Sweave specific LaTeX commands.
+%% need no \usepackage{Sweave}
+%\VignetteIndexEntry{Interface to NetLogo}
+%\VignetteKeywords{NetLogo, R, agent based modelling, abm, individual based modelling, ibm}
+%\VignettePackage{RNetLogo}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Begin of the document
+\begin{document}
+\SweaveOpts{engine=R,eps=FALSE}
+\SweaveOpts{keep.source=TRUE}
+\SweaveOpts{prefix.string=C:/Programme/R/R-2.12.1/Eigene_Pakete/svn/RNetLogo/tutorial/images/}
+
+<<preliminaries,echo=FALSE,results=hide>>=
+options(prompt = "> ")
+options(width=70)
+foo <- packageDescription("RNetLogo")
+@
+
+\maketitle
+
+\section{What is it all about?}
+\label{sec:Intro}
+
+GNU R \citep{Rcore} is a well-known and established language and environment for statistical 
+computing and graphics with lots of user-contributed packages. Therefore, 
+it is the perfect tool for the analysis of agent-based models (ABM). This leads 
+to the desire of a full-fledged integration of agent-based modeling tools and R.
+NetLogo \citep{Wilensky1999} is such an agent-based modeling tool. It is a software platform especially 
+developed for agent-based modeling which comes with an integrated development
+and simulation environment. It is very easy to learn and is a potential candidate 
+to become standard in prototyping and communicating ABMs.
+
+With the \verb@RNetLogo@ package in R we present a tool for the integration of 
+NetLogo in R. In short, while using R you can load models, execute commands,
+push data to and report back data from NetLogo. This opens a large variete of applications.
+
+
+The \verb@RNetLogo@ package is inspired by NetLogo's Mathematica Link and has 
+a very similar syntax \citep{Bakshy2007}.
+
+If you (just) want to integrate R calculations into NetLogo (the other way 
+around!) you should have a look at the \verb@R-Extension@ to NetLogo at \url{http://netlogo-r-ext.berlios.de/}.
+
+For an introduction into NetLogo see the documentation \url{http://ccl.northwestern.edu/netlogo/docs/} 
+of NetLogo. An introduction into agent-based modeling using NetLogo can be 
+found for example in \citep{Railsback2011} or \citep{Wilensky2011}.
+
+For all NetLogo users how are newbies in R: R is very well documented, see for example the R language definition \url{http://cran.r-project.org/doc/manuals/R-lang.html} and the Wiki \url{http://rwiki.sciviews.org/doku.php}. From an R terminal you can execute \verb@help(<command>)@ to open the manual page of a command.
+Furthermore, lots of tutorials can be found in the web, for example \citep{Maindonald2008}, \citep{Venables2011}, \citep{QR2011} or \citep{Owen2010} and many books are available, for example \citep{Zuur2009}, \citep{Crawley2005},  \citep{Kabacoff2010} or \citep{VenablesRipley2002}.
+ 
+\section{Installation}
+\label{sec:Installation}
+
+There is nothing special to do. You must have \verb@GNU R@ (\url{http://cran.r-project.org/}) 
+and NetLogo (\url{http://ccl.northwestern.edu/netlogo/download.shtml}) 
+installed. The \verb@RNetLogo@ package will be installed like any other R package, 
+see \url{http://cran.r-project.org/doc/manuals/R-admin.html#Add_002don-packages} 
+for information on how to install a package. But \verb@RNetLogo@ requires the 
+\verb@rJava@ package \citep{Urbanek2011}. It could be that you have 
+to reconfigure Java after installing \verb@rJava@ on Unix machines. This topic was 
+discussed several times, see for example \url{http://r.789695.n4.nabble.com/install-rJava-in-linux-td1579395.html}. 
+
+\section{Loading NetLogo}
+\label{sec:PackageLoading}
+
+If we want to use the \verb@RNetLogo@ package the first time in the current R 
+session we have to load the package, like any other packages, with
+<<loading>>=
+library(RNetLogo)
+@
+or if you are working with the \verb@RGui@ on Windows by clicking on "Packages -> Load Package...". 
+See R's FAQ page at \url{http://cran.r-project.org/doc/FAQ/R-FAQ.html#\\How-can-add_002don-packages-be-used_003f} 
+for details.
+
+When loading \verb@RNetLogo@ it will automaticly try to load \verb@rJava@. If this runs 
+without any error we are ready to start NetLogo (if not, see section~\ref{sec:Installation}). 
+To do so, we have to know where NetLogo is installed. What we need is the path 
+to the folder that contains the \verb@NetLogo.jar@ file. On Windows machines this 
+could be "C:/Program Files/NetLogo 4.1.3/".
+
+Now, we have to decide, whether we want to run NetLogo in the background 
+without seeing the Graphical User Interface (GUI) and control NetLogo completly 
+from R or if we want to see and use the NetLogo GUI. In the latter case, we can 
+use NetLogo as it was started independently, i.e. can load models, change the 
+source code, click on buttons, see the NetLogo View, inspect agents and so on, 
+but have also controll over NetLogo from R. But the disadvantage by starting 
+NetLogo with GUI is that you cannot run multiple instances of NetLogo in 
+one R session. This is just possible in the so called headless mode, i.e. running 
+NetLogo without GUI (see section~\ref{sec:Headless} for details). 
+Since the NetLogo Controlling API changes with the NetLogo version, 
+you have to use an extra parameter \verb@nl.version@ to start RNetLogo for NetLogo 
+version 5. The default value of \verb@nl.version@ is 4, which means, that we don't have
+to submit this parameter when using NetLogo 4.x.
+
+To keep it simple and comprehensible we start NetLogo with GUI by typing
+<<startGUI>>=
+nl.path <- "C:/Program Files/NetLogo 4.1.3"
+NLStart(nl.path)
+@
+
+If everything goes right, a NetLogo Window will be opened. Please note that R 
+cannot use single backslashes in paths. You should use either forwardslashes or 
+doubled backslashes. As described, we can use the NetLogo Window as we know it 
+from independend startups, with the exception, that we cannot close the Window 
+by clicking. On Windows, NetLogo appears in the same program group at the 
+taskbar as R. For Mac OS and Linux users it can be necessary to run RNetLogo from
+within JGR (an java-based R GUI available as R package, see http://cran.r-project.org/web/packages/JGR/index.html) when using the GUI mode.  
+If possible, we should arrange the R and NetLogo 
+window so that we have them side by side, as shown in Fig~\ref{fig:NLandR1}, and can see what is happening in NetLogo 
+if we submit the following examples.
+
+\begin{figure}
+  \centering
+    \includegraphics{C:/Programme/R/R-2.12.1/Eigene_Pakete/svn/RNetLogo/tutorial/images/NLandR1}
+  \caption{NetLogo (on the right) started and controlled from R (on the left).}
+  \label{fig:NLandR1}
+\end{figure}
+
+\section{Loading a model}
+\label{sec:ModelLoading}
+
+We could now open a NetLogo model by just clicking on "File -> Open..." 
+or choosing one of the sample models by clicking on "File -> Model Library". 
+But, to learn controlling NetLogo from R, as we would need to do when starting 
+NetLogo in headless mode, we type in R:
+
+<<loadModel1>>=
+model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"
+NLLoadModel(paste(nl.path,model.path,sep=""))
+@
+
+The forest fire model \citep{Wilensky1997b} should be loaded.  If we want, we could now change 
+the initial tree density be using the slider on the Interface Tab and run the
+simulation by clicking on the setup button first and then on the go button.
+
+Note: You can copy and paste the R code in this tutorial from the PDF or, preferably, Sweave file.
+
+Now we will do the same by controlling 
+NetLogo from R in the next section.
+
+\section{Principles of controlling a model}
+\label{sec:Controlling}
+
+In a first step we will change the density value, i.e. the position of the density 
+slider, by submitting the following statement in R:
+
+<<setDensity1>>=
+NLCommand("set density 77")
+@
+
+The slider goes immediatly in the position of 77 percent. We could now 
+execute the \verb@setup@ procedure to initialize the simulation. We just submit in 
+R:
+
+<<submitSetup1>>=
+NLCommand("setup")
+@
+
+And again, the command is executed immediatly. The tick counter is reset 
+to 0, the View is green and first fire turtles are found on the left side of the View.
+Please notice, that the \verb@NLCommand@ function does not press the \verb@setup@ button, but 
+calls the \verb@setup@ procedure. In the forest fire example it makes no difference as 
+the setup button also just calls the \verb@setup@ procedure, but it is possibe to add 
+more code to a button than just calling a procedure. But we could copy and 
+paste such code into the \verb@NLCommand@ function as well. Now that we know this, 
+we will go ahead with our simulation.  
+
+After we have setup our simulation by now, we want to run one simulation 
+step by executing the \verb@go@ procedure. This is nothing new; we just submit in 
+R:
+
+<<submitGo1>>=
+NLCommand("go")
+@
+
+We see, that the tick counter was incremented by one and the red line of the 
+fire turtles on the left of the View extended to the next patch.
+
+As we have seen, the \verb@NLCommand@ function can be used to execute any command 
+which could be typed into NetLogo's Command Center. We could, for example, 
+print a message into NetLogo's Command Center with the following statement:
+
+<<submitPrint1>>=
+NLCommand("print \"Hello NetLogo, I called you from R.\"")
+@
+
+The backslashes in front of the  quotation marks are used to "mask" the quotation 
+marks, otherwise R would think that the command string ends after the 
+\verb@print@ and would be confused. Furthermore, it is possible to submit more than 
+one command at once and in combination with R variables. We could change 
+the density slider and execute \verb@setup@ and \verb@go@ with one \verb@NLCommand@ call like this:
+
+<<submitGo1>>=
+density.in.r <- 88
+NLCommand("set density ",density.in.r,"setup",
+          "go")
+@
+
+Let us come back to our forest fire simulation. In most cases, we 
+do not want to execute a go procedure only a single time but run it for, say 
+ten times. With the \verb@RNetLogo@ package we can do this with:
+
+<<submitDoGo1>>=
+NLDoCommand(10, "go")
+@
+
+By now, we ran the simulation eleven times and we are maybe interested to 
+have this information in R. Therefore, we execute:
+
+<<submitReportTicks1>>=
+NLReport("ticks")
+@
+
+As you might expect, we can save this value in an R variable by typing:
+
+<<submitReportTicks2>>=
+ticks <- NLReport("ticks")
+print(ticks)
+@
+
+Now, you know the basic principles of the functionality of the \verb@RNetLogo@ 
+package. The things presented in the following are mostly modifications and/or
+extensions to this basic functionality.
+
+NetLogo users should note, that there is no "forever button". To run a simulation for several time steps use one of the loop function (\verb@NLDoCommand@, \verb@NLDoCommandWhile@, \verb@NLDoReport@, \verb@NLDoReportWhile@) or write a custom procedure in NetLogo to be called by R. 
+
+\section{Quit NetLogo session}
+\label{sec:Quit}
+
+To quit a NetLogo session, i.e. to close a NetLogo instance, you have to use 
+the \verb@NLQuit@ function. If you used the standard GUI mode without submitting 
+an user-defined variable to save the NetLogo reference in, you can write:
+
+<<label=testQuit, eval=FALSE>>=
+NLQuit()
+@
+
+Otherwise, you have to specify, which NetLogo instance you want to close 
+by giving the R variable which stores the NetLogo reference as an argument to 
+the function. Please note, that there is currently no way to close the GUI mode 
+completely. That is why you cannot run \verb@NLStart@ again in the same R session when started with GUI.
+  
+
+
+\section{Advanced controlling functionalities}
+\label{sec:AdvancedControlling}
+
+In the second last section we used the \verb@NLDoCommand@ function to run the 
+simulation for ten times. Here, we will run the model for ten times as well, 
+but we will collecte the percentage of burned trees after every simulation step 
+automaticly. Try this:
+
+<<submitDoReport1>>=
+NLCommand("setup")
+burned <- NLDoReport(10, 
+                     "go", 
+                     "(burned-trees / 
+                       initial-trees) * 100")
+print(burned)
+@
+
+This code ran the simulation for ten ticks and wrote the result of the given 
+reporter (the result of the calculation of the percentage of burned trees) after 
+every tick into the R-List \verb@burned@.
+
+If we would like to run the simulation until no trees are left, while we want to 
+know the precentage of burned-trees in every simulation step we could excute 
+(the result is shown in figure~\ref{fig:NLDoReportWhile1}):
+
+<<label=submitDoReportWhile1, fig=TRUE, include=FALSE>>=
+NLCommand("setup")
+burned <- NLDoReportWhile("any? turtles", 
+                          "go", 
+                          c("ticks","(burned-trees / 
+                            initial-trees) * 100"), 
+                          as.data.frame=TRUE, 
+                          df.col.names=c("tick","burned"))
+plot(burned, type = "s")
+@
+
+\begin{figure}
+  \centering
+<<label=figNLDoReportWhile1,fig=TRUE,echo=FALSE>>=
+<<submitDoReportWhile1>>
+@
+  \caption{A plot of the percentage of burned trees over time as the result of 
+          NLDoReportWhile, which runs as long as there are turtles 
+          (any? turtles).}
+  \label{fig:NLDoReportWhile1}
+\end{figure}
+
+In this short example we find some new things. The first argument of the 
+function takes a NetLogo reporter. Here, the \verb@go@ procedure will be executed while 
+there are turtles in the simulation, i.e. \verb@any? turtles@ reports true. Moreover, we 
+used not just one reporter (third argument) but used a vector of two reporters. 
+One returning the current time and a second with the percentage of burned trees. 
+Furthermore, we have defined that our output should be saved as a data.frame 
+instead of a list and we have defined the names of the columns of the data.frame 
+by using a vector of strings in correspondence to the reporters we have given. At 
+the end, the R variable \verb@burned@ is of type data.frame and contains two columns. 
+One with the simulation time and a second with the corresponding percentage 
+of burned trees. By using the standard plot function, we will get a graph with 
+the development of the percentage of burned trees over time.
+
+\section{Further examples}
+\label{sec:FurtherExamples}
+
+For the demonstration of the \verb@NLGetAgentSet@ function, we will use a different 
+model. Therefore, we load the tumor model from NetLogo's Model Library, 
+set it up and run it for 20 steps.
+
+<<loadModel2>>=
+model.path <- "/models/Sample Models/Biology/Tumor.nlogo"
+NLLoadModel(paste(nl.path,model.path,sep=""))
+NLCommand("setup")
+NLDoCommand(20, "go")
+@
+
+After we have run 20 time steps we will load the x and y positions of all cells 
+(i.e. turtles) into a data.frame and show them in a plot. But before we call the plot function, we will get 
+the spatial extension of the NetLogo World to use it for the plot window (the resulting plot is shown in 
+figure~\ref{fig:getAgentSet1}). 
+
+<<getAgentSet1, fig=FALSE>>=
+cells <- NLGetAgentSet(c("xcor","ycor"),
+                       "turtles",
+                       as.data.frame=TRUE,
+                       df.col.names=c("x","y"))
+x.minmax <- NLReport("(list min-pxcor max-pxcor)")
+y.minmax <- NLReport("(list min-pycor max-pycor)")
+plot(cells, xlim=x.minmax, ylim=y.minmax)
+@
+
+\begin{figure}
+  \centering
+    \includegraphics{C:/Programme/R/R-2.12.1/Eigene_Pakete/svn/RNetLogo/tutorial/images/NLandR_GetAgentSet1}
+  \caption{A visualization of the turtles by getting them via NLGetAgentSet. 
+  On the right hand side the original NetLogo simulation and on the left hand 
+  side the RGUI with the visualization of the reported turtles.}
+  \label{fig:getAgentSet1}
+\end{figure}
+
+In a second step, we will get only the metastatic cells and plot them again 
+(the result is shown in figure~\ref{fig:getAgentSet2}:
+
+<<label=getAgentSet2, fig=TRUE, include=FALSE>>=
+cells.metastatic <- NLGetAgentSet(c("xcor","ycor"),
+                                  "turtles with [metastatic? = True]",
+                                  as.data.frame=TRUE,
+                                  df.col.names=c("x","y"))
+plot(cells.metastatic, xlim=x.minmax, ylim=y.minmax)
+@
+
+\begin{figure}
+  \centering
+<<label=figgetAgentSet2,fig=TRUE,echo=FALSE>>=
+<<getAgentSet2>>
+@
+  \caption{Same as in figure~\ref{fig:getAgentSet1} but with a subset of turtles that fulfill a condition (are metastatic cells).}
+  \label{fig:getAgentSet2}
+\end{figure}
+
+We can use the \verb@NLGetAgentSet@ function to get patches and links as well. 
+But there is a special function for patches, called \verb@NLGetPatches@, which makes 
+life easier. We will test this function by using the Fur model about patterns on 
+animals' skin self-organization and plot the result in a simple raster image (see figure~\ref{fig:getPatches1}).
+
+<<echo=FALSE, results=hide>>=
+NLCommand("random-seed 123456789")
+@
+
+<<label=getPatches1, fig=TRUE, include=FALSE>>=
+model.path <-"/models/Sample Models/Biology/Fur.nlogo"
+NLLoadModel(paste(nl.path,model.path,sep=""))
+NLCommand("setup")
+NLDoCommand(5, "go")
+# get patches as matrix
+patches.matrix <- NLGetPatches("pcolor","patches",
+                               as.matrix=TRUE)
+# rotate matrix to fit into image function
+patches.matrix.rot <- t(patches.matrix)
+patches.matrix.rot <- as.data.frame(patches.matrix.rot)
+patches.matrix.rot <- rev(patches.matrix.rot)
+patches.matrix.rot <- as.matrix(patches.matrix.rot)
+# set colors for image
+col <- c("black", "white")
+# get x and y limits
+x.minmax <- NLReport("(list min-pxcor max-pxcor)")
+y.minmax <- NLReport("(list min-pycor max-pycor)")
+# draw matrix as image
+image(x.minmax[1]:x.minmax[2], y.minmax[1]:y.minmax[2], 
+      patches.matrix.rot, col=col, xlab="", ylab="")
+@
+
+\begin{figure}
+  \centering
+<<label=figgetPatches1,fig=TRUE,echo=FALSE>>=
+<<getPatches1>>
+@
+  \caption{A simple visualization of the result of NLGetPatches as an image.}
+  \label{fig:getPatches1}
+\end{figure}
+
+The code produced a simple raster image from the patches. It is also possible 
+to create a spatial object from the result of \verb@NLGetPatches@ as we see in the next 
+example (the result is shown in figure~\ref{fig:getPatches2}, 
+Package gstat \citep{Pebesma2011} and sp \citep{Pebesma2011b} are used): 
+
+<<echo=FALSE, results=hide>>=
+library(sp)
+spplot.orig = spplot
+spplot = function(...){print(spplot.orig(...))}
+@
+
+<<label=getPatches2, fig=TRUE, include=FALSE>>=
+# the following operations require the gstat 
+# and sp package 
+library(sp)
+library(gstat)
+# get patches
+patches <- NLGetPatches(c("pxcor","pycor","pcolor"),
+                        "patches",
+                        as.data.frame=TRUE,
+                        df.col.names=c("x","y","pcolor"))
+# convert to SpatialPointsDataFrame
+coordinates(patches) <- ~ x + y
+# convert to SpatialPixelsDataFrame
+gridded(patches) <- TRUE
+# convert pcolor to factor
+patches$pcolor <- factor(patches$pcolor)
+# set colors for plot
+col <- c("black", "white")
+# create and show plot
+spplot(patches, 'pcolor', col.regions=col)
+@
+
+\begin{figure}
+  \centering
+<<label=figgetPatches2,fig=TRUE,echo=FALSE>>=
+<<getPatches2>>
+@
+  \caption{Same as in figure~\ref{fig:getPatches1} but the result of 
+  NLGetPatches is converted to a spatial pixels data.frame 
+  and plotted with spplot from package sp.}
+  \label{fig:getPatches2}
+\end{figure}
+
+We see, that it is possible to get the whole NetLogo View. As you can see in 
+the documentation, it is possible to save the result of \verb@NLGetPatches@ into a list, 
+matrix or, like here, into a data.frame. Furthermore, we can reduce the patches 
+to a subset, e.g. all patches that fullfill a condition, like we have done in the 
+\verb@NLGetAgentSet@ example.
+
+There is another function, which will do the otherway around. With 
+\verb@NLSetPatches@ we can push an R matrix into the NetLogo patches. But this function 
+works only if we fill all patches, i.e. if we use a matrix which has the dimension of 
+the NetLogo World. We cannot fill just a subset of patches (see the Code Examples 
+for hints how to do such things). Have a look on the following example. The result 
+is shown in figure~\ref{fig:setPatches1}.
+
+<<setPatches1>>=
+# reuse the patches.matrix from NLGetPatches and 
+# change values from 0 (black) to 15 (red) 
+# (attention: this is relatively slow due to the drawing procedure)
+my.matrix <- replace(patches.matrix, 
+                     patches.matrix == 0, 
+                     15)
+# use this matrix as input for "pcolor"
+NLSetPatches("pcolor", my.matrix)
+@
+
+\begin{figure}
+  \centering
+    \includegraphics{C:/Programme/R/R-2.12.1/Eigene_Pakete/svn/RNetLogo/tutorial/images/NLandR_SetPatches1}
+  \caption{A screenshot while NLSetPatches is executed. The color of the NetLogo 
+  patches on the right hand side are changed gradually from black to red.}
+  \label{fig:setPatches1}
+\end{figure}
+
+
+The \verb@NLGetGraph@ function makes it possible to get a NetLogo network build by 
+NetLogo links into an \verb@igraph@ network. This function requires that we have the R 
+package \verb@igraph@ installed. As an example we could use the Small World model 
+from NetLogo's Model Library. We will build the NetLogo link network and 
+transform it into an igraph network and finally plot it (see figure~\ref{fig:figgetGraph1}).
+
+<<echo=FALSE, results=hide>>=
+ps.options(fonts=c("serif", "sans", "mono"))
+@
+
+<<label=getGraph1, fig=TRUE, include=FALSE>>=
+model.path <- "/models/Sample Models/Networks/Small Worlds.nlogo"
+NLLoadModel(paste(nl.path,model.path,sep=""))
+NLCommand("setup","rewire-all")
+my.network <- NLGetGraph()
+# plot the directed network graph
+plot(my.network, layout=layout.circle, 
+     vertex.label=V(my.network)$name,
+     vertex.label.cex=0.7,
+     asp=FALSE)
+@
+
+\begin{figure}
+  \centering
+<<label=figgetGraph1,fig=TRUE,echo=FALSE>>=
+<<getGraph1>>
+@
+  \caption{A visualization of the graph using the igraph package.
+  The graph was generated by NetLogo links and send to R via NLGetGraph.}
+  \label{fig:figgetGraph1}
+\end{figure}
+
+There are two further functions, which will not be presented here in detail. 
+The first one is the \verb@NLSourceFromString@ function, which enables you to create 
+or append model source code from strings in R. See the code sample folder 
+(No. 14) for an example. Another helper function to send a data.frame into 
+NetLogo lists is delivered with the \verb@NLDfToList@ function. The column names of 
+the data.frame have to be equivalent to the names of the lists in the NetLogo 
+model. See the code sample folder (No. 9) for an example.
+
+\section{Headless mode/Multiple NetLogo instances}
+\label{sec:Headless}
+
+As mentioned above, it is possible to start NetLogo in background (headless 
+mode) without a Graphical User Interface (GUI). For this, we have to execute 
+the \verb@NLStart@ function with a second argument (This will fail, if you do not open 
+a new session, because, as mentioned above, you cannot start several NetLogo sessions if you have already started one session in GUI mode.):
+
+\begin{Schunk}
+\begin{Sinput}
+> NLStart(nl.path, gui = FALSE)
+\end{Sinput}
+\end{Schunk}
+
+Please note that it is not possible to start more than one instance in GUI 
+mode. 
+
+This will save the NetLogo object reference in a variable \verb@nl.intern@ in the local environment \verb@.rnetlogo@. If 
+we want to work with more than one NetLogo model/instance at once, we can 
+specify an own variable name (as a string) where to save the NetLogo instance 
+in the third argument of \verb@NLStart@ like this (variable will be created in global environment):
+
+<<startHeadless1>>=
+# a first NetLogo instance 
+# (beside the one with the default variable name (nl.intern) )
+NLStart(nl.path, 
+        gui=FALSE, 
+        obj.name="my.netlogo1")
+# a second NetLogo instance
+NLStart(nl.path, 
+        gui=FALSE, 
+        obj.name="my.netlogo2")
+# a third instance
+NLStart(nl.path, 
+        gui=FALSE, 
+        obj.name="my.netlogo3")
+@
+
+All functions, presented above, take as last (optional) argument the NetLogo 
+instance variable (obj.name/nl.obj). Therefore, we can specify which instance we want 
+to use. When working in headless mode, the first thing to do is always to load a 
+model. Executing a command or reporter without loading a model in headless 
+model will result in an error. Let us load a model into all instances. 
+ 
+<<loadModelMulti1>>=
+# load model in the first instance (my.netlogo1)
+model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"
+NLLoadModel(paste(nl.path,model.path,sep=""), 
+            nl.obj=my.netlogo1)
+# in the second instance (my.netlogo2)
+NLLoadModel(paste(nl.path,model.path,sep=""), 
+            nl.obj=my.netlogo2)
+# a third instance
+NLLoadModel(paste(nl.path,model.path,sep=""), 
+            nl.obj=my.netlogo3)
+@
+
+Now, we will setup and run the models over different simulation times. 
+
+<<commandModelMulti1>>=
+# setup and run the model in the first instance (my.netlogo1) 
+# for 25 time steps
+NLCommand("setup", nl.obj=my.netlogo1)
+NLDoCommand(25,"go", nl.obj=my.netlogo1)
+
+# in the second instance (my.netlogo2) for 15 time steps
+NLCommand("setup", nl.obj=my.netlogo2)
+NLDoCommand(15,"go", nl.obj=my.netlogo2)
+
+# a third instance for 5 time steps
+NLCommand("setup", nl.obj=my.netlogo3)
+NLDoCommand(5,"go", nl.obj=my.netlogo3)
+
+# show number of burned-trees in the different instances
+NLReport("burned-trees", nl.obj=my.netlogo1)
+NLReport("burned-trees", nl.obj=my.netlogo2) 
+NLReport("burned-trees", nl.obj=my.netlogo3)
+@
+<<commandModelMulti2, eval=FALSE>>=
+# quit NetLogo sessions
+NLQuit(nl.obj=my.netlogo3)
+NLQuit(nl.obj=my.netlogo2)
+NLQuit(nl.obj=my.netlogo1)
+NLQuit() # the standard session as well, if open
+@
+
+\section{Pitfalls}
+\label{sec:Pitfalls}
+
+\subsection{Amount of data}
+Please note, that you are not able to stop an execution of a NetLogo command, whitout closing your R session. Therefore, it is a good idea to think about the amount of data which should be transformed. For example, if you use the \verb@NLGetPatches@ function with the standard settings of the Fire.nlogo model from NetLogo's Model Library, you are requesting 63001 patch values. If you ask for the pxcor, pycor and pcolor values than you request for 63001 * 3 = 189003 values. All these values have to be transformed from NetLogo data type to Java and from Java to R. This may take a while. For technical reasons you are not informed about the process of data transformation. Therefore, it looks like the programm crashed, but if you are patient, the programm will return with the result after some time. That's why it is always a good idea to test your code with a very small example (i.e. small worlds, low number of agents etc.).
+
+\subsection {Endless loops}
+If you use the functions \verb@NLDoCommandWhile@ and \verb@NLDoReportWhile@ please double check your while-condition. Are you sure, that the condition will be met some time? Use this carefully, otherwise it will end up in an endless loop and you will wait for the end of the execution as long as you wish. 
+
+\subsection{Data structure}
+You should always think about the requested data structure before you call a function. Have a look on the following examples:
+<<label=pitfalls1, eval=FALSE>>=
+# load the well-known Fire model
+model.path <- "models/Sample Models/Earth Science/Fire.nlogo"
+NLLoadModel(paste(nl.path,model.path,sep="/"))
+# initialize the model
+NLCommand("setup")
+# run the model for 10 times and report two values as a list after every 
+#step and save them in a data.frame (1. NLDoReport call)
+df1 <- NLDoReport(10,"go","(list count fires count embers)",
+                  as.data.frame=T)
+str(df1)
+NLCommand("setup")
+# 2. NLDoReport call
+df2 <- NLDoReport(10,"go",c("count fires","count embers"),as.data.frame=T)
+str(df2)
+NLCommand("setup")
+# 3. NLDoReport call
+df3 <- NLDoReport(10,"go",c("count turtles", 
+                  "(list count fires count embers)"),as.data.frame=T)
+str(df3)
+NLCommand("setup")
+# 4. NLDoReport call
+df4 <- NLDoReport(3,"go","[(list who xcor ycor)] of turtles",
+                  as.data.frame=T,df.col.names=c("who","xcor","ycor"))
+str(df4)
+@
+The first \verb@NLDoReport@ call results in a data.frame with two columns and ten rows. Because we requested a NetLogo list, the package transforms this list to an R vector. If you put an R vector to a data.frame it will be automaticly splitted into several columns. 
+This result is equivalent to the result of the second \verb@NLDoReport@ call, where we used an R vector as request.
+But in the third call of \verb@NLDoReport@, the NetLogo list will not resolved to different columns, because it is not directly accessible but nested in the result with another value. It will not result in an error. But you see, that the column X2 contains a list instead a vector. If you try, for example, to use the \verb@write.table@ function on this data.frame, if will raise an error. In pure R, you would have to use the I(x) function (see \verb@help(I)@) to create such a data.frame. Therefore, you have to add this property to the X2 column. This could be done by executing \verb@df3$X2 <- I(df3$X2)@.
+If we expected with the fourth call of \verb@NLDoReport@ to get a data.frame with three columns containing the who, xcor and ycor variables, we will be disappointed. If you copy and paste the reporter \verb@[(list who xcor ycor)] of turtles@ into the NetLogo Command Center, you will see that it creates a NetLogo List with nested lists fo each turtle. This NetLogo list structure is transformed into R lists. So far, for every simulation step the \verb@NLDoReport@ creates an R list with a nested R list for each turtle. What the as.data.frame in \verb@NLDoReport@ tries to do is to append the result of one iteration (here one simulation step) to a data.frame, i.e. it creates one row of a data.frame from the R list which contains the nested R lists for each turtle. By doing this, the base R list will be resolved to columns and each column will contain three rows (the variables who, xcor and ycor of the turtle). Because this structure is not appendable, it will be overwritten in every iteration. At the end, we have this (maybe unexpected) data.frame with a column for each turtle of the last iteration. Remember: The as.data.frame variable transform the last result of a function to a data.frame. Think about the expected structure and decide if the input data for the data.frame are suffient.
+
+\subsection{Data type}
+Please think about the data type you are trying to combine. For example, an R vector takes values of just one data type (e.g. String, Numeric/Double or Logical/Boolean) unlike a NetLogo list, where you can combine different data type in one list.
+Try this:
+<<label=pitfalls2, eval=FALSE>>=
+# a NetLogo list of numbers
+NLReport("(list 24 23 22)")
+# a NetLogo list of strings
+NLReport("(list \"foo1\" \"foo2\" \"foo3\")")
+# a NetLogo list of combined numbers and string
+NLReport("(list 24 \"foo\" 22)")
+@
+The first two calls of \verb@NLReport@ will run as expected but the last call will throw an error, because \verb@NLReport@ tries to create a NetLogo into an R vector, which will fail due to the mixed data types. This is also very relevant for the columns of data.frames. 
+
+\subsection{Working directory}
+You should avoid to manually change the working directory of R, because NetLogo need to have the working directory pointed to its installation path. As 
+the R working directory and the Java working directory depend on each other, changing the R working directory can result in unexpected behavior of NetLogo.
+There, you should use absolute paths for I/O processes in R instead of submitting setwd(...). Note, that the RNetLogo package changes the working directory 
+automatically when loading NetLogo and changes back to the former working directory when submitting \verb@NLQuit@.
+
+\subsection{Combinations with the R-Extension}
+If you want to use the R-Extension within your NetLogo model which should be controlled via RNetLogo, please note that
+this will crash as it is not possible to load the JRI-library when rJava is acitve. But to give you the opportunity to have
+access to R from the NetLogo side, the Rserve-Extension was created. It has the same syntax as the R-Extension 
+(with the exception that you have to change the r:... calls to rserve:...) but uses the Rserve server technology. The Rserve-Extension
+is available for download at the Berlios repository (http://netlogo-r-ext.berlios.de/). See the documentation
+of the Rserve-Extension for details on how to get it running.
+
+\section{Application example}
+\label{sec:Application}
+
+The following examples are (partly) taken from the examples given for NetLogo's Mathematica Link (see \citep{Bakshy2007}). These are all one directional examples (from NetLogo to R), but the package opens the possiblity, to let NetLogo and R interact with eachother and and send back results from R (e.g. statistical analysis) to NetLogo and let the model react on these results. Even the manipulation of the model source by using the \verb@NLSourceFromText@ function is possible
+
+\subsection{Analytical comparison}
+
+In the application example of \citep{Bakshy2007} they compare an agent-based model of gas particles with velocity distributions found in analytical treatments of ideal gases. For this, we use the Free Gas model \citep{Wilensky1997} of the GasLab model family from NetLogo's Model Library. In this model, gas particles are moving and colliding with each other without external constraints. \citep{Bakshy2007} compared this model with classical Maxwell-Boltzmann distribution. 
+R itself is not a symbolic mathematical software but there are packages available which let us integrate such software. Here, we use the Ryacas packages \citep{Goedman2010} which is an interface to the opensource Yacas Computer Algebra System \citep{Pinkus2007}. 
+
+
+We start with the agent-based model simulation. Since this model is based on random numbers we run repeated simulations. The resulting probability distribution of particle speeds is shown in figure~\ref{fig:figmaxwellPlot}.
+
+<<label=empiricalMaxwellPre, eval=FALSE>>=
+# load RNetLogo package (if not already done)
+library(RNetLogo)
+# path to NetLogo installation
+nl.path <- "C:/Program Files/NetLogo 4.1.3"
+# initialize NetLogo (if not already done)
+NLStart(nl.path, gui=FALSE)
+@
+<<label=empiricalMaxwell>>=
+# load Gas Lab model from model library
+model.path1 <- "models/Sample Models/Chemistry & Physics/GasLab"
+model.path2 <- "GasLab Free Gas.nlogo"
+NLLoadModel(paste(nl.path,model.path1,model.path2,sep="/"))
+# initialize simulation
+NLCommand("set number-of-particles 500", "no-display", "setup")
+# run simulation for 40 times of 50 steps (= 2000 simulation steps)
+# save speed of particles after every 50 simulation step interval
+particles.speed <- NLDoReport(40, "repeat 50 [go]", "[speed] of particles")
+# flat the list of lists (one list for each of the 40 runs) 
+# to one big vector
+particles.speed.vector <- unlist(particles.speed)
+@
+
+To calculate the analytical distribution, we have to calculate the following equation:
+
+\begin{equation}
+B(v) = v * e^{\frac{-m v^{2}}{2 k T}}
+\end{equation}
+
+\begin{equation}
+normalizer = \int^{0}_{\infty}B(v)\ dv
+\end{equation}
+
+\begin{equation}
+B(v)_{normalized} = \frac{B[v]}{normalizer}\ \ for\ v = [0,max(speed)]
+\end{equation}
+
+Now, Yacas/RYacas will be used. We will first define the equation B(v) with the mean energy derived from the NetLogo simulation. We then define the normalizer integral and solve it numerically. 
+
+<<label=theorMaxwell>>=
+# load the RYacas pacakge
+library(Ryacas)
+# install Yacas, if currently not installed 
+# (just for Windows - see Ryacas documentation for other systems)
+#yacasInstall()
+# get mean energy from NetLogo simulation
+energy.mean <- NLReport("mean [energy] of particles")
+# definition of function B
+B <- function(v, m=1, k=1) v * exp((-m*v^2)/(2*k*energy.mean))
+# register function B in Yacas
+yacas(B)
+# define integration function B from 0 to endless
+B.integr <- expression(integrate(B,0,Infinity))
+# register intergration expression in Yacas
+yacas(B.integr)
+# calculate a numerical approximation using Yacas function N()
+normalizer.yacas <- yacas(N(B.integr))
+# get result from Yacas in R
+normalizer <- Eval(normalizer.yacas)
+# the numeric result is in column value
+print(normalizer$value)
+@
+
+In a second step, we calculate the theoretical probability values of particle speeds using the equation \verb@B(v)@. We do this from 0 to the maximum speed observed in the NetLogo simulation.  
+
+<<label=theorMaxwell2>>=
+# get max. speed from NetLogo simulation
+maxspeed <- max(particles.speed.vector) 
+# create a sequence vector from 0 to maxspeed + stepsize, by stepsize
+stepsize <- 0.25
+v.vec <- seq(0, maxspeed, stepsize)
+# calculate the theoretical value at the points of the sequence vector
+theoretical <- B(v.vec) / normalizer$value
+@
+
+At the end, we plot the empirical/simulation distribution together with the theoretical distribution of particle speeds, shown in figure~\ref{fig:figmaxwellPlot}.
+
+<<label=maxwellPlot, fig=TRUE, include=FALSE>>=
+hist(particles.speed.vector, breaks=max(particles.speed.vector)*5, 
+     freq=FALSE, xlim=c(0,as.integer(maxspeed)+5), 
+     main="Histogram of empirical speed together \n 
+     with theoretical Maxwell-Boltzmann distribution",
+     xlab="speed of particles")
+lines(v.vec, theoretical, lwd=2, col="blue")
+@
+
+\begin{figure}
+  \centering
+<<label=figmaxwellPlot,fig=TRUE,echo=FALSE>>=
+<<maxwellPlot>>
+@
+  \caption{Empirical probability distribution of particle speeds generated by agent-based model (bars) with theoretical Maxwell-Boltzmann distribution (blue line).}
+  \label{fig:figmaxwellPlot}
+\end{figure}
+
+
+\subsection{Exploratory analysis}
+
+With the RNetLogo package it is relatively simple to explore parameters spaces and save as well as analyse the results. Such technics are very relevant in agent-based modelling regarding exploratory analysis, parameter fitting and sensitivity and robustness analysis \citep{Grimm2005}. 
+Here, we will use Fire model \citep{Wilensky1997b} from NetLogo's Model Library and explore the effect of the density of trees in the forest on the percentage of burned trees as described in \citep{Bakshy2007}.
+We start with initialization of NetLogo.
+
+<<label=explorPre, eval=FALSE>>=
+# load RNetLogo package (if not already done)
+library(RNetLogo)
+# path to NetLogo installation
+nl.path <- "C:/Program Files/NetLogo 4.1.3"
+# initialize NetLogo (if not already done)
+NLStart(nl.path, gui=FALSE)
+@
+<<label=explor1>>=
+model.path <- "models/Sample Models/Earth Science/Fire.nlogo"
+NLLoadModel(paste(nl.path,model.path,sep="/"))
+@
+
+Next, we define a function which sets the density of trees, exectues the simulation until no turtles are left and reports back the percentage of burned trees.
+
+<<label=explort2>>=
+# function to simulate with specific density
+sim <- function(density) {
+    NLCommand("set density ", density, "setup")
+    NLCommand("while [any? turtles] [go]");
+    ret <- NLReport("(burned-trees / initial-trees)")
+    return(ret)  
+}
+@
+
+We run the simulation for density value between 1 and 100 with a stepsize of 1, for identifying the phase transition (see figure~\ref{fig:figexplor3}). 
+
+<<label=explor3, fig=TRUE, include=FALSE>>=
+# perform simulation with density: 1-100, stepwidth: 1, (i.e.
+# call function sim for all values in sequence from 1 to 100)
+# and plot the result
+plot(d <- seq(1,100,1),
+     sapply(d, function(dens) {sim(dens)}), 
+     xlab="density", ylab="percent burned")
+@
+
+\begin{figure}
+  \centering
+<<label=figexplor3,fig=TRUE,echo=FALSE>>=
+<<explor3>>
+@
+  \caption{Simulations with the Fire model with varying density of trees and the percentage of burned trees after no burning patches (i.e. no turtles) were left in the simulation.}
+  \label{fig:figexplor3}
+\end{figure}
+
+As we know the region of phase transition (between a density of 45 and 70 percent), we can explore this region more precisely. As the Fire model uses random numbers, it is interesting to find out how much variation occur in this region. Therefore, we define a function, which will repeat the simulations with one density several times.
+
+<<label=explor4>>=
+# function to perform replicated simulations
+rep.sim <- function(density, rep) {
+  return(
+    lapply(density, function(dens) {    
+      replicate(rep, sim(dens))
+    })
+  )  
+}
+@
+
+To get a rough overview we use this new function for densities between 45 and 70 percent with a stepsize of 5 and 10 replications each. The resulting boxplots are shown in figure~\ref{fig:figexplor5}.
+
+<<label=explor5, fig=TRUE, include=FALSE>>=
+# density: 45-70, stepwidth: 5, 10 replications
+d <- seq(45,70,5)
+res <- rep.sim(d,10)
+boxplot(res,names=d, xlab="density", ylab="percent burned")
+@
+
+\begin{figure}
+  \centering
+<<label=figexplor5,fig=TRUE,echo=FALSE>>=
+<<explor5>>
+@
+  \caption{Boxplot of repeated simulations (10 replication) with the Fire model with varying density (45-70 percent) of trees and the percentage of burned trees after no turtles were left in the simulation.}
+  \label{fig:figexplor5}
+\end{figure}
+
+Now, we have seen that the variation of burned trees at densities below 55 and higher 65 is low. As a result, we can skip these values and will have a deeper look into the region of density values between 55 and 65. Therefore, we perform a simulation experiment for this value range with a smaller stepsize of 1 percent and a higher amount of replication of 20 per density value. 
+
+<<label=explor6, fig=TRUE, include=FALSE>>=
+# density: 55-65, stepwidth: 1, 20 replications
+d <- seq(55,65,1)
+res <- rep.sim(d,20)
+boxplot(res,names=d, xlab="density", ylab="percent burned")
+@
+
+\begin{figure}
+  \centering
+<<label=figexplor6,fig=TRUE,echo=FALSE>>=
+<<explor6>>
+@
+  \caption{Boxplot of repeated simulations (20 replication) with the Fire model with varying density (55-65 percent) of trees and the percentage of burned trees after no turtles were left in the simulation.}
+  \label{fig:explor6}
+\end{figure}
+
+Note, that if you are not interested in further (statistical) analysis of the results of repeated simulations, you can perform similar experiments with NetLogo's Behavior Space.
+
+
+\subsection{Database connection}
+
+Since there are packages available to connect all common database management systems (e.g. RMySQL, RPostgreSQL, ROracle, RJDBC, RSQLite or RODBC), the RNetLogo package opens the possibility to store the simulation results into a database. 
+
+In the following example we will use the RSQLite package, which provices a connection to SQLite database, because this is a very easy-to-use database in a single file.
+
+In a first step we have to setup the connections to NetLogo (if not already done) and to our test database.
+
+<<label=databasePre, eval=FALSE>>=
+# load RNetLogo package (if not already done)
+library(RNetLogo)
+# path to NetLogo installation
+nl.path <- "C:/Program Files/NetLogo 4.1.3"
+# initialize NetLogo (if not already done)
+NLStart(nl.path, gui=FALSE)
+@  
+<<label=database1>>=
+library(RSQLite)
+# load database driver
+m <- dbDriver("SQLite")
+# define path and filename for the test database
+database.path = "C:/test_netlogo.db"
+@
+<<label=database2,echo=FALSE, results=hide>>==
+# a hidden overwrite of the path
+database.path = "C:/Programme/R/R-2.12.1/Eigene_Pakete/svn/RNetLogo/tutorial/test_netlogo.db"
+if (file.exists(database.path)) {
+  file.remove(database.path)
+}
+@
+<<label=database3>>==
+# create connection to the database 
+# (if the database does not exist, 
+#  this will create a file test_netlogo.db)
+con <- dbConnect(m, dbname = database.path)
+   
+# load a NetLogo Model
+model.path <- "models/Sample Models/Earth Science/Fire.nlogo"
+NLLoadModel(paste(nl.path,model.path,sep="/"))
+
+# setup the model
+NLCommand("setup")
+
+# run the model for 10 time steps and save the results 
+# (ticks and burned-trees) in table "Burned1" of database
+dbWriteTable(con, "Burned1", 
+             NLDoReport(10,"go",c("ticks","burned-trees"),
+             as.data.frame=T,df.col.names=c("time","burned")), 
+             row.names=F, append=F)
+
+# the first query: how many lines has the new table? 
+dbGetQuery(con, "select count(*) from Burned1")[[1]]
+
+# the second query: select all row from table Burned10 
+# where time is more than 5
+rs <- dbSendQuery(con, "select * from Burned1 where time > 5")
+# get the result of the query
+data <- fetch(rs, n = -1)
+# show the result
+print(data)
+
+# clear query
+dbClearResult(rs)
+
+# append further results to existing table
+dbWriteTable(con, "Burned1", 
+             NLDoReport(10,"go",c("ticks","burned-trees"),
+             as.data.frame=T,df.col.names=c("time","burned")), 
+             row.names=F, append=T)
+
+# show the content of our table
+dbGetQuery(con, "select * from Burned1")
+
+# create a second table and save the result of 10 repeated simulation 
+# of 20 simulation steps each
+for (x in 1:10)
+{
+  NLCommand("setup")
+  dbWriteTable(con, "Burned2", 
+               NLDoReport(20,"go",c("ticks","burned-trees"),
+               as.data.frame=T,df.col.names=c("time","burned")), 
+               row.names=F, append=T)
+}
+            
+# calculate the mean of burned trees (out of the 10 repetitions) 
+# for each time
+rs <- dbSendQuery(con, "select avg(burned) as mean_burned 
+                        from Burned2 group by time")
+# get the result of the query
+data <- fetch(rs, n = -1)
+# show the result
+print(data)
+
+# clear query
+dbClearResult(rs)
+
+# clean up
+dbDisconnect(con)
+@
+
+Note that there are also attempts to connect databases directly from NetLogo via an extension (see \url{http://code.google.com/p/netlogo-sql/}). 
+
+
+\subsection{Advanced plotting functionalities}
+
+R and the additional packages deliver a wide variety of plotting capabilites. As an example, we will present three-dimensional plot in combination with contour map.
+We use the Urban Site - Sprawl Effect model \citep{Felsen2007} from NetLogo's Model Library. This model
+simulates the growth of cities and urban sprawl. Seekers (agents) looking for patches with high attractiveness and also increase the attractiveness the patch they are staying. Therefore, a state variable of the model is the attractiveness of the patches, which can be plotted in R. 
+First, we initialize the simulation, run it for 150 time steps and collect the patch state after this time.
+
+<<label=threedplotPre, eval=FALSE>>=
+# load RNetLogo package (if not already done)
+library(RNetLogo)
+# path to NetLogo installation
+nl.path <- "C:/Program Files/NetLogo 4.1.3"
+# initialize NetLogo (if not already done)
+NLStart(nl.path, gui=FALSE)
+@
+<<label=threedplot1>>=
+model.path <- "models/Curricular Models/Urban Suite"
+model.name <- "Urban Suite - Sprawl Effect.nlogo"
+NLLoadModel(paste(nl.path,model.path,model.name,sep="/"))
+@
+<<label=threedplot2, echo=FALSE, results=hide>>=
+NLCommand("random-seed 324534346123")
+@
+<<label=threedplot3>>=
+NLCommand("resize-world -20 20 -20 20 ")
+NLCommand("set smoothness 10",
+          "set max-attraction 5",
+          "set population 500",
+          "set seeker-search-angle 200",
+          "set seeker-patience 15",
+          "set wait-between-seeking 5")
+
+NLCommand("setup")
+NLDoCommand(150,"go")
+
+attraction <- NLGetPatches("attraction",as.matrix=T)
+pxcor <- NLReport(c("min-pxcor","max-pxcor"))
+pycor <- NLReport(c("min-pycor","max-pycor"))
+@
+
+Now, we define the advanced plotting function with a three-dimensional plot and a contour map. At the end, we execute this function for the collected data. The resulting plot is shown in figure~\ref{fig:figthreedplot4}.
+
+
+<<label=threedplot4, fig=TRUE, include=FALSE>>=
+# adapted from 
+# \url{http://addictedtor.free.fr/graphiques/RGraphGallery.php?graph=1}
+# author: Romain Francois
+kde2dplot <- function(d,                
+                      ncol=50,          
+                      zlim=c(0,max(z)), 
+                      nlevels=20,       
+                      theta=30,         
+  	                  phi=30)           
+{
+  z   <- d$z
+  nrz <- nrow(z)
+  ncz <- ncol(z)
+  couleurs  <- tail(topo.colors(trunc(1.4 * ncol)),ncol)
+  fcol      <- couleurs[trunc(z/zlim[2]*(ncol-1))+1]
+  dim(fcol) <- c(nrz,ncz)
+  fcol      <- fcol[-nrz,-ncz]
+  
+  par(mfrow=c(1,2),mar=c(0.5,0.5,0.5,0.5))
+  persp(d,col=fcol,zlim=zlim,theta=theta,phi=phi,
+        zlab="attraction",xlab="x",ylab="y")
+  
+  par(mar=c(2,2,2,2))
+  image(d,col=couleurs)
+  contour(d,add=T,nlevels=nlevels)
+  box()
+}
+# merge the data
+d <- list(x=seq(pxcor[[1]],pxcor[[2]]),
+     y=seq(pycor[[1]],pycor[[2]]),
+     z=attraction)
+# execute the plot function
+kde2dplot(d)
+@
+
+\begin{figure}
+  \centering
+<<label=figthreedplot4,fig=TRUE,echo=FALSE>>=
+<<threedplot4>>
+@
+  \caption{Spatial distribution of attractiveness of patches after 150 simulation steps. 3D plot (left) and contour plot (right).}
+  \label{fig:figthreedplot4}
+\end{figure}
+
+
+\subsection{Time sliding visualization}
+
+As agent-based models are often very complex, more than the three dimensions (x-cor.,y-cor.,color) could be relevant for the analysis. With the RNetLogo package it is possible to save the output of a simulation in R for every time step and then click through, or animate, the time series of these outputs, for example a combination of the model's View and distributions of state variables. As a prototype we wrote a function to implement a timeslider to plot turtles. This function can be extended to visualize a panel of multiple plots per time step. With a slider we can browse through the simulation steps. To give an example, we used the Virus model \citep{Wilensky1998} from NetLogo's Model Library to visualize the spatial distribution of infected and immune agents as well as boxplots of the time periode of infection and the age in one plot panel. 
+
+We first load the required packages (rpanel \citep{Bowman2007}) and define a helper function to set the plot colors for the logical variables (sick, immune) of the turtles.
+
+<<label=timeslider1, eval=FALSE>>=
+# load the rpanel pacakge
+library(rpanel)
+
+# define a function to set a logical variable to colors
+color.func <- function(color.var,colors,timedata) {
+  color <- NULL
+  if (!is.null(color.var)) {
+    index.color <- which(names(timedata)==color.var)
+    color <- timedata[[index.color]]
+    color[color==F] <- colors[1]
+    color[color==T] <- colors[2]
+  }
+  return(color)
+}
+@
+
+Next, we define the main function containing the slider and what to do, if we move the slider. The input is a list containing data.frames for every time step. When the slider is moved, we send the current position of slider (i.e. the requested time step) to the plotting function, extract the corresponding data.frame from the timedata list and draw a panel of four plots using this data.frame. 
+
+<<label=timeslider2, eval=FALSE>>=
+# define a custom plot function using rp.slider of the rpanel package
+# to browse through the plots
+plottimedata <- function(timedata.list,x.var,y.var,boxplot.var1,
+                         boxplot.var2,color.var1=NULL,colors1="black",
+                         color.var2=NULL,colors2="black", 
+                         mains = NULL, ...) 
+{
+  
+   # the drawing function, called when the slider position is changed
+   timeslider.draw <- function(panel) {
+     index.x <- which(names(timedata.list[[panel$t]])==x.var)
+     index.y <- which(names(timedata.list[[panel$t]])==y.var)
+     index.b1 <- which(names(timedata.list[[panel$t]])==boxplot.var1)
+     index.b2 <- which(names(timedata.list[[panel$t]])==boxplot.var2)
+
+     # if a color variable (logical) is given set the colors
+     # using function defined above
+     color1 <- color.func(color.var1,colors1,timedata.list[[panel$t]])
+     color2 <- color.func(color.var2,colors2,timedata.list[[panel$t]])
+
+     # 4 figures arranged in 2 rows and 2 columns with one title text line
+     par(mfrow=c(2,2),oma = c( 0, 0, 1, 0 ))
+     # create current plot
+     plot(timedata.list[[panel$t]][[index.x]],
+          timedata.list[[panel$t]][[index.y]], 
+          col=color1, main=mains[1], ...)
+     plot(timedata.list[[panel$t]][[index.x]],
+          timedata.list[[panel$t]][[index.y]], 
+          col=color2, main=mains[2], ...)
+     boxplot(timedata.list[[panel$t]][[index.b1]], main=mains[3])
+     boxplot(timedata.list[[panel$t]][[index.b2]], main=mains[4])
+     title( paste("at time ",panel$t), outer = TRUE )
+     panel
+   }
+   
+   # create a control panel (hosting the slider)
+   panel <- rp.control()
+   
+   # create a slider to switch the plot data
+   rp.slider(panel, resolution=1, var=t, from=1, to=length(timedata.list),
+             title="Time", showvalue=TRUE, action = timeslider.draw)
+}
+@
+
+In the third step, we initialize and run the NetLogo simulation and collect the results into the timedate list. As mentioned above, we push a data.frame containing the results of one simulation step into the timedata list. Here, we run 100 simulation steps and use the \verb@NLGetAgentSet@ to collect data from the turtles.
+
+<<label=timeslider3, eval=FALSE>>=
+library(RNetLogo)
+# initialize NetLogo
+nl.path <- "C:/Program Files/NetLogo 4.1.3"
+model.path <- "/models/Sample Models/Biology/Virus.nlogo"
+NLStart(nl.path)
+# load the Tumor model
+NLLoadModel(paste(nl.path,model.path,sep=""))
+# initialize the model
+NLCommand("setup")
+# run the model for 100 time steps and save the turtles of
+# every step in one entry of the timedata list
+nruns <- 100
+timedata <- list()
+for(i in 1:nruns) {
+  NLCommand("go")
+  timedata[[i]] <- NLGetAgentSet(c("who","xcor","ycor","age",
+                                   "sick?","immune?","sick-count"),
+                                 "turtles",as.data.frame=T,
+                                 df.col.names=c("who","x","y","age",
+                                                "sick","immune",
+                                                "sick-count"))
+}
+@
+
+In the last step, we collect the dimension of the NetLogo World to use it for the axis extend of the plot and define the colors to use for the variables sick (green=FALSE, red=TRUE) and immune (red=FALSE, green=TRUE). At least, we call the above defined \verb@plottimedata@ function to create the timeslider. Then, we can move the slider and the plot is updated immediately as shown in figure~\ref{fig:timeslider1}.
+
+<<label=timeslider4, eval=FALSE>>=
+# get the world dimension to use for the plot
+world.dim <- NLReport(c("(list min-pxcor max-pxcor)",
+                        "(list min-pycor max-pycor)"))
+# define colors to be used for turtle visualization
+colors1 <- c("green","red")
+colors2 <- c("red","green")
+# call the plottimedata function to brwose through the timedata list
+plottimedata(timedata.list=timedata, x.var="x", y.var="y", xlab="x",
+             ylab="y", color.var1="sick", color.var2="immune",
+             boxplot.var1="sick-count", boxplot.var2="age",
+             colors1=colors1, colors2=colors2,
+             mains=c("Sick","Immune","Stick-count","Age"),
+             xlim=world.dim[[1]], ylim=world.dim[[2]])
+@
+
+\begin{figure}
+  \centering \includegraphics{C:/Programme/R/R-2.12.1/Eigene_Pakete/svn/RNetLogo/tutorial/images/NLandR_TimeSlider}
+  \caption{Timeslider example using the Virus model.}
+  \label{fig:timeslider1}
+\end{figure}
+
+\section{Concluding remark}
+\label{sec:Concluding}
+
+Now, we think you know everything you need to know to start with your own 
+project. There are so many interesting packages available in R with connections 
+to many other programs - it is really amazing what this connections offers to 
+both: R users and NetLogo users!\\[5ex]
+
+Note that there are code samples for all functions in the example folder (RNetLogo/examples/ code samples) of the \verb@RNetLogo@ package. Furthermore, there are (just) some example applications in the example folder. 
+
+\textbf{A last hint}: In case you don't know, there is a program available which comes with eavery R installation, called \verb@Sweave@, which enables you to write a combined LaTex and R document (see \url{http://www.stat.uni-muenchen.de/~leisch/Sweave} for further details). You can embed your R code in your LaTex text document. When compiling the Sweave document, the R code is evaluated and the results (not only numberic but also images) can be embedded automaticaly into the LaTex document. The \verb@RNetLogo@ package opens the possibility to embed not only results of R but also the result of a NetLogo simulation. I.e. you can create a self-documented report with NetLogo simulations and R analytics (with or without source code). For an example see the code of this tutorial (\verb@tutorial.Rnw@). It is completly created with \verb@Sweave@. 
+Similar things can be done with OpenOffice-Writer using the odfWeave package \citep{Kuhn2010} and with Microsoft Word using the SWord program \citep{Baier2009}. 
+
+Feedback and comments are very welcome. Write to Jan C. Thiele (\email{jthiele@gwdg.de}).\\[5ex]
+Many thanks for using the RNetLogo Package.
+
+\section{Acknowledgement}
+I would like to thank Volker Grimm for his comments on this tutorial and his motivating words all over the time. 
+
+%% this adds References to the PDF-Index without adding an obsolete section
+\phantomsection
+\addcontentsline{toc}{section}{References}
+\bibliography{refs}
+
+
+\end{document}

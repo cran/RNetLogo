@@ -1,0 +1,6 @@
+importFrom("rJava", ".jarray", ".jcall", ".jevalArray",
+           ".jinit", ".jnew", ".jpackage")
+
+export("NLStart", "NLLoadModel", "NLSourceFromString", "NLCommand", "NLDoCommand", 
+	 "NLDoCommandWhile", "NLReport", "NLDoReport", "NLDoReportWhile", 
+	 "NLGetPatches", "NLSetPatches", "NLGetAgentSet", "NLGetGraph", "NLDfToList", "NLQuit")

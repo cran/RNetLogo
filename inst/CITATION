@@ -1,0 +1,21 @@
+citHeader("To cite the R package RNetLogo in publications please use:")
+
+citEntry(entry	="article",
+	title 	= "RNetLogo: an R package for running and exploring individual-based models implemented in NetLogo",
+	author 	= personList(
+			person(given="Jan C.", 	family="Thiele",	email="jthiele@gwdg.de"),
+			person(given="Winfried",family="Kurth",	email="wk@informatik.uni-goettingen.de"),
+			person(given="Volker", 	family="Grimm",	email="volker.grimm@ufz.de")
+		),
+	year 	= "submitted",
+	journal = "Methods in Ecology and Evolution",
+	volume 	= "??",
+	number 	= "??",
+	pages 	= "??",
+	url   	= "??",
+	
+	textVersion = 
+	paste("Thiele, J.C., Kurth, W., and Grimm, V. (submitted): ",
+	      "RNetLogo: an R package for running and exploring individual-based models implemented in NetLogo, ",
+	      "Methods in Ecology and Evolution.", sep="")
+	)
