@@ -1,0 +1,3 @@
+v 0.9.1
+
+- fixed bug: JARs compiled against Java 1.5 now instead of Java 1.6
