@@ -51,16 +51,28 @@ public class NLink_v4 {
 		try
 		{
 			blockExit = false;
+			// it is not possible to close NetLogo by its own closing method, because
+			// it is based on System.exit(0) which will result in a termination of 
+			// the JVM, rJava and finally R.
+			// Therefore, we can only dispose the thread, we can find. Not the best but 
+			// currently the only way I can see. I include the risk, that not everything
+			// is cleaned up.
 			if (isGUIworkspace) {
+				for (int i=0; i<((App)workspace).frame.getFrames().length; i++) {
+					java.awt.Frame frame = ((App)workspace).frame.getFrames()[i];
+					//if (frame instanceof org.nlogo.gl.view.ObserverView) {
+						frame.dispose();
+					//}
+				}
 				//((App)workspace).workspace.dispose();
-				((App)workspace).frame.dispose();
 				Thread.currentThread().interrupt();
 				//((App)workspace).quit();
+				// cannot be used, because this will close the JVM and R
 				//System.exit(0);
 			}
 			else {
 				((HeadlessWorkspace)workspace).dispose();
-			}
+			}			
 		}
 		catch (Exception ex) {
 			JOptionPane.showMessageDialog(null, "Error in killing workspace:"+ex, "Error", JOptionPane.OK_CANCEL_OPTION);
@@ -72,12 +84,13 @@ public class NLink_v4 {
 			System.setProperty("user.dir", userdir);
 	}
 	
-	public NLink_v4(Boolean isGUImode, String _userdir)
+	public NLink_v4(Boolean isGUImode, Boolean is3d, String _userdir)
 	{
 		userdir = _userdir;
 		try
 		{
 			System.setSecurityManager(securityManager1);
+			System.setProperty("org.nlogo.is3d" , is3d.toString());
 			isGUIworkspace = isGUImode.booleanValue();
 			if( isGUIworkspace ) {
 				App.main( new String[] { } ) ;

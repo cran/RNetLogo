@@ -53,7 +53,7 @@ NLStart(nl.path)
 model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"
 NLLoadModel(paste(nl.path,model.path,sep=""))
 NLCommand("setup")
-NLDoCommand("go", 10)
+NLDoCommand(10, "go")
 burned <- NLReport("burned-trees")
 print(burned)
 }

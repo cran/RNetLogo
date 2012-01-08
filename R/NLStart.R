@@ -1,11 +1,22 @@
 NLStart <-
-function(nl.path, gui=TRUE, obj.name=NULL, nl.version=4)
+function(nl.path, gui=TRUE, obj.name=NULL, nl.version=4, is3d=FALSE)
 {
     # get RNetLogo jar corresponding to NetLogo version
     localjar <- 'RNetLogov4.jar'
     if (nl.version==5)
     {
       localjar <- 'RNetLogov5.jar'
+    }
+    
+    # check for 3D/2D session
+    if (.rnetlogo$nl3d == -1)
+    {
+        .rnetlogo$nl3d <- is3d
+    }    
+    else
+    {
+      if (.rnetlogo$nl3d != is3d)
+        stop("You can't use 2D and 3D NetLogo in one R session.")
     }
     
     # NetLogo version check
@@ -23,7 +34,7 @@ function(nl.path, gui=TRUE, obj.name=NULL, nl.version=4)
     {
       if (.rnetlogo$nlversion != nl.version)
         stop("You can't use different NetLogo version in one R session.")
-    }
+    }   
 
   if (is.null(obj.name)) obj.name <- "nl.intern"
         
@@ -41,7 +52,7 @@ function(nl.path, gui=TRUE, obj.name=NULL, nl.version=4)
   if (nl.version == 4)
   {
     nlo <- tryCatch(
-  			.jnew("nlcon/NLink_v4",.jnew("java/lang/Boolean",gui),.jnew("java/lang/String",.rnetlogo$savedworkingdir[2])),
+  			.jnew("nlcon/NLink_v4",.jnew("java/lang/Boolean",gui),.jnew("java/lang/Boolean",is3d),.jnew("java/lang/String",.rnetlogo$savedworkingdir[2])),
   			error = function(e) {
   				e$printStackTrace()
         }
@@ -52,7 +63,7 @@ function(nl.path, gui=TRUE, obj.name=NULL, nl.version=4)
     if (nl.version == 5)
     {
       nlo <- tryCatch(
-    			.jnew("nlcon/NLink_v5",.jnew("java/lang/Boolean",gui),.jnew("java/lang/String",.rnetlogo$savedworkingdir[2])),
+    			.jnew("nlcon/NLink_v5",.jnew("java/lang/Boolean",gui),.jnew("java/lang/Boolean",is3d),.jnew("java/lang/String",.rnetlogo$savedworkingdir[2])),
     			error = function(e) {
     				e$printStackTrace()
           }

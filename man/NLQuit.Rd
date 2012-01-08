@@ -23,6 +23,8 @@ NLQuit(nl.obj=NULL)
 \section{Warning }{
   There is currently no way to kill a NetLogo instance with GUI completly. After executing \code{NLQuit} you
   can't run \code{NLStart} again. You have to quit your R session first and start a new one. 
+  The reason is, that NetLogo quits itself via System.exit (and has no funcionality to quit all threads manually) but executing System.exit will terminate the whole JVM which will terminate also rJava and finally R.).
+  It can happen that some memory is not released although you have executed NLQuit. Therefore, it is a good idea to start a new R session whenever it is possible (e.g. if you are going to load a new model).  
 } 
 \seealso{
  \code{\link{NLStart}}

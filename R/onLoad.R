@@ -5,11 +5,12 @@
 .rnetlogo[["libname"]] <- ""
 .rnetlogo[["pkgname"]] <- ""
 .rnetlogo[["nlversion"]] <- 0
+.rnetlogo[["nl3d"]] <- -1
 
 .onLoad <-
 function(libname, pkgname)
 {
-  if(!require(rJava)) stop("RNetLogo needs rJava")
+  #if(!require(rJava)) stop("RNetLogo needs rJava")
     
     .rnetlogo$pkgname <- pkgname 	
     .rnetlogo$libname <- libname
