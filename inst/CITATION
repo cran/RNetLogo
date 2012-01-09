@@ -7,7 +7,7 @@ citEntry(entry	="article",
 			person(given="Winfried",family="Kurth",	email="wk@informatik.uni-goettingen.de"),
 			person(given="Volker", 	family="Grimm",	email="volker.grimm@ufz.de")
 		),
-	year 	= "submitted",
+	year 	= "in press",
 	journal = "Methods in Ecology and Evolution",
 	volume 	= "??",
 	number 	= "??",
@@ -15,7 +15,25 @@ citEntry(entry	="article",
 	url   	= "??",
 	
 	textVersion = 
-	paste("Thiele, J.C., Kurth, W., and Grimm, V. (submitted): ",
+	paste("Thiele, J.C., Kurth, W., and Grimm, V. (in press): ",
 	      "RNetLogo: an R package for running and exploring individual-based models implemented in NetLogo, ",
 	      "Methods in Ecology and Evolution.", sep="")
+	)
+
+citEntry(entry	="article",
+	title 	= "R Meets NetLogo: Introduction to the RNetLogo Package",
+	author 	= personList(
+			person(given="Jan C.", 	family="Thiele",	email="jthiele@gwdg.de")
+		),
+	year 	= "submitted",
+	journal = "Journal of Statistical Software",
+	volume 	= "??",
+	number 	= "??",
+	pages 	= "??",
+	url   	= "??",
+	
+	textVersion = 
+	paste("Thiele, J.C. (submitted): ",
+	      "R Meets NetLogo: Introduction to the RNetLogo Package, ",
+	      "Journal of Statistical Software.", sep="")
 	)

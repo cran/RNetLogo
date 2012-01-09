@@ -1,3 +1,13 @@
+v 0.9.2
+
+- typo in manual fixed (order of arguments in NLDoCommand)
+- support for NetLogo 3D added (extra boolean argument is3d in NLStart)
+- test with NetLogo 5.0RC5 (successful)
+- better clean up at NLQuit (but this is still a problem. NetLogo offers no clean up for all threads,
+  they just do a System.exit, which can not be used with rJava, because it will terminate the JVM, therefore
+  also rJava and finally R as well.)
+
+
 v 0.9.1
 
 - fixed bug: JARs compiled against Java 1.5 now instead of Java 1.6

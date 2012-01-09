@@ -9,7 +9,7 @@
   or GUI mode. 
 }
 \usage{
-NLStart(nl.path, gui=TRUE, obj.name=NULL, nl.version=4)
+NLStart(nl.path, gui=TRUE, obj.name=NULL, nl.version=4, is3d=FALSE)
 }
 \arguments{
   \item{nl.path}{
@@ -32,6 +32,9 @@ NLStart(nl.path, gui=TRUE, obj.name=NULL, nl.version=4)
   It is not possible to mix NetLogo versions in one R session. Please use different R sessions if you want to start RNetLogo
   with version 4 and version 5.
 }
+  \item{is3d}{
+  (optional) A boolean value: if \code{TRUE}, NetLogo 3D will be started. \code{FALSE} will start the conventionally 2D NetLogo.
+}
 }
 \details{
   You can start multiple instances of NetLogo in headless mode and save each in another
@@ -41,10 +44,13 @@ NLStart(nl.path, gui=TRUE, obj.name=NULL, nl.version=4)
   Note for Linux and Mac OS X (Mac is untested) users: If you want to use the GUI mode, then it can be necessary to run RNetLogo 
   in JGR application (see package JGR, http://cran.r-project.org/web/packages/JGR/index.html). 
   
-  General Note: You should avoid to manually change the working directory of R, because NetLogo need to have the working directory pointed to its installation path. As 
+  General Notes: 
+  1. You should avoid to manually change the working directory of R, because NetLogo need to have the working directory pointed to its installation path. As 
 the R working directory and the Java working directory depend on each other, changing the R working directory can result in unexpected behavior of NetLogo.
 There, you should use absolute paths for I/O processes in R instead of submitting setwd(...). Note, that the RNetLogo package changes the working directory 
 automatically when loading NetLogo and changes back to the former working directory when submitting NLQuit.
+  2. It is currently not possible to quit NetLogo completly (because NetLogo quits itself via System.exit but executing System.exit will terminate the whole JVM which will terminate also rJava and finally R.).
+  It can happen that some memory is not released although you have executed NLQuit. Therefore, it is a good idea to start a new R session whenever it is possible (e.g. if you are going to load a new model).  
 }
 \value{
   The function implicit returns an Java Object containing the reference to the Java controlling interface stored in a variable with the name given in 3rd function argument. 
