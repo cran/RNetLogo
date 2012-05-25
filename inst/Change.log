@@ -1,3 +1,14 @@
+v0.9.3
+
+- NetLogo 5.0 is default in NLStart (nl.version=5) --> NetLogo 5.0 is much more faster than NetLogo 4.1.x in sending values to R!
+- Rewrite of functions NLGetAgentSet, NLGetPatches, NLGetGraph for markable speed improvements
+- Default return type of NLGetAgentSet and NLGetPatches is a data.frame instead of a list
+- experimental function NLSetAgentSet added (may change or be deleted in future)
+- Support of NetLogo 4.0.x added (use nl.version=40 in NLStart)
+- Document "PerformanceNotes" added
+- Document "ParallelProcessing" added
+
+
 v 0.9.2
 
 - typo in manual fixed (order of arguments in NLDoCommand)

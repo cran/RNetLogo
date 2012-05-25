@@ -1,7 +1,7 @@
 \name{NLDoCommandWhile}
 \alias{NLDoCommandWhile}
 \title{
-  Repeated execution of a command in the referenced NetLogo instance while a reporter returns TRUE.
+  Repeated execution of a command in the referenced NetLogo instance while a reporter returns \code{TRUE}.
 }
 \description{
   \code{NLDoCommandWhile} function is used to execute a NetLogo command (submitted as a string)
@@ -25,6 +25,8 @@ NLDoCommandWhile(condition, ..., nl.obj=NULL)
 \details{
   This function is used to execute a command for more than one time. It could be used
   to run a simulation (e.g. calling "go") while a variable is lower a boundary value. 
+  Attention: Make sure that the condition switches from \code{TRUE} to \code{FALSE} sometime, 
+  otherwise you will run an endless loop.
 }
 \value{
   No return value.
@@ -39,7 +41,7 @@ NLDoCommandWhile(condition, ..., nl.obj=NULL)
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 4.1.3"
+nl.path <- "C:/Program Files/NetLogo 5.0"
 NLStart(nl.path)
 model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"
 NLLoadModel(paste(nl.path,model.path,sep=""))

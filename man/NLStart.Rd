@@ -9,7 +9,7 @@
   or GUI mode. 
 }
 \usage{
-NLStart(nl.path, gui=TRUE, obj.name=NULL, nl.version=4, is3d=FALSE)
+NLStart(nl.path, gui=TRUE, obj.name=NULL, nl.version=5, is3d=FALSE)
 }
 \arguments{
   \item{nl.path}{
@@ -27,10 +27,16 @@ NLStart(nl.path, gui=TRUE, obj.name=NULL, nl.version=4, is3d=FALSE)
   If you don't specify this variable, an intern (in .rnetlogo environment) variable will be created and automaticaly used in all further functions.
 }
   \item{nl.version}{
-  (optional) An interger value, that determines, if you want to start a NetLogo version 4.x or a NetLogo version 5.x.
+  (optional) An interger value, that determines, if you want to start a NetLogo version 4.0.x, 4.1.x or a NetLogo version 5.x.
   Don't try to start a NetLogo version 4.x with nl.version=5 and vice versa.
   It is not possible to mix NetLogo versions in one R session. Please use different R sessions if you want to start RNetLogo
   with version 4 and version 5.
+  The default is \code{nl.version=5} for NetLogo 5.0.
+  For NetLogo 4.1.x use \code{nl.version=4}.
+  For NetLogo 4.0.x use \code{nl.version=40}.
+  Please note, that the data transformation is much faster in NetLogo 5.0 than in NetLogo 4.x. Therefore, I strongly recommend to use NetLogo 5.0.
+  See the document \code{performanceNotes.pdf} in directory \code{performanceNote} in the installation directory of the package for
+  performance details.
 }
   \item{is3d}{
   (optional) A boolean value: if \code{TRUE}, NetLogo 3D will be started. \code{FALSE} will start the conventionally 2D NetLogo.
@@ -48,7 +54,7 @@ NLStart(nl.path, gui=TRUE, obj.name=NULL, nl.version=4, is3d=FALSE)
   1. You should avoid to manually change the working directory of R, because NetLogo need to have the working directory pointed to its installation path. As 
 the R working directory and the Java working directory depend on each other, changing the R working directory can result in unexpected behavior of NetLogo.
 There, you should use absolute paths for I/O processes in R instead of submitting setwd(...). Note, that the RNetLogo package changes the working directory 
-automatically when loading NetLogo and changes back to the former working directory when submitting NLQuit.
+automatically when loading NetLogo and changes back to the former working directory when submitting NLQuit (doesn't work currently with custom \code{obj.name}).
   2. It is currently not possible to quit NetLogo completly (because NetLogo quits itself via System.exit but executing System.exit will terminate the whole JVM which will terminate also rJava and finally R.).
   It can happen that some memory is not released although you have executed NLQuit. Therefore, it is a good idea to start a new R session whenever it is possible (e.g. if you are going to load a new model).  
 }
@@ -74,7 +80,7 @@ automatically when loading NetLogo and changes back to the former working direct
 \examples{
 \dontrun{
 library(RNetLogo)
-nl.path <- "C:/Program Files/NetLogo 4.1.3"
+nl.path <- "C:/Program Files/NetLogo 5.0"
 NLStart(nl.path)
 NLCommand("create-turtles 10")
 noturtles <- NLReport("count turtles")

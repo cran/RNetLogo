@@ -22,8 +22,8 @@ NLSetPatches(patch.var, in.matrix, nl.obj=NULL)
 }
 \details{
   The matrix must have the same x- and y-dimension as the NetLogo world with indices beginning with (1,1). 
-  The upper-left cell (1,1) of the matrix represents the upper-left patch of the NetLogo world 
-  independent of the origin of the NetLogo world.
+  The upper-left cell (1,1) of the matrix represents the upper-left patch of the NetLogo World 
+  independent from the origin of the NetLogo World.
 }
 \value{
   No return value.
@@ -39,7 +39,7 @@ NLSetPatches(patch.var, in.matrix, nl.obj=NULL)
 }
 \examples{
 \dontrun{
-NLStart("C:/Program Files/NetLogo 4.1.3")
+NLStart("C:/Program Files/NetLogo 5.0")
 m1 <- matrix(1:1089 , 33)
 NLSetPatches(m1, "pcolor")
 }

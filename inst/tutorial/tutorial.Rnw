@@ -59,7 +59,7 @@ NetLogos' Mathematica Link \url{http://ccl.northwestern.edu/netlogo/docs/mathema
 \begin{document}
 \SweaveOpts{engine=R,eps=FALSE}
 \SweaveOpts{keep.source=TRUE}
-\SweaveOpts{prefix.string=C:/Programme/R/R-2.12.1/Eigene_Pakete/svn/RNetLogo/tutorial/images/}
+\SweaveOpts{prefix.string=C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/tutorial/images/}
 
 <<preliminaries,echo=FALSE,results=hide>>=
 options(prompt = "> ")
@@ -127,7 +127,7 @@ When loading \verb@RNetLogo@ it will automaticly try to load \verb@rJava@. If th
 without any error we are ready to start NetLogo (if not, see section~\ref{sec:Installation}). 
 To do so, we have to know where NetLogo is installed. What we need is the path 
 to the folder that contains the \verb@NetLogo.jar@ file. On Windows machines this 
-could be "C:/Program Files/NetLogo 4.1.3/".
+could be "C:/Program Files/NetLogo 5.0/".
 
 Now, we have to decide, whether we want to run NetLogo in the background 
 without seeing the Graphical User Interface (GUI) and control NetLogo completly 
@@ -140,12 +140,13 @@ one R session. This is just possible in the so called headless mode, i.e. runnin
 NetLogo without GUI (see section~\ref{sec:Headless} for details). 
 Since the NetLogo Controlling API changes with the NetLogo version, 
 you have to use an extra parameter \verb@nl.version@ to start RNetLogo for NetLogo 
-version 5. The default value of \verb@nl.version@ is 4, which means, that we don't have
-to submit this parameter when using NetLogo 4.x.
+version 4 (nl.version=4 for NetLogo 4.1.x, nl.version=40 for NetLogo 4.0.x). 
+The default value of \verb@nl.version@ is 5, which means, that we don't have
+to submit this parameter when using NetLogo 5.0.
 
 To keep it simple and comprehensible we start NetLogo with GUI by typing
 <<startGUI>>=
-nl.path <- "C:/Program Files/NetLogo 4.1.3"
+nl.path <- "C:/Program Files/NetLogo 5.0"
 NLStart(nl.path)
 @
 
@@ -162,7 +163,7 @@ if we submit the following examples.
 
 \begin{figure}
   \centering
-    \includegraphics{C:/Programme/R/R-2.12.1/Eigene_Pakete/svn/RNetLogo/tutorial/images/NLandR1}
+    \includegraphics{C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/tutorial/images/NLandR1}
   \caption{NetLogo (on the right) started and controlled from R (on the left).}
   \label{fig:NLandR1}
 \end{figure}
@@ -374,17 +375,15 @@ figure~\ref{fig:getAgentSet1}).
 
 <<getAgentSet1, fig=FALSE>>=
 cells <- NLGetAgentSet(c("xcor","ycor"),
-                       "turtles",
-                       as.data.frame=TRUE,
-                       df.col.names=c("x","y"))
+                       "turtles")
 x.minmax <- NLReport("(list min-pxcor max-pxcor)")
 y.minmax <- NLReport("(list min-pycor max-pycor)")
-plot(cells, xlim=x.minmax, ylim=y.minmax)
+plot(cells, xlim=x.minmax, ylim=y.minmax, xlab="x", ylab="y")
 @
 
 \begin{figure}
   \centering
-    \includegraphics{C:/Programme/R/R-2.12.1/Eigene_Pakete/svn/RNetLogo/tutorial/images/NLandR_GetAgentSet1}
+    \includegraphics{C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/tutorial/images/NLandR_GetAgentSet1}
   \caption{A visualization of the turtles by getting them via NLGetAgentSet. 
   On the right hand side the original NetLogo simulation and on the left hand 
   side the RGUI with the visualization of the reported turtles.}
@@ -396,10 +395,8 @@ In a second step, we will get only the metastatic cells and plot them again
 
 <<label=getAgentSet2, fig=TRUE, include=FALSE>>=
 cells.metastatic <- NLGetAgentSet(c("xcor","ycor"),
-                                  "turtles with [metastatic? = True]",
-                                  as.data.frame=TRUE,
-                                  df.col.names=c("x","y"))
-plot(cells.metastatic, xlim=x.minmax, ylim=y.minmax)
+                                  "turtles with [metastatic? = True]")
+plot(cells.metastatic, xlim=x.minmax, ylim=y.minmax, xlab="x", ylab="y")
 @
 
 \begin{figure}
@@ -470,11 +467,9 @@ library(sp)
 library(gstat)
 # get patches
 patches <- NLGetPatches(c("pxcor","pycor","pcolor"),
-                        "patches",
-                        as.data.frame=TRUE,
-                        df.col.names=c("x","y","pcolor"))
+                        "patches")
 # convert to SpatialPointsDataFrame
-coordinates(patches) <- ~ x + y
+coordinates(patches) <- ~ pxcor + pycor
 # convert to SpatialPixelsDataFrame
 gridded(patches) <- TRUE
 # convert pcolor to factor
@@ -482,7 +477,7 @@ patches$pcolor <- factor(patches$pcolor)
 # set colors for plot
 col <- c("black", "white")
 # create and show plot
-spplot(patches, 'pcolor', col.regions=col)
+spplot(patches, 'pcolor', col.regions=col, xlab="x", ylab="y")
 @
 
 \begin{figure}
@@ -522,7 +517,7 @@ NLSetPatches("pcolor", my.matrix)
 
 \begin{figure}
   \centering
-    \includegraphics{C:/Programme/R/R-2.12.1/Eigene_Pakete/svn/RNetLogo/tutorial/images/NLandR_SetPatches1}
+    \includegraphics{C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/tutorial/images/NLandR_SetPatches1}
   \caption{A screenshot while NLSetPatches is executed. The color of the NetLogo 
   patches on the right hand side are changed gradually from black to red.}
   \label{fig:setPatches1}
@@ -660,7 +655,7 @@ NLQuit() # the standard session as well, if open
 
 \subsection{Amount of data}
 Please note, that you are not able to stop an execution of a NetLogo command, whitout closing your R session. Therefore, it is a good idea to think about the amount of data which should be transformed. For example, if you use the \verb@NLGetPatches@ function with the standard settings of the Fire.nlogo model from NetLogo's Model Library, you are requesting 63001 patch values. If you ask for the pxcor, pycor and pcolor values than you request for 63001 * 3 = 189003 values. All these values have to be transformed from NetLogo data type to Java and from Java to R. This may take a while. For technical reasons you are not informed about the process of data transformation. Therefore, it looks like the programm crashed, but if you are patient, the programm will return with the result after some time. That's why it is always a good idea to test your code with a very small example (i.e. small worlds, low number of agents etc.).
-
+You should know, that NetLogo 5.0 is extremly faster in transfering data than NetLogo 4.x.
 \subsection {Endless loops}
 If you use the functions \verb@NLDoCommandWhile@ and \verb@NLDoReportWhile@ please double check your while-condition. Are you sure, that the condition will be met some time? Use this carefully, otherwise it will end up in an endless loop and you will wait for the end of the execution as long as you wish. 
 
@@ -741,7 +736,7 @@ We start with the agent-based model simulation. Since this model is based on ran
 # load RNetLogo package (if not already done)
 library(RNetLogo)
 # path to NetLogo installation
-nl.path <- "C:/Program Files/NetLogo 4.1.3"
+nl.path <- "C:/Program Files/NetLogo 5.0"
 # initialize NetLogo (if not already done)
 NLStart(nl.path, gui=FALSE)
 @
@@ -843,7 +838,7 @@ We start with initialization of NetLogo.
 # load RNetLogo package (if not already done)
 library(RNetLogo)
 # path to NetLogo installation
-nl.path <- "C:/Program Files/NetLogo 4.1.3"
+nl.path <- "C:/Program Files/NetLogo 5.0"
 # initialize NetLogo (if not already done)
 NLStart(nl.path, gui=FALSE)
 @
@@ -948,7 +943,7 @@ In a first step we have to setup the connections to NetLogo (if not already done
 # load RNetLogo package (if not already done)
 library(RNetLogo)
 # path to NetLogo installation
-nl.path <- "C:/Program Files/NetLogo 4.1.3"
+nl.path <- "C:/Program Files/NetLogo 5.0"
 # initialize NetLogo (if not already done)
 NLStart(nl.path, gui=FALSE)
 @  
@@ -961,7 +956,7 @@ database.path = "C:/test_netlogo.db"
 @
 <<label=database2,echo=FALSE, results=hide>>==
 # a hidden overwrite of the path
-database.path = "C:/Programme/R/R-2.12.1/Eigene_Pakete/svn/RNetLogo/tutorial/test_netlogo.db"
+database.path = "C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/tutorial/test_netlogo.db"
 if (file.exists(database.path)) {
   file.remove(database.path)
 }
@@ -1050,7 +1045,7 @@ First, we initialize the simulation, run it for 150 time steps and collect the p
 # load RNetLogo package (if not already done)
 library(RNetLogo)
 # path to NetLogo installation
-nl.path <- "C:/Program Files/NetLogo 4.1.3"
+nl.path <- "C:/Program Files/NetLogo 5.0"
 # initialize NetLogo (if not already done)
 NLStart(nl.path, gui=FALSE)
 @
@@ -1203,7 +1198,7 @@ In the third step, we initialize and run the NetLogo simulation and collect the 
 <<label=timeslider3, eval=FALSE>>=
 library(RNetLogo)
 # initialize NetLogo
-nl.path <- "C:/Program Files/NetLogo 4.1.3"
+nl.path <- "C:/Program Files/NetLogo 5.0"
 model.path <- "/models/Sample Models/Biology/Virus.nlogo"
 NLStart(nl.path)
 # load the Tumor model
@@ -1218,10 +1213,7 @@ for(i in 1:nruns) {
   NLCommand("go")
   timedata[[i]] <- NLGetAgentSet(c("who","xcor","ycor","age",
                                    "sick?","immune?","sick-count"),
-                                 "turtles",as.data.frame=T,
-                                 df.col.names=c("who","x","y","age",
-                                                "sick","immune",
-                                                "sick-count"))
+                                 "turtles")
 }
 @
 
@@ -1235,8 +1227,8 @@ world.dim <- NLReport(c("(list min-pxcor max-pxcor)",
 colors1 <- c("green","red")
 colors2 <- c("red","green")
 # call the plottimedata function to brwose through the timedata list
-plottimedata(timedata.list=timedata, x.var="x", y.var="y", xlab="x",
-             ylab="y", color.var1="sick", color.var2="immune",
+plottimedata(timedata.list=timedata, x.var="xcor", y.var="ycor", xlab="x",
+             ylab="y", color.var1="sick?", color.var2="immune?",
              boxplot.var1="sick-count", boxplot.var2="age",
              colors1=colors1, colors2=colors2,
              mains=c("Sick","Immune","Stick-count","Age"),
@@ -1244,7 +1236,7 @@ plottimedata(timedata.list=timedata, x.var="x", y.var="y", xlab="x",
 @
 
 \begin{figure}
-  \centering \includegraphics{C:/Programme/R/R-2.12.1/Eigene_Pakete/svn/RNetLogo/tutorial/images/NLandR_TimeSlider}
+  \centering \includegraphics{C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/tutorial/images/NLandR_TimeSlider}
   \caption{Timeslider example using the Virus model.}
   \label{fig:timeslider1}
 \end{figure}

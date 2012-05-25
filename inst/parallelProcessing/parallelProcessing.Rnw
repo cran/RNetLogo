@@ -1,0 +1,276 @@
+\documentclass[article,nojss]{jss}
+\graphicspath{{images/}}
+
+%% almost as usual
+\author{
+  Jan C. Thiele\\
+  Department of\\
+  Ecoinformatics, Biometrics\\
+  and Forest Growth\\
+  University of G\"ottingen\\
+  Germany
+}
+
+\title{Parallel processing with the RNetLogo Package}
+
+%% for pretty printing and a nice hypersummary also set:
+\Plainauthor{Jan C. Thiele} %% comma-separated
+\Plaintitle{Parallel processing with the RNetLogo Package} %% without formatting
+\Shorttitle{Parallel RNetLogo} %% a short title (if necessary)
+
+%% an abstract and keywords
+\Abstract{
+RNetLogo is a flexible interface for NetLogo to R. It opens various possiblities to connect agent-based models with advanced statistics. It opens the possiblity to use R as the starting point to design systematic experiments with agent-based models
+and perform parameter fittings and sensitivity analysis. Therefore, it can be necessary to perform repeated simulations which could be parallelized. Here, I present how such a parallelization could be done for the RNetLogo package. The things presented here could be used to run multiple simulations in parallel on a single computer with multiple processors or to spread multiple simulation to several processors in computer clusters/grids.   
+Using the parallel package has an positive side effect: It enables you to start more than one NetLogo instance with GUI in parallel, which is not possible with parallelization.
+}
+\Keywords{NetLogo, R, agent based modelling, abm, 
+individual based modelling, ibm, parallelization}
+\Plainkeywords{NetLogo, R, agent based modelling, abm, 
+individual based modelling, ibm, modelling} %% without formatting
+%% at least one keyword must be supplied
+
+%% publication information
+%% NOTE: Typically, this can be left commented and will be filled out by the technical editor
+%% \Volume{13}
+%% \Issue{9}
+%% \Month{September}
+%% \Year{2004}
+%% \Submitdate{2004-09-29}
+%% \Acceptdate{2004-09-29}
+
+%% The address of (at least) one author should be given
+%% in the following format:
+\Address{
+  Jan C. Thiele\\
+  Department of Ecoinformatics, Biometrics and Forest Growth\\
+  University of G\"ottingen\\
+  B\"usgenweg 4\\
+  37077 G\"ottingen, Germany\\
+  E-mail: \email{jthiele@gwdg.de}\\
+  URL: \url{http://www.uni-goettingen.de/en/72779.html}\\
+}
+
+%% It is also possible to add a telephone and fax number
+%% before the e-mail in the following format:
+%% Telephone: +43/1/31336-5053
+%% Fax: +43/1/31336-734
+
+%% for those who use Sweave please include the following line (with % symbols):
+%% need no \usepackage{Sweave.sty}
+
+%% end of declarations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\SweaveOpts{engine = R, eps = FALSE}
+\SweaveOpts{keep.source = TRUE}
+%\SweaveOpts{prefix.string=C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/parallelProcessing/images/}
+
+<<preliminaries, echo=FALSE, results=hide>>=
+options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
+@
+\fvset{listparameters={\setlength{\topsep}{0pt}}}
+\renewenvironment{Schunk}{\vspace{\topsep}}{\vspace{\topsep}}
+
+\maketitle
+
+
+\section{Motivation}
+\label{sec:Motivation}
+
+Since modern computers mostly have more than one processor and agent-based simulations are often complex and time comsuming it is desireable to spread repeated simulations, for example for parameter fitting or sensitivity analysis, to multiple processors in parallel.
+Here, I will present one way of how it is possible to spread multiple NetLogo simulations controlled from R via the RNetLogo package to multiple processors. 
+
+\section{Parallelization in R}
+\label{sec:ParallelR}
+
+R itself is not able to make use of multiple processors of a computer. But there are several R packages available, which enable the use to spread repeated processes to multiple processors. There is a CRAN Task View called "High-Performance and Parallel Computing with R" at \url{http://cran.r-project.org/web/views/HighPerformanceComputing.html}. 
+Since R version 2.14.0 there is the \pkg{parallel} package included in every standard R installation. 
+In the following I will present how to use this \pkg{parallel} package in conjunction with RNetLogo. Therefore, to follow the examples it requires that you have at R version >= 2.14.0 installed.
+There is a pdf file coming with the parallel packing giving a short introduction into the usage of the package and the plattform specific differences. You should always start by reading this document.
+A last note, before we start: The commands presented in the following have been tested on Windows and Linux operation systems only. If you have experiences with Mac OS please let me know.
+
+\section{Parallelize a simple process}
+\label{sec:simpleProcess}
+
+The basic concept of the \pkg{parallel} package is to parallelize an apply (or lapply, sapply etc.) operation. This means, that the process you want to parallelize has to be process which is applied to an array, matrix, list or whatever.
+
+Let us start with a simple example without using RNetLogo. First, we define a simple function which calculates the square of an input number.
+
+<<label=simpleFunction, eval=TRUE, echo=TRUE>>=
+testfun1 <- function(x) {
+  return(x*x)
+}
+@
+
+We could apply this simple function to a vector of values using \code{sapply} like this:
+
+<<label=applySimpleFunction, eval=TRUE, echo=TRUE>>=
+my.v1 <- 1:10
+print(my.v1)
+
+my.v1.quad <- sapply(my.v1, testfun1)
+print(my.v1.quad)
+@
+
+The result is a vector with the quadratic values of the input vector, i.e. the function was applied sequentially to each element of the input vector.
+
+One way to use the \pkg{parallel} package is to use the parallel version of the \code{sapply} function which is called \code{parSapply}.
+
+But before we can use this function, we have to make/register a cluster, as you know from the manual of the \pkg{parallel} package. 
+Therefore, we could, for example, detect the number of cores of our local computer and start a local cluster with this number of processors, as shown here:
+
+<<label=makeCluster1, eval=TRUE, echo=TRUE>>=
+# load the parallel package
+library(parallel)
+
+# detect the number of cores available
+processors <- detectCores()
+
+# create cluster
+cl <- makeCluster(processors)
+@
+
+Then, we can run our simple function on this cluster. At the end, we should always stop the cluster.
+
+<<label=runCluster1, eval=TRUE, echo=TRUE>>=
+# call parallel sapply
+my.v1.quad.par <- parSapply(cl, my.v1, testfun1)
+print(my.v1.quad.par)
+
+# stop cluster
+stopCluster(cl)
+@
+
+
+\section{Parallelize RNetLogo}
+\label{sec:RNetLogo}
+
+As you know from the RNetLogo manual, it requires an initialization using the \code{NLStart} and (maybe) \code{NLLoadModel} function. To parallelize (R)NetLogo we need this initialization to be done for every processor, because they are independent from each other (which is a very important property, because, for example, random processes in parallel simulations should not beeing influenced by each other). 
+
+Therefore, it makes sence to put the initialization, the simulation and the quiting process into seperate functions. 
+These functions could look like the following (if you want to test these, don't forget to adapt the paths appropriate):
+
+<<label=defineFunctions1, eval=TRUE, echo=TRUE>>=
+# the initialization function
+prepro <- function(dummy, gui, nl.path, model.path) {
+  library(RNetLogo)
+  NLStart(nl.path, nl.version=5, gui=gui)
+  NLLoadModel(model.path)
+}
+
+
+# the simulation function
+simfun <- function(x) {
+  NLCommand("print ",x)
+  NLCommand("set density", x)
+  NLCommand("setup")
+  NLCommand("go")
+  NLCommand("print count turtles")
+  ret <- data.frame(x, NLReport("count turtles"))
+  names(ret) <- c("x","turtles")
+  return(ret)
+}
+
+
+# the quit function
+postpro <- function(x) {
+  NLQuit()
+}
+@
+
+\subsection{With Graphical User Interface (GUI)}
+\label{sec:gui}
+
+Now, we have to start the cluster, run the initialization function in each processor, which will open so many NetLogo windows as we have processors.
+
+Note, that this is also a nice way to run multiple NetLogo GUI instances in parallel, what is not possible within one R session without this parallelization (see documentation of the RNetLogo package for detail).
+
+<<label=initNetLogo1, eval=TRUE, echo=TRUE>>=
+# load the parallel package, if not already done
+require(parallel)
+
+# detect the number of cores available
+processors <- detectCores()
+
+# create cluster
+cl <- makeCluster(processors)
+
+# set variables for the start up process
+# adapt path appropriate
+gui <- TRUE
+nl.path <- "C:/Program Files/NetLogo 5.0"
+model.path <- "models/Sample Models/Earth Science/Fire.nlogo"
+
+# load NetLogo in each processor/core
+invisible(parLapply(cl, 1:processors, prepro, gui=gui, 
+                    nl.path=nl.path, model.path=model.path))
+@
+
+After the initialization is done in all processors, we can run the simulation. Here, we will use the Fire model from NetLogo's Model Library. We will vary the density value from 1 to 20, i.e. we will run 20 independent simulations each with a different density value. 
+
+<<label=simNetLogo1, eval=TRUE, echo=TRUE>>=
+# create a vector with 20 density values
+density <- 1:20
+print(density)
+
+# run a simulation for each density value
+# by calling parallel sapply
+result.par <- parSapply(cl, density, simfun)
+print(data.frame(t(result.par)))
+@
+
+At the end, we should stop all NetLogo instances and the cluster.
+
+<<label=quitNetLogo1, eval=TRUE, echo=TRUE>>=
+# Quit NetLogo in each processor/core
+invisible(parLapply(cl, 1:processors, postpro))
+
+# stop cluster
+stopCluster(cl)
+@
+
+\subsection{Headless}
+\label{sec:headless}
+
+The same is possible with the headless mode, i.e. with the GUI. We just have to set the variable \code{gui} to \code{FALSE}.
+
+It could look like this:
+
+<<label=simNetLogo1, eval=TRUE, echo=TRUE>>=
+# run in headless mode
+gui <- FALSE
+
+# create cluster
+cl <- makeCluster(processors)
+
+# load NetLogo in each processor/core
+invisible(parLapply(cl, 1:processors, prepro, gui=gui, 
+                    nl.path=nl.path, model.path=model.path))
+
+# create a vector with 20 density values
+density <- 1:20
+print(density)
+
+# run a simulation for each density value
+# by calling parallel sapply
+result.par <- parSapply(cl, density, simfun)
+print(data.frame(t(result.par)))
+
+# Quit NetLogo in each processor/core
+invisible(parLapply(cl, 1:processors, postpro))
+
+# stop cluster
+stopCluster(cl)
+@
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+We have seen one way of how it is possible to spread repeated and independent simulations to multiple processors using the \pkg{parallel} package. Therefore, RNetLogo can be efficiently used to perform parameter fittings and sensitivity analyses where large number of repeated simultions are required. 
+
+
+%\section*{Acknowledgement}
+%Thanks go to ...  
+
+\end{document}

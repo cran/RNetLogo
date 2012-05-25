@@ -1,0 +1,937 @@
+\documentclass[article,nojss]{jss}
+\graphicspath{{images/}}
+
+%% almost as usual
+\author{
+  Jan C. Thiele\\
+  Department of\\
+  Ecoinformatics, Biometrics\\
+  and Forest Growth\\
+  University of G\"ottingen\\
+  Germany
+}
+
+\title{Performance Notes to the RNetLogo Package}
+
+%% for pretty printing and a nice hypersummary also set:
+\Plainauthor{Jan C. Thiele} %% comma-separated
+\Plaintitle{Performance Notes to the RNetLogo Package} %% without formatting
+\Shorttitle{Performance Notes} %% a short title (if necessary)
+
+%% an abstract and keywords
+\Abstract{
+RNetLogo is a flexible interface for NetLogo to R, howerver, it was noticed that the performance is slow for large datasets in some circumstances. Here, I show that these problems are solved for newer versions of RNetLogo/NetLogo, and give some specific hints for using RNetLogo in situations where runtime is critical. Specifically, I present the results of an execution time measurement study of \code{NLGetAgentSet} using NetLogo 4.0.5, 4.1.3, and 5.0 as well as
+RNetLogo 0.9.2 and 0.9.3.
+The results show that using NetLogo 5.0 is highly recommended since its transformation times/list operations are substantially faster than in older versions of NetLogo.
+Some further speed improvements (for \code{NLGetAgentSet} or \code{NLGetPatches}) can be achieved by using RNetLogo >= 0.9.3. 
+}
+\Keywords{NetLogo, R, agent based modelling, abm, 
+individual based modelling, ibm, performance, execution time}
+\Plainkeywords{NetLogo, R, agent based modelling, abm, 
+individual based modelling, ibm, performance, execution time} %% without formatting
+%% at least one keyword must be supplied
+
+%% publication information
+%% NOTE: Typically, this can be left commented and will be filled out by the technical editor
+%% \Volume{13}
+%% \Issue{9}
+%% \Month{September}
+%% \Year{2004}
+%% \Submitdate{2004-09-29}
+%% \Acceptdate{2004-09-29}
+
+%% The address of (at least) one author should be given
+%% in the following format:
+\Address{
+  Jan C. Thiele\\
+  Department of Ecoinformatics, Biometrics and Forest Growth\\
+  University of G\"ottingen\\
+  B\"usgenweg 4\\
+  37077 G\"ottingen, Germany\\
+  E-mail: \email{jthiele@gwdg.de}\\
+  URL: \url{http://www.uni-goettingen.de/en/72779.html}\\
+}
+
+%% It is also possible to add a telephone and fax number
+%% before the e-mail in the following format:
+%% Telephone: +43/1/31336-5053
+%% Fax: +43/1/31336-734
+
+%% for those who use Sweave please include the following line (with % symbols):
+%% need no \usepackage{Sweave.sty}
+
+%% end of declarations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\SweaveOpts{engine = R, eps = FALSE}
+\SweaveOpts{keep.source = TRUE}
+\SweaveOpts{prefix.string=C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/images/}
+
+<<preliminaries, echo=FALSE, results=hide>>=
+options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
+@
+\fvset{listparameters={\setlength{\topsep}{0pt}}}
+\renewenvironment{Schunk}{\vspace{\topsep}}{\vspace{\topsep}}
+
+\maketitle
+
+\section{Preliminary Note}
+\label{sec:PreNote}
+
+All tests and measurements have been performed on Windows XP Professional  SP3 (32-bit) with a DELL Latitude D630 notebook with an Intel(R) Core(TM)2 Duo T9500 chipset with 2.60GHz and used RAM of 3.49 GB.
+
+The simulations have been run only once. This does not deliver reliable performance measures, because system background processes can cover the real execution times. Normally, one would run simulations multiple times and take only the minimum execution times. But to get a rough impression of the dimensions, running one simulation should be sufficient for the purpose here. 
+
+\section{Motivation}
+\label{sec:Motivation}
+
+Some of the users of the RNetLogo package recognized, that the data transfer using functions like the \code{NLGetAgentSet} was very slow on large datasets/numbers of agents. Moreover, the processing time increased non-linear with an increasing number of datasets/agents. To make it possible to work also with large datasets/number of agents I systematically analyzed the problem and identified some reasons. This paper documents the problem analysis as well as shows how to resolve the bottleneck. It also show what have changed in RNetLogo 0.9.3 in the functions \code{NLGetAgentSet} and \code{NLGetPatches} especially regarding the return data types.
+
+\section{Changes in NLGetAgentSet and NLGetPatches}
+\label{sec:ChangesNLGetAgentSet}
+
+\subsection{Until RNetLogo 0.9.2}
+\label{sec:RNetLogo 0.9.2}
+
+The results shown in the following are produced using the Fireflies model from NetLogo's Model Library.
+This model is initialized with different number of flies (i.e. turtles). Afterwards the \code{NLGetAgentSet} function from the RNetLogo package is used to get variables from all flies/turtles from NetLogo into R. 
+
+With RNetLogo 0.9.2 there are two data type variants for the output of the \code{NLGetAgentSet} function available: an R list (default) and an R data.frame.
+
+The structure of the list is as follws: 
+In case of multiple requested agent variables: for each agent there is one list element. Each of these elements contain the requested agent variables in a vector.
+In case of just one requested agent variable: only a single vector with the values of the different agents instead of a list is returned.
+
+For example (using RNetLogo 0.9.2):
+<<test_data_092_A, eval=FALSE, echo=FALSE>>=
+library(RNetLogo)
+vers <- (packageDescription("RNetLogo")["Version"])
+
+nl.path <- "C:/Program Files/NetLogo 5.0"
+NLStart(nl.path, nl.version=5, gui=F)
+model.path <- "/models/Sample Models/Biology/Fireflies.nlogo"
+NLLoadModel(paste(nl.path, model.path, sep=""))
+NLCommand("set number 10")
+NLCommand("setup")
+
+test_t1 <- NLGetAgentSet("who", "turtles", as.data.frame=T, df.col.names=c("who"))
+test_t2 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles", as.data.frame=T, df.col.names=c("who", "xcor", "ycor"))
+
+test_t5 <- NLGetAgentSet("who", "turtles", as.data.frame=F)
+test_t6 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles", as.data.frame=F)
+  
+#NLQuit()
+@
+
+<<test_data_092_B, eval=FALSE, results=hide, echo=FALSE>>=
+save.image(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/testdata_RNetLogo092.RData")
+@
+
+<<list_example_RN092_A, results=hide, echo=FALSE>>=
+load("testdata_RNetLogo092.RData")
+@
+
+<<list_example_RN092_B, eval=FALSE>>=
+#RNetLogo version:
+print(vers)
+
+nl.path <- "C:/Program Files/NetLogo 5.0"
+NLStart(nl.path, nl.version=5, gui=F)
+model.path <- "/models/Sample Models/Biology/Fireflies.nlogo"
+NLLoadModel(paste(nl.path, model.path, sep=""))
+NLCommand("set number 10")
+NLCommand("setup")
+@
+
+<<list_example_RN092_vers, eval=TRUE, echo=TRUE>>=
+#RNetLogo version:
+print(vers)
+@
+
+<<list_example_RN092_C, eval=FALSE, echo=TRUE>>=
+# for only one agent variable it's just a vector
+test_t5 <- NLGetAgentSet("who", "turtles", as.data.frame=F)
+@
+<<list_example_RN092_D, eval=TRUE, echo=TRUE>>=
+str(test_t5)
+is.list(test_t5)
+@
+<<list_example_RN092_E, eval=FALSE, echo=TRUE>>=
+# for more than one agent variable it's a list
+# with one list element for each agent and a 
+# vector in each list element containing
+# the values of the requested agents variables
+test_t6 <- NLGetAgentSet(c("who", "xcor", "ycor"), 
+                         "turtles", as.data.frame=F)
+@
+<<list_example_RN092_F, eval=TRUE, echo=TRUE>>=
+str(test_t6)
+is.list(test_t6)
+@
+
+If we request a data.frame, we have to set the argument \code{as.data.frame} to \code{TRUE} and should submit the names for the data.frame columns in the agrument \code{df.col.names}. 
+
+If we request only one agent variable, again, just a single vector is returned.
+But if we request more than one agent variable a data.frame is constructed with the agent variables in the columns and the values of each agent in rows.
+
+For example:
+<<df_example_RN092_A, eval=FALSE, echo=TRUE>>=
+# for only one agent variable its just a vector
+test_t1 <- NLGetAgentSet("who", "turtles", as.data.frame=T, 
+                         df.col.names=c("who"))
+@
+<<df_example_RN092_B, eval=TRUE, echo=TRUE>>=
+str(test_t1)
+is.data.frame(test_t1)
+@
+<<df_example_RN092_C, eval=FALSE, echo=TRUE>>=
+# for more than one agent variable it's a data.frame
+# with agent variables in columns and 
+# one row for each agent
+test_t2 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles", 
+                         as.data.frame=T, df.col.names=c("who",
+                         "xcor", "ycor"))
+@
+<<df_example_RN092_D, eval=TRUE, echo=TRUE>>=
+str(test_t2)
+is.data.frame(test_t2)
+@
+
+This pattern is the same for the \code{NLGetPatches} function, since its functioning is equivalent to \code{NLGetAgentSet}.
+
+In the manual of RNetLogo 0.9.2 it was mentioned, that the data.frame variant is much faster when requesting more than one agent variable. 
+
+This is one of the reasons why I decided to change the default return value of \code{NLGetAgentSet}/ \code{NLGetPatches} in RNetLogo 0.9.3.
+
+\subsection{Since RNetLogo 0.9.3}
+\label{sec:RNetLogo 0.9.3}
+
+Since RNetLogo 0.9.3 the argument \code{df.col.names} isn't available anymore because the names of the requested agent variables are used as column names of the data.frame. This prevents mistankes in the order of variables and there names. If you want to replace these names just use R's \code{names} function.
+
+Because the data.frame is the default return type now, it means that the function argument \code{as.data.frame} is \code{TRUE} by default. This was done because the data.frame is the standard data type in R. But if we change \code{as.data.frame} to \code{FALSE} we are not getting the data structure as known from RNetLogo 0.9.2 but a list where the list elements are the agents variables (instead of the agents) and these list elements contain vectors with the values for the agents. Therefore, it is very similar to the data structure of the data.frame. The list elements are also named with the names of the agent variables. This new list structure is substantially faster created than the old one.  
+
+If you want to produce the default list structure known from RNetLogo 0.9.2 instead, you have to set a further argument called \code{agents.by.row} to \code{TRUE} in combination with setting \code{as.data.frame} to \code{FALSE}.  
+
+Since RNetLogo 0.9.3 you will always get the expected data type independent from the number of agent variables requested. In RNetLogo 0.9.2 we got a vector when we requested only one agent variable. Now, since RNetLogo 0.9.3, we are getting either a list or data.frame depending on what was requested. This new behavior will prevent unexpected return types for single agent requests. You will now consequently getting what you asked for.
+
+There is also the option to get a simple vector when requesting only one agent variable. Therefore, we have to set the function argument \code{as.vector} to \code{TRUE}. The result is equivalent to the output of RNetLogo 0.9.2 when requesting one agent variable independent from the requested output data type (see above). 
+
+Maybe it's more clear to see it with an example (using RNetLogo 0.9.3):
+<<test_data_093_A, eval=FALSE, echo=FALSE, results=hide>>=
+library(RNetLogo)
+vers <- (packageDescription("RNetLogo")["Version"])
+
+nl.path <- "C:/Program Files/NetLogo 5.0"
+NLStart(nl.path, nl.version=5, gui=F)
+model.path <- "/models/Sample Models/Biology/Fireflies.nlogo"
+NLLoadModel(paste(nl.path, model.path, sep=""))
+NLCommand("set number 10")
+NLCommand("setup")
+
+test_t1 <- NLGetAgentSet("who", "turtles")
+test_t2 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles")
+ 
+test_t3 <- NLGetAgentSet("who", "turtles", as.data.frame=F)
+test_t4 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles", as.data.frame=F)
+           
+test_t5 <- NLGetAgentSet("who", "turtles", as.data.frame=F, agents.by.row=T)
+test_t6 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles", as.data.frame=F, agents.by.row=T)
+
+test_t7 <- NLGetAgentSet("who", "turtles", as.vector=T)
+
+save.image(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/testdata_RNetLogo093.RData")
+
+#NLQuit()
+@
+
+<<list_example_RN093_A, results=hide, echo=FALSE>>=
+load("testdata_RNetLogo093.RData")
+@
+
+<<list_example_RN093_B, eval=FALSE>>=
+library(RNetLogo)
+vers <- (packageDescription("RNetLogo")["Version"])
+
+nl.path <- "C:/Program Files/NetLogo 5.0"
+NLStart(nl.path, nl.version=5, gui=F)
+model.path <- "/models/Sample Models/Biology/Fireflies.nlogo"
+NLLoadModel(paste(nl.path, model.path, sep=""))
+NLCommand("set number 10")
+NLCommand("setup")
+@
+
+<<list_example_RN093_vers, eval=TRUE, echo=TRUE>>=
+#RNetLogo version:
+print(vers)
+@
+
+<<list_example_RN093_C, eval=FALSE, echo=TRUE>>=
+# the equivalent to the RNetLogo 0.9.2 default:
+# the list variant for only one agent variable 
+# (but now as list not as vector)
+test_t5 <- NLGetAgentSet("who", "turtles", as.data.frame=F, agents.by.row=T)
+@
+<<list_example_RN093_D, eval=TRUE, echo=TRUE>>=
+str(test_t5)
+is.list(test_t5)
+@
+<<list_example_RN093_E, eval=FALSE, echo=TRUE>>=
+# for more than one agent variable 
+test_t6 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles", 
+                         as.data.frame=F, agents.by.row=T)
+@
+<<list_example_RN093_F, eval=TRUE, echo=TRUE>>=
+str(test_t6)
+is.list(test_t6)
+@
+
+<<df_example_RN093_A, eval=FALSE, echo=TRUE>>=
+# now the new default: the data.frame
+# it's a data.frame independent from 
+# the number of agent variables requested 
+test_t1 <- NLGetAgentSet("who", "turtles")
+@
+<<df_example_RN093_B, eval=TRUE, echo=TRUE>>=
+str(test_t1)
+is.data.frame(test_t1)
+@
+
+<<df_example_RN093_C, eval=FALSE, echo=TRUE>>=
+# with three agent variables:
+test_t2 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles")
+@
+<<df_example_RN093_D, eval=TRUE, echo=TRUE>>=
+str(test_t2)
+is.data.frame(test_t2)
+@
+
+<<newlist_example_RN093_A, eval=FALSE, echo=TRUE>>=
+# Next, the new list style (similar to the data.frame):
+test_t3 <- NLGetAgentSet("who", "turtles", as.data.frame=F)
+@
+<<newlist_example_RN093_B, eval=TRUE, echo=TRUE>>=
+str(test_t3)
+is.list(test_t3)
+@
+
+<<newlist_example_RN093_C, eval=FALSE, echo=TRUE>>=
+# for three agent variables:
+test_t4 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles", as.data.frame=F)
+@
+<<newlist_example_RN093_D, eval=TRUE, echo=TRUE>>=
+str(test_t4)
+is.list(test_t4)
+@
+
+<<vector_example_RN093_A, eval=FALSE, echo=TRUE>>=
+# the old data structure for one agent variable 
+# (a simple vector):
+test_t7 <- NLGetAgentSet("who", "turtles", as.vector=T)
+@
+
+<<vector_example_RN093_B, eval=TRUE, echo=TRUE>>=
+str(test_t7)
+is.list(test_t7)
+is.vector(test_t7)
+@
+
+
+Later on, we will have a look on the performance of the \code{NLGetAgentSet} function depending on the different output data structures.
+
+But first, we will look on the performance depending on the NetLogo version used in conjunction with RNetLogo. 
+
+\section{NetLogo dependent performance}
+\label{sec:NetLogo}
+
+\subsection{RNetLogo 0.9.2}
+\label{sec:NL_RNetLogo092}
+
+\subsubsection{NetLogo 4.1.3}
+\label{sec:NL413_RNetLogo092}
+
+In this section I will give you an impression of the performance of the \code{NLGetAgentSet} function in dependence of the NetLogo version used with RNetLogo.
+
+From postings on the NetLogo mailing list like this one: \url{http://groups.yahoo.com/group/netlogo-users/message/12919}, we know that the performance of list operations can be expected to be much better in NetLogo 5.0 than in NetLogo 4.1.2. As the NetLogo primitive \code{sort} is used in the background of the \code{NLGetAgentSet} function (as well as the \code{NLGetPatches} function), list operations are very important for the performance of this function.
+
+As support for NetLogo 4.0.x comes first with RNetLogo 0.9.3, we can only test NetLogo 4.1.x (here I will use 4.1.3) against NetLogo 5.0 with RNetLogo 0.9.2.
+
+Let us start with defining a function which sets up the Fireflies model and requests all flies with different number of agent variables (t1 \& t5: one variable; t2 \& t6: three variables) and different returning data types (t1 \& t2: data.frame; t5 \& t6: list). Then, we call this function with different numbers of flies (i.e. turtles) starting with 100 and multiplying it with 2 until 409.600 turtles.
+
+<<data_recording_092_413, eval=FALSE, echo=TRUE, results=hide>>=
+library(RNetLogo)
+vers <- (packageDescription("RNetLogo")["Version"])
+
+nl.path <- "C:/Program Files/NetLogo 4.1.3"
+NLStart(nl.path, nl.version=4, gui=F)
+model.path <- "/models/Sample Models/Biology/Fireflies.nlogo"
+NLLoadModel(paste(nl.path, model.path, sep=""))
+
+f_GetAgentSet <- function(x) {
+  NLCommand(paste("set number ",x,sep=""))
+  NLCommand("setup")
+            
+  t1 <- system.time(df_a_1 <- NLGetAgentSet("who", "turtles",as.data.frame=T,
+                                            df.col.names=c("who"))
+                    )[["user.self"]]
+  t2 <- system.time(df_a_3 <- NLGetAgentSet(c("who", "xcor", "ycor"), 
+                                            "turtles", as.data.frame=T, 
+                                            df.col.names=c("who", "xcor", "ycor"))
+                    )[["user.self"]]
+    
+  t5 <- system.time(li2_a_1 <- NLGetAgentSet("who", "turtles", 
+                                             as.data.frame=F)
+                    )[["user.self"]]
+  t6 <- system.time(li2_a_3 <- NLGetAgentSet(c("who", "xcor", "ycor"), 
+                                             "turtles", as.data.frame=F)
+                    )[["user.self"]]
+  return(data.frame(t1,t2,t5,t6))
+}
+
+it <- c(100,200,400,800,1600,3200,6400,12800,25600,51200,102400,204800,409600)
+times_092_NL413 <- lapply(it, function(x) {f_GetAgentSet(x)})
+#NLQuit()
+@
+<<label=data_recording_092_413_save, eval=FALSE, results=hide, echo=FALSE>>=
+save.image(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL413_RNetLogo092.RData")
+@
+<<load_data_recording_092_413, eval=TRUE, results=hide, echo=FALSE>>=
+load("NL413_RNetLogo092.RData")
+@
+
+The execution time for getting the agent variables within a plain list output (one list element for each agent) with one (t5) as well as three (t6) agent variables is shown in Figure~\ref{fig:plot_data_recording_092_413_t5}.
+
+<<label=plot_data_recording_092_413_t5, eval=TRUE, echo=FALSE, include=FALSE, fig=TRUE, height=6, width=9>>=
+par.default <- par(no.readonly = TRUE)
+par(mfrow = c(1, 2), mar = c(1, 1, 1, 1), cex = 1.3)
+par(mar = c(3.5, 3.5, 0.5, 0.5))
+par(xpd = T)
+plot(it,sapply(times_092_NL413, function(x) x$t5), ylab="", xlab="", type="o")
+title(ylab = "time [sec.]", mgp = c(2.2, 0, 0))
+title(xlab = "no. turtles", mgp= c(2.2, 0, 0)) 
+plot(it,sapply(times_092_NL413, function(x) x$t6), ylab="", xlab="", type="o")
+title(ylab = "time [sec.]", mgp = c(2.2, 0, 0))
+title(xlab = "no. turtles", mgp= c(2.2, 0, 0)) 
+par(par.default)
+@
+
+\begin{figure}
+  \centering
+\includegraphics[width=0.7\textwidth]{./images/-plot_data_recording_092_413_t5} \hfill
+  \caption{Execution time of \code{NLGetAgentSet} with list output for different number of turtles using RNetLogo 0.9.2 and NetLogo 4.1.3. Left: one agent variable, Right: three agent variables requested.}
+  \label{fig:plot_data_recording_092_413_t5}
+\end{figure}
+
+We see that the execution time increases more than linearly with an increasing number of turtles in both cases.
+
+Now, we will have a look on the performance of the same procedure but with the data.frame as return type shown in Figure~\ref{fig:plot_data_recording_092_413_t1}.
+
+<<label=plot_data_recording_092_413_t1, eval=TRUE, echo=FALSE, include=FALSE, fig=TRUE, height=6, width=9>>=
+par.default <- par(no.readonly = TRUE)
+par(mfrow = c(1, 2), mar = c(1, 1, 1, 1), cex = 1.3)
+par(mar = c(3.5, 3.5, 0.5, 0.5))
+par(xpd = T)
+plot(it,sapply(times_092_NL413, function(x) x$t1), ylab="", xlab="", type="o")
+title(ylab = "time [sec.]", mgp = c(2.2, 0, 0))
+title(xlab = "no. turtles", mgp= c(2.2, 0, 0)) 
+plot(it,sapply(times_092_NL413, function(x) x$t2), ylab="", xlab="", type="o")
+title(ylab = "time [sec.]", mgp = c(2.2, 0, 0))
+title(xlab = "no. turtles", mgp= c(2.2, 0, 0)) 
+par(par.default)
+@
+
+\begin{figure}
+  \centering
+\includegraphics[width=0.7\textwidth]{./images/-plot_data_recording_092_413_t1} \hfill
+  \caption{Execution time of \code{NLGetAgentSet} with data.frame output for different number of turtles using RNetLogo 0.9.2 and NetLogo 4.1.3. Left: one agent variable, Right: three agent variables requested.}
+  \label{fig:plot_data_recording_092_413_t1}
+\end{figure}
+
+We see that the pattern is the same as with the list output type. 
+The data.frame output type with one requested agent variable (t1) is in all cases slightly slower than the list output type. The opposite is true when three agent variables are requested (t2 vs. t6) with an exception for the last step (409.600 turtles). 
+
+\subsubsection{NetLogo 5.0}
+\label{sec:NL50_RNetLogo092}
+
+Now, let us do the same with NetLogo 5.0. 
+
+<<load_data_recording_092_50, eval=TRUE, results=hide, echo=FALSE>>=
+load("NL50_RNetLogo092.RData")
+@
+
+The execution times for producing the plain list output (one list element for each agent) with one (t5) as well as three (t6) agent variables is given in Figure~\ref{fig:plot_data_recording_092_50_t5}.
+Maybe you wonder why the execution time can be higher for smaller agentsets. If you have some experiences with NetLogo you may have seen that execution time of NetLogo strongly varies (partly due to system background process but also due to NetLogo internals). 
+Because the execution times are very small now, we can see these variations in the plots which have been covered before by the extrem long (and increasing) operation time.
+
+<<label=plot_data_recording_092_50_t5, eval=TRUE, echo=FALSE, include=FALSE, fig=TRUE, height=6, width=9>>=
+par.default <- par(no.readonly = TRUE)
+par(mfrow = c(1, 2), mar = c(1, 1, 1, 1), cex = 1.3)
+par(mar = c(3.5, 3.5, 0.5, 0.5))
+par(xpd = T)
+plot(it,sapply(times_092_NL5, function(x) x$t5), ylab="", xlab="", type="o")
+title(ylab = "time [sec.]", mgp = c(2.2, 0, 0))
+title(xlab = "no. turtles", mgp= c(2.2, 0, 0)) 
+plot(it,sapply(times_092_NL5, function(x) x$t6), ylab="", xlab="", type="o")
+title(ylab = "time [sec.]", mgp = c(2.2, 0, 0))
+title(xlab = "no. turtles", mgp= c(2.2, 0, 0)) 
+par(par.default)
+@
+
+\begin{figure}
+  \centering
+\includegraphics[width=0.7\textwidth]{./images/-plot_data_recording_092_50_t5} \hfill
+  \caption{Execution time of \code{NLGetAgentSet} with list output for different number of turtles using RNetLogo 0.9.2 and NetLogo 5.0. Left: one agent variable, Right: three agent variables requested.}
+  \label{fig:plot_data_recording_092_50_t5}
+\end{figure}
+
+Let us have also a look on the results for the data.frame output type shown in Figure~\ref{fig:plot_data_recording_092_50_t1}.
+
+<<label=plot_data_recording_092_50_t1, eval=TRUE, echo=FALSE, include=FALSE, fig=TRUE, height=6, width=9>>=
+par.default <- par(no.readonly = TRUE)
+par(mfrow = c(1, 2), mar = c(1, 1, 1, 1), cex = 1.3)
+par(mar = c(3.5, 3.5, 0.5, 0.5))
+par(xpd = T)
+plot(it,sapply(times_092_NL5, function(x) x$t1), ylab="", xlab="", type="o")
+title(ylab = "time [sec.]", mgp = c(2.2, 0, 0))
+title(xlab = "no. turtles", mgp= c(2.2, 0, 0)) 
+plot(it,sapply(times_092_NL5, function(x) x$t2), ylab="", xlab="", type="o")
+title(ylab = "time [sec.]", mgp = c(2.2, 0, 0))
+title(xlab = "no. turtles", mgp= c(2.2, 0, 0)) 
+par(par.default)
+@
+
+\begin{figure}
+  \centering
+\includegraphics[width=0.7\textwidth]{./images/-plot_data_recording_092_50_t1} \hfill
+  \caption{Execution time of \code{NLGetAgentSet} with data.frame output for different number of turtles using RNetLogo 0.9.2 and NetLogo 5.0. Left: one agent variable, Right: three agent variables requested.}
+  \label{fig:plot_data_recording_092_50_t1}
+\end{figure}
+
+
+All in all, we see an extrem large reduction of the exection time by just switching from NetLogo 4.1.3 to NetLogo 5.0. For example, transforming 409.600 turtles with three agent variables into a data.frame, the execution time reduced from approximatly 4495 seconds to only 8.46 seconds, which is a reduction of more than 530 times! 
+This is the reason, why NetLogo 5.0 is the default version since RNetLogo 0.9.3 (argument \code{nl.version} in \code{NLStart}).
+
+But, even this performance can be improved as you can see when switching to RNetLogo 0.9.3.
+
+\subsection{RNetLogo 0.9.3}
+\label{sec:NL_RNetLogo093}
+
+\subsubsection{NetLogo 5.0}
+\label{sec:NL50_RNetLogo093}
+
+Let us start with NetLogo 5.0, as we know, this is the most interesting version. At the end, we will have a short look on the comparison with NetLogo 4.1.3 and NetLogo 4.0.5.
+
+As mentioned above, RNetLogo 0.9.3 offers three output types. 
+The classical list output where the list elements represent the agents (which was the default until RNetLogo 0.9.2), the new list style where each list element represent an agent variable (the fastest variant for requesting multiple agent variables), 
+and the data.frame where each agent variable is represented in a column and each agent is represented by a row (the default in NetLogo 0.9.3). 
+
+Here is the defintion of the function to iterate through different numbers of turtles:
+<<data_recording_093_50_A, eval=FALSE, echo=TRUE, results=hide>>=
+library(RNetLogo)
+vers <- (packageDescription("RNetLogo")["Version"])
+
+nl.path <- "C:/Program Files/NetLogo 5.0"
+NLStart(nl.path, nl.version=5, gui=F)
+model.path <- "/models/Sample Models/Biology/Fireflies.nlogo"
+NLLoadModel(paste(nl.path, model.path, sep=""))
+
+f_GetAgentSet <- function(x) {
+  NLCommand(paste("set number ",x,sep=""))
+  NLCommand("setup")
+            
+  t1 <- system.time(df_a_1 <- NLGetAgentSet("who", "turtles")
+                    )[["user.self"]]
+  t2 <- system.time(df_a_3 <- NLGetAgentSet(c("who", "xcor", "ycor"),
+                                            "turtles")
+                    )[["user.self"]]
+  
+  t3 <- system.time(li_a_1 <- NLGetAgentSet("who", "turtles",
+                                            as.data.frame=F)
+                    )[["user.self"]]
+  t4 <- system.time(li_a_3 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles",
+                                            as.data.frame=F)
+                    )[["user.self"]]
+  
+  t5 <- system.time(li2_a_1 <- NLGetAgentSet("who", "turtles", as.data.frame=F,
+                                             agents.by.row=T)
+                    )[["user.self"]]
+  t6 <- system.time(li2_a_3 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles",
+                                             as.data.frame=F, 
+                                             agents.by.row=T)
+                    )[["user.self"]]
+
+  t7 <- system.time(ve_a_1 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles",
+                                             as.vector=T)
+                    )[["user.self"]]
+  return(data.frame(t1,t2,t3,t4,t5,t6,t7))
+}
+
+it <- c(100,200,400,800,1600,3200,6400,12800,25600,51200,102400,204800,409600)
+times_093_NL5 <- lapply(it, function(x) {f_GetAgentSet(x)})
+
+#NLQuit()
+@
+
+Let us start with a comparison of the performance of the three different output types for requesting one agent variable as shown in Figure~\ref{fig:plot_data_recording_093_50_1av}.
+
+<<load_data_recording_093_50, eval=TRUE, results=hide, echo=FALSE>>=
+load("NL50_RNetLogo093.RData")
+@
+
+<<label=plot_data_recording_093_50_1av, eval=TRUE, echo=FALSE, include=FALSE, fig=TRUE, height=6, width=15>>=
+par.default <- par(no.readonly = TRUE)
+par(mfrow = c(1, 4), mar = c(1, 1, 1, 1), cex = 1.3)
+par(mar = c(3.5, 3.5, 0.5, 0.5))
+par(xpd = T)
+plot(it,sapply(times_093_NL5, function(x) x$t7), ylab="", xlab="", type="o")
+title(ylab = "time [sec.]", mgp = c(2.2, 0, 0))
+title(xlab = "no. turtles", mgp= c(2.2, 0, 0)) 
+plot(it,sapply(times_093_NL5, function(x) x$t5), ylab="", xlab="", type="o")
+title(ylab = "time [sec.]", mgp = c(2.2, 0, 0))
+title(xlab = "no. turtles", mgp= c(2.2, 0, 0)) 
+plot(it,sapply(times_093_NL5, function(x) x$t1), ylab="", xlab="", type="o")
+title(ylab = "time [sec.]", mgp = c(2.2, 0, 0))
+title(xlab = "no. turtles", mgp= c(2.2, 0, 0)) 
+plot(it,sapply(times_093_NL5, function(x) x$t3), ylab="", xlab="", type="o")
+title(ylab = "time [sec.]", mgp = c(2.2, 0, 0))
+title(xlab = "no. turtles", mgp= c(2.2, 0, 0)) 
+par(par.default)
+@
+
+\begin{figure}
+  \centering
+\includegraphics[width=1.0\textwidth]{./images/-plot_data_recording_093_50_1av} \hfill
+  \caption{Execution time of \code{NLGetAgentSet} with one requested agent variable for different number of turtles using RNetLogo 0.9.3 and NetLogo 5.0. Left: simple vector, Second from left: old list style, Second from right: data.frame, Right: new list style.}
+  \label{fig:plot_data_recording_093_50_1av}
+\end{figure}
+
+We see, that the execution times for the old list style (which was the default in RNetLogo <= 0.9.2) are larger than in RNetLogo 0.9.2. 
+The explanation for this is very easy: the old RNetLogo version returned just a vector when the user requested only one agent variable while the new version constructs the requested list which is more logical but takes more time. 
+The same is true for the data.frame construction. Furthermore, we see that the new list style is not faster than the data.frame construction when requesting only one agent variable.
+
+But this conclusion changes when we look on the execution times for three agent variables (Figure~\ref{fig:plot_data_recording_093_50_3av}). 
+
+<<label=plot_data_recording_093_50_3av, eval=TRUE, echo=FALSE, include=FALSE, fig=TRUE, height=6, width=13.5>>=
+par.default <- par(no.readonly = TRUE)
+par(mfrow = c(1, 3), mar = c(1, 1, 1, 1), cex = 1.3)
+par(mar = c(3.5, 3.5, 0.5, 0.5))
+par(xpd = T)
+plot(it,sapply(times_093_NL5, function(x) x$t6), ylab="", xlab="", type="o")
+title(ylab = "time [sec.]", mgp = c(2.2, 0, 0))
+title(xlab = "no. turtles", mgp= c(2.2, 0, 0)) 
+plot(it,sapply(times_093_NL5, function(x) x$t2), ylab="", xlab="", type="o")
+title(ylab = "time [sec.]", mgp = c(2.2, 0, 0))
+title(xlab = "no. turtles", mgp= c(2.2, 0, 0)) 
+plot(it,sapply(times_093_NL5, function(x) x$t4), ylab="", xlab="", type="o")
+title(ylab = "time [sec.]", mgp = c(2.2, 0, 0))
+title(xlab = "no. turtles", mgp= c(2.2, 0, 0)) 
+par(par.default)
+@
+
+\begin{figure}
+  \centering
+\includegraphics[width=0.9\textwidth]{./images/-plot_data_recording_093_50_3av} \hfill
+  \caption{Execution time of \code{NLGetAgentSet} with three requested agent variables for different number of turtles using RNetLogo 0.9.3 and NetLogo 5.0. Left: old list style, Middle: data.frame Right: new list style.}
+  \label{fig:plot_data_recording_093_50_3av}
+\end{figure}
+
+The time for requesting three agent variables in the old list style takes approximatly the same time with RNetLogo 0.9.3 as with the old version. But the performance of the data.frame is much better than with the old version when requesting more than one agent variable. For 409.600 turtles with three variables it took approximatly 8.46 seconds with RNetLogo 0.9.2 and now, with RNetLogo 0.9.3, it takes approximatly 1.26 seconds, which is a reduction of more than six times. Furthermore, we see that the new list style is even slightly faster than the data.frame with only 0.7 seconds for 409.600 turtles with three variables (i.e. the transformation of 1.228.800 values!).
+
+\subsubsection{NetLogo 5.0 vs. 4.1.3 vs. 4.0.5}
+\label{sec:NL405_RNetLogo093}
+
+Just for interest, we will compare also the performance of NetLogo 4.1.3 with the one of NetLogo 4.0.5, which is possible since RNetLogo 0.9.3, as well as with NetLogo 5.0.
+
+<<load_data_recording_093_405, eval=TRUE, results=hide, echo=FALSE>>=
+load("NL405_RNetLogo093.RData")
+load("NL413_RNetLogo093.RData")
+load("NL50_RNetLogo093.RData")
+@
+
+The results for only one agent variable are shown in Figure~\ref{fig:plot_data_recording_093_405_1av} 
+and the results for requesting three agent variables are given in Figure~\ref{fig:plot_data_recording_093_405_3av}.
+
+<<label=plot_data_recording_093_405_1av, eval=TRUE, echo=FALSE, include=FALSE, fig=TRUE, height=6, width=13.5>>=
+par.default <- par(no.readonly = TRUE)
+par(mfrow = c(1, 3), mar = c(1, 1, 1, 1), cex = 1.3)
+par(mar = c(3.5, 3.5, 0.5, 0.5))
+par(xpd = T)
+plot(it,sapply(times_093_NL413, function(x) x$t5), ylab="", xlab="", type="o", pch=1)
+lines(it,sapply(times_093_NL405, function(x) x$t5), type="o", pch=2)
+lines(it,sapply(times_093_NL5, function(x) x$t5), type="o", pch=3)
+title(ylab = "time [sec.]", mgp = c(2.2, 0, 0))
+title(xlab = "no. turtles", mgp= c(2.2, 0, 0)) 
+plot(it,sapply(times_093_NL413, function(x) x$t1), ylab="", xlab="", type="o", pch=1)
+lines(it,sapply(times_093_NL405, function(x) x$t1), type="o", pch=2)
+lines(it,sapply(times_093_NL5, function(x) x$t1), type="o", pch=3)
+title(ylab = "time [sec.]", mgp = c(2.2, 0, 0))
+title(xlab = "no. turtles", mgp= c(2.2, 0, 0)) 
+plot(it,sapply(times_093_NL413, function(x) x$t3), ylab="", xlab="", type="o", pch=1)
+lines(it,sapply(times_093_NL405, function(x) x$t3), ylab="", xlab="", type="o", pch=2)
+lines(it,sapply(times_093_NL5, function(x) x$t3), ylab="", xlab="", type="o", pch=3)
+title(ylab = "time [sec.]", mgp = c(2.2, 0, 0))
+title(xlab = "no. turtles", mgp= c(2.2, 0, 0)) 
+par(par.default)
+@
+
+\begin{figure}
+  \centering
+\includegraphics[width=0.9\textwidth]{./images/-plot_data_recording_093_405_1av} \hfill
+  \caption{Execution time of \code{NLGetAgentSet} with one requested agent variable for different number of turtles using RNetLogo 0.9.3 and NetLogo 4.0.5 (dots), 4.1.3 (triangle), and 5.0 (plus). Left: old list style, Middle: data.frame Right: new list style.}
+  \label{fig:plot_data_recording_093_405_1av}
+\end{figure}
+
+
+<<label=plot_data_recording_093_405_3av, eval=TRUE, echo=FALSE, include=FALSE, fig=TRUE, height=6, width=13.5>>=
+par.default <- par(no.readonly = TRUE)
+par(mfrow = c(1, 3), mar = c(1, 1, 1, 1), cex = 1.3)
+par(mar = c(3.5, 3.5, 0.5, 0.5))
+par(xpd = T)
+plot(it,sapply(times_093_NL413, function(x) x$t6), ylab="", xlab="", type="o", pch=1)
+lines(it,sapply(times_093_NL405, function(x) x$t6), type="o", pch=2)
+lines(it,sapply(times_093_NL5, function(x) x$t6), type="o", pch=3)
+title(ylab = "time [sec.]", mgp = c(2.2, 0, 0))
+title(xlab = "no. turtles", mgp= c(2.2, 0, 0)) 
+plot(it,sapply(times_093_NL413, function(x) x$t2), ylab="", xlab="", type="o", pch=1)
+lines(it,sapply(times_093_NL405, function(x) x$t2), type="o", pch=2)
+lines(it,sapply(times_093_NL5, function(x) x$t2), type="o", pch=3)
+title(ylab = "time [sec.]", mgp = c(2.2, 0, 0))
+title(xlab = "no. turtles", mgp= c(2.2, 0, 0)) 
+plot(it,sapply(times_093_NL413, function(x) x$t4), ylab="", xlab="", type="o", pch=1)
+lines(it,sapply(times_093_NL405, function(x) x$t4), ylab="", xlab="", type="o", pch=2)
+lines(it,sapply(times_093_NL5, function(x) x$t4), ylab="", xlab="", type="o", pch=3)
+title(ylab = "time [sec.]", mgp = c(2.2, 0, 0))
+title(xlab = "no. turtles", mgp= c(2.2, 0, 0)) 
+par(par.default)
+@
+
+\begin{figure}
+  \centering
+\includegraphics[width=0.9\textwidth]{./images/-plot_data_recording_093_405_3av} \hfill
+  \caption{Execution time of \code{NLGetAgentSet} with three requested agent variables for different number of turtles using RNetLogo 0.9.3 and NetLogo 4.0.5 (dots), 4.1.3 (triangle), and 5.0 (plus). Left: old list style, Middle: data.frame Right: new list style.}
+  \label{fig:plot_data_recording_093_405_3av}
+\end{figure}
+
+
+In (nearly) all cases, NetLogo 4.0.5 performs better than NetLogo 4.1.3 but it is also far behind NetLogo 5.0.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+We have seen that, whenever possible, NetLogo 5.0 should be prefered over NetLogo 4.x. The performance of \code{NLGetAgentSet} is substantially better with NetLogo 5.0. These results are representive for other operations/functions.
+Furthermore, RNetLogo 0.9.3 performs better than older versions when requesting more than one agent variable with the \code{NLGetAgentSet} or \code{NLGetPatches} functions. The old list style should be avoided. 
+The data.frame is now the default return type and performs well. But if it is sufficient to proceed with a list, the new list style is even faster than the data.frame and should be prefered.
+
+With NetLogo 5.0 and RNetLogo 0.9.3, in most cases the data transformation from NetLogo to R should be fast enough even for requesting large numbers of turtles or patches. 
+To get three agent variables for 409.600 turtles (i.e. 1.228.800 values) from NetLogo into R took in the example only 1.26 seconds for a data.frame and 0.7 seconds for the new list style.
+The setup procedure in the Fireflies model in pure NetLogo (without using RNetLogo and switching off the visual update) with 409.600 turtles took for example approximatly 61 seconds 
+and the execution of one simulation step (go procedure) with this number of turtles took approximatly 80 seconds. 
+In conclusion, I think you will find RNetLogo isn't a bottleneck.
+
+
+%XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+%XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+%XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+%XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+%XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+
+% run this stuff with
+% RNetLogo 0.9.2: 
+%                 NetLogo 4.0.5
+%                 NetLogo 4.1.3
+%                 NetLogo 5.0
+%
+% RNetLogo 0.9.3: 
+%                 NetLogo 4.0.5
+%                 NetLogo 4.1.3
+%                 NetLogo 5.0
+
+
+<<data_recording_093_50_A, eval=FALSE, echo=FALSE, results=hide>>=
+library(RNetLogo)
+vers <- (packageDescription("RNetLogo")["Version"])
+
+nl.path <- "C:/Program Files/NetLogo 5.0"
+NLStart(nl.path, nl.version=5, gui=F)
+model.path <- "/models/Sample Models/Biology/Fireflies.nlogo"
+NLLoadModel(paste(nl.path, model.path, sep=""))
+
+f_GetAgentSet <- function(x) {
+  NLCommand(paste("set number ",x,sep=""))
+  NLCommand("setup")
+            
+  t1 <- system.time(df_a_1 <- NLGetAgentSet("who", "turtles"))[["user.self"]]
+  t2 <- system.time(df_a_3 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles"))[["user.self"]]
+  
+  t3 <- system.time(li_a_1 <- NLGetAgentSet("who", "turtles", as.data.frame=F))[["user.self"]]
+  t4 <- system.time(li_a_3 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles", as.data.frame=F))[["user.self"]]
+  
+  t5 <- system.time(li2_a_1 <- NLGetAgentSet("who", "turtles", as.data.frame=F, agents.by.row=T))[["user.self"]]
+  t6 <- system.time(li2_a_3 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles", as.data.frame=F, agents.by.row=T))[["user.self"]]
+  
+  t7 <- system.time(ve_a_1 <- NLGetAgentSet("who", "turtles", as.data.frame=F, agents.by.row=F, as.vector=T))[["user.self"]]
+  
+  return(data.frame(t1,t2,t3,t4,t5,t6,t7))
+}
+
+it <- c(100,200,400,800,1600,3200,6400,12800,25600,51200,102400,204800,409600)
+times_093_NL5 <- lapply(it, function(x) {f_GetAgentSet(x)})
+
+NLQuit()
+@
+
+<<data_recording_093_50_B, eval=FALSE, echo=FALSE, results=hide>>=
+save.image(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL50_RNetLogo093.RData")
+@
+
+
+<<data_recording_093_413, eval=FALSE, echo=FALSE, results=hide>>=
+library(RNetLogo)
+vers <- (packageDescription("RNetLogo")["Version"])
+
+nl.path <- "C:/Program Files/NetLogo 4.1.3"
+NLStart(nl.path, nl.version=4, gui=F)
+model.path <- "/models/Sample Models/Biology/Fireflies.nlogo"
+NLLoadModel(paste(nl.path, model.path, sep=""))
+
+f_GetAgentSet <- function(x) {
+  NLCommand(paste("set number ",x,sep=""))
+  NLCommand("setup")
+  t1 <- system.time(df_a_1 <- NLGetAgentSet("who", "turtles"))[["user.self"]]
+  t2 <- system.time(df_a_3 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles"))[["user.self"]]
+  
+  t3 <- system.time(li_a_1 <- NLGetAgentSet("who", "turtles", as.data.frame=F))[["user.self"]]
+  t4 <- system.time(li_a_3 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles", as.data.frame=F))[["user.self"]]
+  
+  t5 <- system.time(li2_a_1 <- NLGetAgentSet("who", "turtles", as.data.frame=F, agents.by.row=T))[["user.self"]]
+  t6 <- system.time(li2_a_3 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles", as.data.frame=F, agents.by.row=T))[["user.self"]]
+  return(data.frame(t1,t2,t3,t4,t5,t6))
+}
+
+it <- c(100,200,400,800,1600,3200,6400,12800,25600,51200,102400,204800,409600)
+times_093_NL413 <- lapply(it, function(x) {f_GetAgentSet(x)})
+save.image(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL413_RNetLogo093.RData")
+
+#NLQuit()
+@
+
+
+<<data_recording_093_405, eval=FALSE, echo=FALSE, results=hide>>=
+library(RNetLogo)
+vers <- (packageDescription("RNetLogo")["Version"])
+
+nl.path <- "C:/Program Files/NetLogo 4.0.5"
+NLStart(nl.path, nl.version=40, gui=F)
+model.path <- "/models/Sample Models/Biology/Fireflies.nlogo"
+NLLoadModel(paste(nl.path, model.path, sep=""))
+
+f_GetAgentSet <- function(x) {
+  NLCommand(paste("set number ",x,sep=""))
+  NLCommand("setup")
+  t1 <- system.time(df_a_1 <- NLGetAgentSet("who", "turtles"))[["user.self"]]
+  t2 <- system.time(df_a_3 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles"))[["user.self"]]
+  
+  t3 <- system.time(li_a_1 <- NLGetAgentSet("who", "turtles", as.data.frame=F))[["user.self"]]
+  t4 <- system.time(li_a_3 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles", as.data.frame=F))[["user.self"]]
+  
+  t5 <- system.time(li2_a_1 <- NLGetAgentSet("who", "turtles", as.data.frame=F, agents.by.row=T))[["user.self"]]
+  t6 <- system.time(li2_a_3 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles", as.data.frame=F, agents.by.row=T))[["user.self"]]
+  return(data.frame(t1,t2,t3,t4,t5,t6))
+}
+
+it <- c(100,200,400,800,1600,3200,6400,12800,25600,51200,102400,204800,409600)
+times_093_NL405 <- lapply(it, function(x) {f_GetAgentSet(x)})
+save.image(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL405_RNetLogo093.RData")
+
+#NLQuit()
+@
+
+
+
+<<data_recording_092_50, eval=FALSE, echo=FALSE, results=hide>>=
+library(RNetLogo)
+vers <- (packageDescription("RNetLogo")["Version"])
+
+nl.path <- "C:/Program Files/NetLogo 5.0"
+NLStart(nl.path, nl.version=5, gui=F)
+model.path <- "/models/Sample Models/Biology/Fireflies.nlogo"
+NLLoadModel(paste(nl.path, model.path, sep=""))
+
+f_GetAgentSet <- function(x) {
+  NLCommand(paste("set number ",x,sep=""))
+  NLCommand("setup")
+            
+  t1 <- system.time(df_a_1 <- NLGetAgentSet("who", "turtles",as.data.frame=T,df.col.names=c("who")))[["user.self"]]
+  t2 <- system.time(df_a_3 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles", as.data.frame=T, df.col.names=c("who", "xcor", "ycor")))[["user.self"]]
+  
+  t5 <- system.time(li2_a_1 <- NLGetAgentSet("who", "turtles", as.data.frame=F))[["user.self"]]
+  t6 <- system.time(li2_a_3 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles", as.data.frame=F))[["user.self"]]
+  return(data.frame(t1,t2,t5,t6))
+}
+
+it <- c(100,200,400,800,1600,3200,6400,12800,25600,51200,102400,204800,409600)
+times_092_NL5 <- lapply(it, function(x) {f_GetAgentSet(x)})
+save.image(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL50_RNetLogo092.RData")
+
+#NLQuit()
+@
+
+<<data_recording_092_413, eval=FALSE, echo=FALSE, results=hide>>=
+library(RNetLogo)
+vers <- (packageDescription("RNetLogo")["Version"])
+
+nl.path <- "C:/Program Files/NetLogo 4.1.3"
+NLStart(nl.path, nl.version=4, gui=F)
+model.path <- "/models/Sample Models/Biology/Fireflies.nlogo"
+NLLoadModel(paste(nl.path, model.path, sep=""))
+
+f_GetAgentSet <- function(x) {
+  NLCommand(paste("set number ",x,sep=""))
+  NLCommand("setup")
+            
+  t1 <- system.time(df_a_1 <- NLGetAgentSet("who", "turtles",as.data.frame=T,df.col.names=c("who")))[["user.self"]]
+  t2 <- system.time(df_a_3 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles", as.data.frame=T, df.col.names=c("who", "xcor", "ycor")))[["user.self"]]
+    
+  t5 <- system.time(li2_a_1 <- NLGetAgentSet("who", "turtles", as.data.frame=F))[["user.self"]]
+  t6 <- system.time(li2_a_3 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles", as.data.frame=F))[["user.self"]]
+  return(data.frame(t1,t2,t5,t6))
+}
+
+it <- c(100,200,400,800,1600,3200,6400,12800,25600,51200,102400,204800,409600)
+times_092_NL413 <- lapply(it, function(x) {f_GetAgentSet(x)})
+save.image(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL413_RNetLogo092.RData")
+
+#NLQuit()
+@
+
+
+
+<<all_together, eval=FALSE, echo=FALSE, results=hide>>=
+load(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL50_RNetLogo093.RData")
+load(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL413_RNetLogo093.RData")
+load(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL405_RNetLogo093.RData")
+
+load(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL50_RNetLogo092.RData")
+load(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL413_RNetLogo092.RData")
+
+t1_RN093_NL5 <- sapply(times_093_NL5, function(x) x$t1)
+t2_RN093_NL5 <- sapply(times_093_NL5, function(x) x$t2)
+t3_RN093_NL5 <- sapply(times_093_NL5, function(x) x$t3)
+t4_RN093_NL5 <- sapply(times_093_NL5, function(x) x$t4)
+t5_RN093_NL5 <- sapply(times_093_NL5, function(x) x$t5)
+t6_RN093_NL5 <- sapply(times_093_NL5, function(x) x$t6)
+
+t1_RN092_NL5 <- sapply(times_092_NL5, function(x) x$t1)
+t2_RN092_NL5 <- sapply(times_092_NL5, function(x) x$t2)
+t5_RN092_NL5 <- sapply(times_092_NL5, function(x) x$t5)
+t6_RN092_NL5 <- sapply(times_092_NL5, function(x) x$t6)
+
+@
+
+
+
+\section*{Acknowledgement}
+Thanks go to Florian Hartig (UFZ - Helmholtz Centre for Environmental Research, Leipzig) and Thomas Petzold (University of Dresden) who found it took very long to transform large agentsets and motivated me to look closer on this topic. Furthermore, Florian made some valueable notes on this manuscript.   
+
+\end{document}

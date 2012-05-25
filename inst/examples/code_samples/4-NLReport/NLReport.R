@@ -1,12 +1,12 @@
 library(RNetLogo)
 
 # PLEASE FILL IN THE PATH TO YOUR NetLogo INSTALLATION FOLDER !!!!
-path.to.NetLogo <- "C:/Program Files/NetLogo 4.1.2"
+path.to.NetLogo <- "C:/Program Files/NetLogo 5.0"
 
 # start NetLogo, if it is not started yet
 if (!exists("nl.test1", -1)) 
 {
-  NLStart(path.to.NetLogo, nl.version=4, obj.name="nl.test1")
+  NLStart(path.to.NetLogo, nl.version=5, obj.name="nl.test1")
 }
 
 # load a sample model

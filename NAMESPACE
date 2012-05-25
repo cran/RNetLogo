@@ -3,4 +3,4 @@ importFrom("rJava", ".jarray", ".jcall", ".jevalArray",
 
 export("NLStart", "NLLoadModel", "NLSourceFromString", "NLCommand", "NLDoCommand", 
 	 "NLDoCommandWhile", "NLReport", "NLDoReport", "NLDoReportWhile", 
-	 "NLGetPatches", "NLSetPatches", "NLGetAgentSet", "NLGetGraph", "NLDfToList", "NLQuit")
+	 "NLGetPatches", "NLSetPatches", "NLSetAgentSet", "NLGetAgentSet", "NLGetGraph", "NLDfToList", "NLQuit")

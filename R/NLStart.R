@@ -1,5 +1,5 @@
 NLStart <-
-function(nl.path, gui=TRUE, obj.name=NULL, nl.version=4, is3d=FALSE)
+function(nl.path, gui=TRUE, obj.name=NULL, nl.version=5, is3d=FALSE)
 {
     # get RNetLogo jar corresponding to NetLogo version
     localjar <- 'RNetLogov4.jar'
@@ -7,6 +7,10 @@ function(nl.path, gui=TRUE, obj.name=NULL, nl.version=4, is3d=FALSE)
     {
       localjar <- 'RNetLogov5.jar'
     }
+    else if (nl.version==40)
+    {
+      localjar <- 'RNetLogov40.jar'
+    }  
     
     # check for 3D/2D session
     if (.rnetlogo$nl3d == -1)
@@ -58,23 +62,29 @@ function(nl.path, gui=TRUE, obj.name=NULL, nl.version=4, is3d=FALSE)
         }
   	)
 	}
-	else
-	{
-    if (nl.version == 5)
-    {
+	else if (nl.version == 40)
+  {
+      nlo <- tryCatch(
+    			.jnew("nlcon/NLink_v40",.jnew("java/lang/Boolean",gui),.jnew("java/lang/Boolean",is3d),.jnew("java/lang/String",.rnetlogo$savedworkingdir[2])),
+    			error = function(e) {
+    				e$printStackTrace()
+          }
+    	)	
+  } 
+	else if (nl.version == 5)
+  {
       nlo <- tryCatch(
     			.jnew("nlcon/NLink_v5",.jnew("java/lang/Boolean",gui),.jnew("java/lang/Boolean",is3d),.jnew("java/lang/String",.rnetlogo$savedworkingdir[2])),
     			error = function(e) {
     				e$printStackTrace()
           }
     	)	
-    } 
-    else 
-    {
-       print("NetLogo version number unknown. Supported versions are 4 and 5.")
-      stop()
-    }
-	}
+  } 
+  else 
+  {
+    print("NetLogo version number unknown. Supported versions are 4 and 5.")
+    stop()
+  }
 	
 	if (obj.name == "nl.intern")
 	{

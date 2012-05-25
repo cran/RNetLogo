@@ -48,8 +48,8 @@ If you made experiences with the package on Mac, please let me know.
 \examples{
 \dontrun{
 library(RNetLogo)
-nl.path <- "C:/Program Files/NetLogo 4.1.3"
-NLStart(nl.path)
+nl.path <- "C:/Program Files/NetLogo 5.0"
+NLStart(nl.path, nl.version=5)
 model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"
 NLLoadModel(paste(nl.path,model.path,sep=""))
 NLCommand("setup")
