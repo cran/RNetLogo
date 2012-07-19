@@ -1,0 +1,2 @@
+- Unloading Java/NetLogo not fully possible (maybe some memory is also not released) --> due to rJava and NetLogo (system.exit), no solution via RNetLogo possible
+- Resetting working directory after NLQuit only works with the internal nl.obj (.nl.intern) not with user specified object names

@@ -11,14 +11,14 @@ NLGetGraph(link.agentset="links", nl.obj=NULL)
 }
 \arguments{
   \item{link.agentset}{
-  (optional) A string defining the set of links/network. Default is "links", which are all links.
+  (optional) A string defining the set of links/network. Default is \code{"links"}, which are all links.
 }
   \item{nl.obj}{
   (optional) A variable holding a reference to a NetLogo instance created with \code{\link{NLStart}}.
 }
 }
 \details{
-  Save a link network in a graph object of package igraph for network analysis.
+  Saves a link network in a graph object of package igraph for network analysis.
 }
 \value{
   Return a graph object of package igraph.
@@ -31,7 +31,7 @@ NLGetGraph(link.agentset="links", nl.obj=NULL)
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 4.1.3"
+nl.path <- "C:/Program Files/NetLogo 5.0"
 NLStart(nl.path)
 model.path <- 
 "/models/Sample Models/Networks/Preferential Attachment.nlogo"

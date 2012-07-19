@@ -6,7 +6,7 @@ function(patch.var, in.matrix, nl.obj=NULL)
     
   if (!is.matrix(in.matrix))
   {
-   stop('argument 1 must be a matrix!')
+   stop('First argument must be a matrix!')
   }
 
   min.pxcor <- NLReport("min-pxcor", nl.obj=nl.obj)

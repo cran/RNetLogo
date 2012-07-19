@@ -1,7 +1,7 @@
 \name{NLDoReportWhile}
 \alias{NLDoReportWhile}
 \title{
-  Repeated execution of a command and a reporter in the referenced NetLogo instance while a conditional reporter returns TRUE.
+  Repeated execution of a command and a reporter in the referenced NetLogo instance while a conditional reporter returns \code{TRUE}.
 }
 \description{
   \code{NLDoReportWhile} function is used to execute a NetLogo command (submitted as a string)
@@ -39,6 +39,8 @@ NLDoReportWhile(condition, command, reporter, as.data.frame=FALSE,
   This function is used to execute a command for more than one time and will report a value or a number of values after
   each iteration. It is usually used to call a procedure (e.g. "go") while a variable is lower a boundary value and to 
   save the value of a state variable in each simulation step. 
+  Attention: Make sure that the condition switches from \code{TRUE} to \code{FALSE} sometime, 
+  otherwise you will run an endless loop.
 }
 \value{
   A list/nested list with the value(s) of the reporter after each execution of the command.
@@ -53,7 +55,7 @@ NLDoReportWhile(condition, command, reporter, as.data.frame=FALSE,
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 4.1.3"
+nl.path <- "C:/Program Files/NetLogo 5.0"
 NLStart(nl.path)
 model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"
 NLLoadModel(paste(nl.path,model.path,sep=""))

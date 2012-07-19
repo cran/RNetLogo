@@ -10,8 +10,7 @@
 .onLoad <-
 function(libname, pkgname)
 {
-  #if(!require(rJava)) stop("RNetLogo needs rJava")
-    
+    #if(!require(rJava)) stop("RNetLogo needs rJava")
     .rnetlogo$pkgname <- pkgname 	
     .rnetlogo$libname <- libname
     .rnetlogo$startedGUI <- FALSE

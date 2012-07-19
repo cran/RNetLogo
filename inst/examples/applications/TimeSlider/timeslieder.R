@@ -42,9 +42,9 @@ plottimedata <- function(timedata.list,x.var,y.var,color.var=NULL, ...) {
 }
 
 
-nl.path <- "C:/Program Files/NetLogo 4.1.3"
+nl.path <- "C:/Program Files/NetLogo 5.0"
 model.path <- "/models/Sample Models/Biology/Tumor.nlogo"
-NLStart(nl.path)
+NLStart(nl.path, nl.version=5)
 NLLoadModel(paste(nl.path,model.path,sep=""))
 NLCommand("setup")
 
@@ -53,15 +53,13 @@ timedata <- list()
 
 for(i in 1:nruns) {
   NLCommand("go")
-  timedata[[i]] <- NLGetAgentSet(c("xcor","ycor","who","stem?","metastatic?"),
-                                 "turtles",as.data.frame=T,
-                                 df.col.names=c("x","y","who","stem","metastatic"))
+  timedata[[i]] <- NLGetAgentSet(c("xcor","ycor","who","stem?","metastatic?"), "turtles")
 }
 
 world.dim <- NLReport(c("(list min-pxcor max-pxcor)", "(list min-pycor max-pycor)"))
 colors <- c("green","red")
 
-plottimedata(timedata.list=timedata, x.var="x", y.var="y", xlab="x", ylab="y", color.var="metastatic", main="Tumor cells", xlim=world.dim[[1]] ,ylim=world.dim[[2]])
+plottimedata(timedata.list=timedata, x.var="xcor", y.var="ycor", xlab="x", ylab="y", color.var="metastatic?", main="Tumor cells", xlim=world.dim[[1]] ,ylim=world.dim[[2]])
 
 # close NetLogo
 NLQuit()

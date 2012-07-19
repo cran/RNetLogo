@@ -4,7 +4,7 @@
   Transforms a data.frame into a NetLogo-List or multiple NetLogo-List (one for each column of the data.frame).
 }
 \description{
-  \code{NLDfToList} function is used to push the values of a data.frame in NetLogo-Lists. 
+  \code{NLDfToList} function is used to push the values of a data.frame into NetLogo-Lists. 
   The column names of the data.frame are used as names for the NetLogo-Lists 
   (but the NetLogo-List must already exist in the current NetLogo model).
 }
@@ -35,7 +35,7 @@ NLDfToList(in.data.frame, nl.obj=NULL)
 }
 \examples{
 \dontrun{
-NLStart("C:/Program Files/NetLogo 4.1.3")
+NLStart("C:/Program Files/NetLogo 5.0")
 df1 <- data.frame(x=c(1,2,3,4),y=c(1,2,3,4))
 # the current NetLogo model must have lists with the names 'x' and 'y'
 NLDfToList(df1)

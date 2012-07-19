@@ -11,7 +11,11 @@ patches-own [
 ]
 
 to setup
-  clear-all
+  ;; (for this model to work with NetLogo's new plotting features,
+  ;; __clear-all-and-reset-ticks should be replaced with clear-all at
+  ;; the beginning of your setup procedure and reset-ticks at the end
+  ;; of the procedure.)
+  __clear-all-and-reset-ticks
   set show-water? true
   ask patches [
     ifelse bumpy?
@@ -124,6 +128,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 12
@@ -140,6 +145,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 12
@@ -186,6 +192,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 TEXTBOX
 9
@@ -259,6 +266,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 127
@@ -275,6 +283,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 TEXTBOX
 7
@@ -297,13 +306,12 @@ Simulation controls:
 0
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This model is a simulation of soil erosion by water.  The user is presented with an empty terrain.  Rain falls on the terrain and starts to flow downhill.  As it flows, it erodes the terrain below.  The patterns of water flow change as the terrain is reshaped by erosion.  Eventually, a river system emerges.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 The soil is represented by gray patches.  The lighter the patch, the higher the elevation. Water is represented by blue patches.  Deeper water is represented by a darker blue.  Around the edge of the world is a "drain" into which water and sediment disappear.
 
 Each patch has a certain chance per time step of receiving rain.  If it does receive rain, its water depth increases by one.
@@ -312,9 +320,8 @@ The model uses the following naive model of flowing water.  Water flows to the a
 
 Erosion is represented by decreasing the elevation of the source patch a bit when flow occurs.  The amount of erosion is proportional to the amount of flow.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 The SETUP button generates a terrain.  The smoothness of the terrain is controlled by the TERRAIN-SMOOTHNESS slider.  Lower values give rougher terrain, with more variation in elevation.  If you want a perfectly flat terrain, turn off the BUMPY? switch.  If you want to start out with a hill in the middle, turn on the HILL? switch.
 
 The GO button runs the erosion simulation.
@@ -325,14 +332,12 @@ The RAINFALL slider controls how much rain falls.  For example, if RAINFALL is 0
 
 The SOIL-HARDNESS slider controls how "hard" or resistant to erosion the soil is.  Higher values will cause the soil to be harder, and less likely to erode, while lower values will cause the soil to erode more quickly.  A value of 1.0 means that the soil will not erode at all.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Initially, the world is covered by lakes.  Then rivers start to form at the edge of the world.  Gradually, these rivers grow until they have drained all the lakes.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Use the HIDE-WATER button to make the water invisible, and observe the terrain.
 
 Experiment with the effect of the different sliders on the appearance of the resulting rivers.
@@ -341,9 +346,8 @@ See what happens when you start with a perfectly flat terrain.  (Is what happens
 
 See what happens when you start with a hill.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Add evaporation.  Does this alter the behavior of the system in interesting ways?
 
 Add "springs" -- point sources from which new water flows.
@@ -356,42 +360,37 @@ Add multiple soil types to the terrain, so that the land is of varying hardness,
 
 What would it take to get river deltas to form?  You'd need to model sediment being carried by water and then deposited.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
 Only patches are used, no turtles.
 
 The code depends on agentsets always being randomly ordered.
 
+## CREDITS AND REFERENCES
 
-CREDITS AND REFERENCES
-----------------------
-Here is an eroded volcano in Kamchatka with a strong resemblance to this model:
+Here is an eroded volcano in Kamchatka with a strong resemblance to this model:  
 http://maps.google.com/?t=k&ll=52.544312,157.338467&spn=0.070884,0.118103&t=k
 
 Thanks to Greg Dunham and Seth Tisue for their work on this model.
 
+## HOW TO CITE
 
-HOW TO CITE
------------
-If you mention this model in an academic publication, we ask that you include these citations for the model itself and for the NetLogo software:
-- Dunham, G., Tisue, S. and Wilensky, U. (2004).  NetLogo Erosion model.  http://ccl.northwestern.edu/netlogo/models/Erosion.  Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+If you mention this model in an academic publication, we ask that you include these citations for the model itself and for the NetLogo software:  
+- Dunham, G., Tisue, S. and Wilensky, U. (2004).  NetLogo Erosion model.  http://ccl.northwestern.edu/netlogo/models/Erosion.  Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.  
 - Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
-In other publications, please use:
+In other publications, please use:  
 - Copyright 2004 Uri Wilensky. All rights reserved. See http://ccl.northwestern.edu/netlogo/models/Erosion for terms of use.
 
+## COPYRIGHT NOTICE
 
-COPYRIGHT NOTICE
-----------------
 Copyright 2004 Uri Wilensky. All rights reserved.
 
-Permission to use, modify or redistribute this model is hereby granted, provided that both of the following requirements are followed:
-a) this copyright notice is included.
+Permission to use, modify or redistribute this model is hereby granted, provided that both of the following requirements are followed:  
+a) this copyright notice is included.  
 b) this model will not be redistributed for profit without permission from Uri Wilensky. Contact Uri Wilensky for appropriate licenses for redistribution for profit.
 
 This model was created as part of the projects: PARTICIPATORY SIMULATIONS: NETWORK-BASED DESIGN FOR SYSTEMS LEARNING IN CLASSROOMS and/or INTEGRATED SIMULATION AND MODELING ENVIRONMENT. The project gratefully acknowledges the support of the National Science Foundation (REPP & ROLE programs) -- grant numbers REC #9814682 and REC-0126227.
-
 @#$#@#$#@
 default
 true
@@ -676,7 +675,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 4.1.3
+NetLogo 5.0
 @#$#@#$#@
 setup
 repeat 175 [ go ]

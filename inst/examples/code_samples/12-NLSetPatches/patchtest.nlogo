@@ -1,6 +1,10 @@
 
 to setup
-  ca
+  ;; (for this model to work with NetLogo's new plotting features,
+  ;; __clear-all-and-reset-ticks should be replaced with clear-all at
+  ;; the beginning of your setup procedure and reset-ticks at the end
+  ;; of the procedure.)
+  __clear-all-and-reset-ticks
   ask patches
   [
    set plabel random 30 
@@ -11,11 +15,11 @@ end
 GRAPHICS-WINDOW
 210
 10
-320
-201
+455
+305
 -1
 -1
-20.0
+33.0
 1
 10
 1
@@ -33,6 +37,7 @@ GRAPHICS-WINDOW
 0
 1
 ticks
+30.0
 
 BUTTON
 11
@@ -49,50 +54,43 @@ NIL
 NIL
 NIL
 NIL
+1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This section could give a general understanding of what the model is trying to show or explain.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 This section could explain what rules the agents use to create the overall behavior of the model.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 This section could explain how to use the model, including a description of each of the items in the interface tab.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 This section could give some ideas of things for the user to notice while running the model.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 This section could give some ideas of things for the user to try to do (move sliders, switches, etc.) with the model.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 This section could give some ideas of things to add or change in the procedures tab to make the model more complicated, detailed, accurate, etc.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
 This section could point out any especially interesting or unusual features of NetLogo that the model makes use of, particularly in the Procedures tab.  It might also point out places where workarounds were needed because of missing features.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
 This section could give the names of models in the NetLogo Models Library or elsewhere which are of related interest.
 
+## CREDITS AND REFERENCES
 
-CREDITS AND REFERENCES
-----------------------
 This section could contain a reference to the model's URL on the web if it has one, as well as any other necessary credits or references.
 @#$#@#$#@
 default
@@ -387,7 +385,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 4.1
+NetLogo 5.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

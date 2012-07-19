@@ -29,9 +29,9 @@ library(RNetLogo)
 #----
 # TODO: adapt this path to your NetLogo installation folder
 #----
-nl.path <- "C:/Program Files/NetLogo 4.1.3"
+nl.path <- "C:/Program Files/NetLogo 5.0"
 # initialize NetLogo
-NLStart(nl.path, nl.version=4, gui=FALSE)
+NLStart(nl.path, nl.version=5, gui=FALSE)
 # load Gas Lab model from model library
 model.path <- "models/Sample Models/Chemistry & Physics/GasLab/GasLab Free Gas.nlogo"
 NLLoadModel(paste(nl.path,model.path,sep="/"))

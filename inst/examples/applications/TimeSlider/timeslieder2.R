@@ -49,9 +49,9 @@ plottimedata <- function(timedata.list,x.var,y.var,boxplot.var1,
 }
 
 # initialize NetLogo
-nl.path <- "C:/Program Files/NetLogo 4.1.3"
+nl.path <- "C:/Program Files/NetLogo 5.0"
 model.path <- "/models/Sample Models/Biology/Virus.nlogo"
-NLStart(nl.path)
+NLStart(nl.path, nl.version=5)
 # load the Tumor model
 NLLoadModel(paste(nl.path,model.path,sep=""))
 # initialize the model
@@ -63,8 +63,7 @@ timedata <- list()
 for(i in 1:nruns) {
   NLCommand("go")
   timedata[[i]] <- NLGetAgentSet(c("who","xcor","ycor","age","sick?","immune?","sick-count"),
-                                 "turtles",as.data.frame=T,
-                                 df.col.names=c("who","x","y","age","sick","immune","sick-count"))
+                                 "turtles")
 }
 # get the world dimension to use for the plot
 world.dim <- NLReport(c("(list min-pxcor max-pxcor)",
@@ -73,8 +72,8 @@ world.dim <- NLReport(c("(list min-pxcor max-pxcor)",
 colors1 <- c("green","red")
 colors2 <- c("red","green")
 # call the plottimedata function to brwose through the timedata list
-plottimedata(timedata.list=timedata, x.var="x", y.var="y", xlab="x",
-             ylab="y", color.var1="sick", color.var2="immune",
+plottimedata(timedata.list=timedata, x.var="xcor", y.var="ycor", xlab="x",
+             ylab="y", color.var1="sick?", color.var2="immune?",
              boxplot.var1="sick-count", boxplot.var2="age",
              colors1=colors1, colors2=colors2,
              mains=c("Sick","Immune","Stick-count","Age"),
