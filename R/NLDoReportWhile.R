@@ -1,5 +1,5 @@
 NLDoReportWhile <-
-function(condition, command, reporter, as.data.frame=FALSE, df.col.names=NULL, nl.obj=NULL)
+function(condition, command, reporter, as.data.frame=FALSE, df.col.names=NULL, max.minutes=10, nl.obj=NULL)
 {
   if (is.null(nl.obj))
     nl.obj <- .rnetlogo[["nl.intern"]]
@@ -7,20 +7,22 @@ function(condition, command, reporter, as.data.frame=FALSE, df.col.names=NULL, n
   if (length(reporter) == 1) 
   {
     resobj <- .jcall(nl.obj, "[Ljava/lang/Object;", "doReportWhile", 
-                    .jnew("java/lang/String", command), 
-                    .jnew("java/lang/String", reporter), 
-                    .jnew("java/lang/String", condition)
-                    )       
+                     .jnew("java/lang/String", command), 
+                     .jnew("java/lang/String", reporter), 
+                     .jnew("java/lang/String", condition),
+                     .jnew("java/lang/Integer", as.integer(max.minutes))
+                    )         
 
     resobj <- lapply(resobj, function(x) {eval.reportobject(x)})
   } 
   else 
   {
     resobj <- .jcall(nl.obj, "[Ljava/lang/Object;", "doReportWhile", 
-                    .jnew("java/lang/String", command), 
-                    .jarray(reporter), 
-                    .jnew("java/lang/String", condition)
-                    )       
+                     .jnew("java/lang/String", command), 
+                     .jarray(reporter), 
+                     .jnew("java/lang/String", condition),
+                     .jnew("java/lang/Integer", as.integer(max.minutes))
+                    )          
     resobj <- lapply(resobj, function(x) {.jevalArray(x)})
     resobj <- lapply(resobj, function(x) {
                         lapply(x, function(z) {eval.reportobject(z) } )

@@ -15,15 +15,15 @@ NLReport(reporter, nl.obj=NULL)
   (Or a vector of strings.)
 }
   \item{nl.obj}{
-  (optional) A variable holding a reference to a NetLogo instance created with \code{\link{NLStart}}.
+  (optional) A reference to a NetLogo instance created with \code{\link{NLStart}}.
 }
 }
 \details{
-  Every reporter (= a command which will return a value), which can be called in the NetLogo Command Center, 
+  Every reporter (commands which return a value) that can be called in the NetLogo Command Center 
   can be called with \code{NLReport}. 
 }
 \value{
-  A list or, if necessary, a nested list with the reported values.
+  A vector of length one if only one value is returned. Otherwise it is a list or, if necessary, a nested list with the reported values.
 }
 \author{
   Jan C. Thiele <jthiele@gwdg.de>
@@ -36,7 +36,7 @@ NLReport(reporter, nl.obj=NULL)
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.0"
+nl.path <- "C:/Program Files/NetLogo 5.0.3"
 NLStart(nl.path)
 model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"
 NLLoadModel(paste(nl.path,model.path,sep=""))
@@ -45,5 +45,6 @@ NLDoCommandWhile("burned-trees < 2200", "go")
 noburned <- NLReport("burned-trees")
 }
 }
-\keyword{ ~NLReport }
-\keyword{ ~RNetLogo }
+\keyword{interface}
+\keyword{NLReport}
+\keyword{RNetLogo}

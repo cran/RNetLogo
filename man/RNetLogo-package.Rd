@@ -6,26 +6,37 @@
 Provides an interface to the agent-based modelling plattform NetLogo
 }
 \description{
-Interface to embed NetLogo into the R environment 
-with headless (no GUI) and interactive GUI mode. Provides functions to load
-models, execute commands and to get values from reporters. 
-Mostly equivalent to NetLogo Mathematica Link 
+Interface to use and access NetLogo from R
+using either headless (no GUI) or interactive GUI mode. Provides functions to load
+models, execute commands, and get values from reporters. 
+Mostly analogous to the NetLogo Mathematica Link 
 \url{http://ccl.northwestern.edu/netlogo/docs/mathematica.html}.
 }
 \details{
 \tabular{ll}{
 Package: \tab RNetLogo\cr
 Type: \tab Package\cr
-Version: \tab 0.9\cr
-Date: \tab 2011-07-13\cr
+Version: \tab 0.9.4\cr
+Date: \tab 2013-01-02\cr
 License: \tab GNU GPL v2\cr
 LazyLoad: \tab yes\cr
 }
-Start with the creation of a NetLogo instance by using \code{\link{NLStart}}. Then load a model with the function 
-\code{\link{NLLoadModel}} and then use a command and/or reporter to do what you like.
+Start by creating a NetLogo instance by using \code{\link{NLStart}}. Then load a model with the function 
+\code{\link{NLLoadModel}} and then use commands and reporters to do what you like.
 
-Please note, that the package is not tested with Mac OS. 
-If you made experiences with the package on Mac, please let me know.
+It is possible to use NetLogo 3D. Just set the \code{is3d} argument in \code{\link{NLStart}} to \code{TRUE}. This functionality is experimental. All RNetLogo functions should work in NetLogo 3D as they do in conventional 2D NetLogo except \code{\link{NLSetPatches}}, which is not implemented to work with NetLogo 3D properly. \code{\link{NLSetPatchSet}} delivers a similar functionality usable also with NetLogo 3D but uses a data.frame instead of a matrix. 
+
+\bold{Note for MAC users}: If you want to run RNetLogo in headless mode (without GUI, i.e. setting argument \code{gui=FALSE} in \code{\link{NLStart}}) you have to disable AWT before loading the package. Just execute \code{Sys.setenv(NOAWT=1)} before executing \code{library(RNetLogo)}.
+  If you want to run RNetLogo in GUI mode you have to start it from the JGR application (see \url{http://cran.r-project.org/web/packages/JGR/index.html} and the note at \url{http://groups.yahoo.com/group/netlogo-users/message/14817}). It can be necessary to run \code{Sys.setenv(NOAWT=1)} before loading the JGR package and run \code{Sys.unsetenv("NOAWT")} before starting JGR via \code{JGR()}.
+
+\bold{Note for Linux users}: If you want to run RNetLogo in GUI mode you should start RNetLogo from JGR (see \url{http://cran.r-project.org/web/packages/JGR/index.html}).
+
+\bold{Note for Windows 32-bit users}: Starting RNetLogo (in GUI mode) on 32-bit Windows (not 64-bit Windows running in 32-bit mode) may fail in R version 2.15.2 (see description here: \url{https://stat.ethz.ch/pipermail/r-devel/2013-January/065576.html}). The reason could be the increased C stack size since 2.15.2. If you execute \code{Cstack_info()} you can see how large the C stack size is. 
+A workaround is to use R 2.15.1 or to start RNetLogo from JGR (see \url{http://cran.r-project.org/web/packages/JGR/index.html}) or RStudio (see \url{http://www.rstudio.com/}).  
+
+If you want to increase the Java Heap Space and set other parameters of the Java Virtual Machine (JVM) see notes at \code{NLStart}.
+
+See the \bold{tutorial} located in folder "tutorial" in the installation path of the package for an introduction. Example codes for all functions can be found in the folder "\bold{examples}" in the installation path of the package. For \bold{performance notes} see the vignette "performanceNotes.pdf" and for an introduction how to \bold{run RNetLogo in parallel} on multicore computers or clusters/grids see the vignette "parallelProcessing.pdf".
 }
 \author{
   Jan C. Thiele <jthiele@gwdg.de>
@@ -33,11 +44,11 @@ If you made experiences with the package on Mac, please let me know.
 \references{
   For NetLogo see \url{http://ccl.northwestern.edu/netlogo}.
   For R Extension for NetLogo see \url{http://netlogo-r-ext.berlios.de}.
-  The RNetLogo package is an equivalent (and inspired by) to the NetLogo Mathematica Link \url{http://ccl.northwestern.edu/netlogo/docs/mathematica.html}.
+  The RNetLogo package is analogous to (and inspired by) the NetLogo Mathematica Link \url{http://ccl.northwestern.edu/netlogo/docs/mathematica.html}.
 }
-\keyword{ NetLogo }
-\keyword{ agent-based }
-\keyword{ individual-based }
+\keyword{NetLogo}
+\keyword{agent-based}
+\keyword{individual-based}
 \seealso{
 \code{
   \link{NLStart},
@@ -48,7 +59,7 @@ If you made experiences with the package on Mac, please let me know.
 \examples{
 \dontrun{
 library(RNetLogo)
-nl.path <- "C:/Program Files/NetLogo 5.0"
+nl.path <- "C:/Program Files/NetLogo 5.0.3"
 NLStart(nl.path, nl.version=5)
 model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"
 NLLoadModel(paste(nl.path,model.path,sep=""))
