@@ -219,23 +219,49 @@ public class NLink_v4 {
 		}
 	}
 
-	public void doCommandWhile(final String s, final String cond) throws LogoException, CompilerException
+	public void doCommandWhile(final String s, final String cond, Integer maxMinutes) throws LogoException, CompilerException
 	{
-		while (((Boolean)workspace.report(cond)).booleanValue())
-		{
-			workspace.command(s);
+		if (maxMinutes > 0) {
+			long startTime = System.currentTimeMillis();
+			while (((Boolean)workspace.report(cond)).booleanValue())
+			{
+				workspace.command(s);
+				// max. time exceeded
+				if ((System.currentTimeMillis() - startTime) / 60000 >= maxMinutes) {
+					//break;
+					throw new RuntimeException("Maximum time for NLDoCommandWhile reached. Process stopped.");
+				}
+			}
+		}
+		else {		
+			while (((Boolean)workspace.report(cond)).booleanValue())
+			{
+				workspace.command(s);
+			}
 		}
 	}
 
-	public void doCommandWhile(final String[] s, final String cond) throws LogoException, CompilerException
+	public void doCommandWhile(final String[] s, final String cond, Integer maxMinutes) throws LogoException, CompilerException
 	{
-		while (((Boolean)workspace.report(cond)).booleanValue())
-		{
-			command(s);
+		if (maxMinutes > 0) {
+			long startTime = System.currentTimeMillis();
+			while (((Boolean)workspace.report(cond)).booleanValue())
+			{
+				command(s);
+				// max. time exceeded
+				if ((System.currentTimeMillis() - startTime) / 60000 >= maxMinutes) {
+					//break;
+					throw new RuntimeException("Maximum time for NLDoCommandWhile reached. Process stopped.");
+				}
+			}
 		}
-	}
-
-	
+		else {		
+			while (((Boolean)workspace.report(cond)).booleanValue())
+			{
+				command(s);
+			}
+		}
+	}	
 
 	/* returns the value of a reporter.  if it is a LogoList, it will be
 	recursively converted to an array of Objects */
@@ -291,14 +317,28 @@ public class NLink_v4 {
 
 
 
-/* Repeats a command and returns a reporter until a condition is met */
-	public Object[] doReportWhile(final String s, final String var, final String condition)
+	/* Repeats a command and returns a reporter until a condition is met */
+	public Object[] doReportWhile(final String s, final String var, final String condition, Integer maxMinutes)
 		throws LogoException, CompilerException, Exception
 	{
 		java.util.ArrayList<Object> varList = new java.util.ArrayList<Object>();
-		for(int i=0; ((Boolean)workspace.report(condition)).booleanValue(); i++) {
-			workspace.command(s);
-			varList.add(report(var));
+		if (maxMinutes > 0) {
+			long startTime = System.currentTimeMillis();
+			for(int i=0; ((Boolean)workspace.report(condition)).booleanValue(); i++) {
+				workspace.command(s);
+				varList.add(report(var));
+				// max. time exceeded
+				if ((System.currentTimeMillis() - startTime) / 60000 >= maxMinutes) {
+					//break;
+					throw new RuntimeException("Maximum time for NLDoReportWhile reached. Process stopped.");
+				}
+			}
+		}
+		else {		
+			for(int i=0; ((Boolean)workspace.report(condition)).booleanValue(); i++) {
+				workspace.command(s);
+				varList.add(report(var));
+			}
 		}
 		Object[] objArray = varList.toArray();
 		return objArray;
@@ -306,18 +346,31 @@ public class NLink_v4 {
 
 	
 /* Repeats a command and returns a list of reporters until a condition is met */
-	public Object[] doReportWhile(final String s, final String[] vars, final String condition)
+	public Object[] doReportWhile(final String s, final String[] vars, final String condition, Integer maxMinutes)
 		throws LogoException, CompilerException, Exception
 	{
 		java.util.ArrayList<Object> varList = new java.util.ArrayList<Object>();
-		for(int i=0; ((Boolean)workspace.report(condition)).booleanValue(); i++) {
-			workspace.command(s);
-			varList.add(report(vars));
+		if (maxMinutes > 0) {
+			long startTime = System.currentTimeMillis();
+			for(int i=0; ((Boolean)workspace.report(condition)).booleanValue(); i++) {
+				workspace.command(s);
+				varList.add(report(vars));
+				// max. time exceeded
+				if ((System.currentTimeMillis() - startTime) / 60000 >= maxMinutes) {
+					//break;
+					throw new RuntimeException("Maximum time for NLDoReportWhile reached. Process stopped.");
+				}
+			}
+		}
+		else {		
+			for(int i=0; ((Boolean)workspace.report(condition)).booleanValue(); i++) {
+				workspace.command(s);
+				varList.add(report(vars));
+			}
 		}
 		Object[] objArray = varList.toArray();
 		return objArray;
 	}
-	
 }
 
 	

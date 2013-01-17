@@ -1,26 +1,26 @@
 \name{NLDfToList}
 \alias{NLDfToList}
 \title{
-  Transforms a data.frame into a NetLogo-List or multiple NetLogo-List (one for each column of the data.frame).
+  Transforms a data.frame into a NetLogo list or multiple NetLogo list (one for each column of the data.frame).
 }
 \description{
-  \code{NLDfToList} function is used to push the values of a data.frame into NetLogo-Lists. 
-  The column names of the data.frame are used as names for the NetLogo-Lists 
-  (but the NetLogo-List must already exist in the current NetLogo model).
+  \code{NLDfToList} pushes the values of a data.frame into NetLogo lists. 
+  The column names of the data.frame are used as names for the NetLogo lists 
+  (but the lists must already exist in the current NetLogo model).
 }
 \usage{
 NLDfToList(in.data.frame, nl.obj=NULL)
 }
 \arguments{
   \item{in.data.frame}{
-  The data.frame which should be used to fill the NetLogo-Lists (with the names of the columns of this data.frame) with the corresponding values of the column.
+  The data.frame to fill the NetLogo lists.
 }
   \item{nl.obj}{
-  (optional) A variable holding a reference to a NetLogo instance created with \code{\link{NLStart}}. 
+  (optional) A reference to a NetLogo instance created with \code{\link{NLStart}}. 
 }
 }
 \details{
-  Remember: There have to be NetLogo-Lists in the NetLogo model with the names of the columns of the submitted data.frame. 
+  Remember: There must be lists in the NetLogo model with the names of the columns of the submitted data.frame. 
 }
 \value{
   No return value.
@@ -35,11 +35,12 @@ NLDfToList(in.data.frame, nl.obj=NULL)
 }
 \examples{
 \dontrun{
-NLStart("C:/Program Files/NetLogo 5.0")
+NLStart("C:/Program Files/NetLogo 5.0.3")
 df1 <- data.frame(x=c(1,2,3,4),y=c(1,2,3,4))
 # the current NetLogo model must have lists with the names 'x' and 'y'
 NLDfToList(df1)
 }
 }
-\keyword{ ~NLDfToList }
-\keyword{ ~RNetLogo }
+\keyword{interface}
+\keyword{NLDfToList}
+\keyword{RNetLogo}

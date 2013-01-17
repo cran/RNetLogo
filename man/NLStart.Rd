@@ -5,7 +5,7 @@
   Creates an instance of NetLogo
 }
 \description{
-  \code{NLStart} can be used to create a new instance of NetLogo in headless (without the Graphical User Interface)
+  \code{NLStart} creates a new instance of NetLogo in either headless (without the Graphical User Interface)
   or GUI mode. 
 }
 \usage{
@@ -13,54 +13,68 @@ NLStart(nl.path, gui=TRUE, obj.name=NULL, nl.version=5, is3d=FALSE)
 }
 \arguments{
   \item{nl.path}{
-  Path to your NetLogo installation (the folder where the NetLogo.jar is).
+  An absolute path to your NetLogo installation (the folder where the NetLogo.jar is) starting from the root. On Windows, for example, something like "C:/Program Files/NetLogo 5.0.3".
 }
   \item{gui}{
   (optional) A boolean value: if \code{TRUE}, NetLogo will be started with GUI (only one instance with GUI can be created currently!). 
   \code{FALSE} will start NetLogo in headless mode.
 }
   \item{obj.name}{
-  (optional) A string with the name of the variable which should be created and will contain the reference to the NetLogo instance. 
-  After the execution of \code{NLStart} is finished, there will be a variable with the given name in the 
-  global scope. This variable is needed for all further transactions and is always the last argument of the other
-  functions of the RNetLogo package.
-  If you don't specify this variable, an intern (in .rnetlogo environment) variable will be created and automaticaly used in all further functions.
+  (optional) A string with the name of a variable which will contain the reference to the NetLogo instance. 
+  After \code{NLStart} is finished, there will be a variable with the given name in the 
+  global scope. This variable is needed for all other RNetLogo functions and is always the last argument.
+  If you don't specify this variable, an internal (in .rnetlogo environment) variable will be created and automaticaly used in all further functions.
 }
   \item{nl.version}{
-  (optional) An interger value, that determines, if you want to start a NetLogo version 4.0.x, 4.1.x or a NetLogo version 5.x.
+  (optional) An integer value specifying the (major) version of NetLogo being started.
   Don't try to start a NetLogo version 4.x with nl.version=5 and vice versa.
   It is not possible to mix NetLogo versions in one R session. Please use different R sessions if you want to start RNetLogo
   with version 4 and version 5.
   The default is \code{nl.version=5} for NetLogo 5.0.
   For NetLogo 4.1.x use \code{nl.version=4}.
   For NetLogo 4.0.x use \code{nl.version=40}.
-  Please note, that the data transformation is much faster in NetLogo 5.0 than in NetLogo 4.x. Therefore, I strongly recommend to use NetLogo 5.0.
-  See the document \code{performanceNotes.pdf} in directory \code{performanceNote} in the installation directory of the package for
-  performance details.
+  Please note, that the data transformation is much faster in NetLogo 5.0 than in NetLogo 4.x. Therefore, using NetLogo 5 is strongly recommended.
+  See the vignette \code{performanceNotes.pdf} for performance details.
 }
   \item{is3d}{
-  (optional) A boolean value: if \code{TRUE}, NetLogo 3D will be started. \code{FALSE} will start the conventionally 2D NetLogo.
+  (optional) A boolean value: if \code{TRUE}, NetLogo 3D will be started. \code{FALSE} will start the conventional 2D NetLogo. This functionality is experimental. All RNetLogo functions should work in NetLogo 3D as they do in conventional 2D NetLogo except NLSetPatches, which is currently not implemented to work in NetLogo 3D properly.
 }
 }
 \details{
   You can start multiple instances of NetLogo in headless mode and save each in another
   variable but it is not possible to start multiple instances in GUI mode. 
-  (It would result in an crash of R since there is no way to detach the Java Virtual Machine via rJava.)
+  (It would result in an crash of R since there is no way to detach the Java Virtual Machine via rJava.) But there is a trick to run RNetLogo in GUI mode multiple times described in the document \code{parallelProcessing.pdf} in directory \code{parallelProcessing} in the installation directory of the package.
   
-  Note for Linux and Mac OS X (Mac is untested) users: If you want to use the GUI mode, then it can be necessary to run RNetLogo 
-  in JGR application (see package JGR, http://cran.r-project.org/web/packages/JGR/index.html). 
   
-  General Notes: 
-  1. You should avoid to manually change the working directory of R, because NetLogo need to have the working directory pointed to its installation path. As 
+  \bold{Note for Mac OS users}: If you want to run RNetLogo in headless mode (without GUI, i.e. setting argument \code{gui=FALSE}) you have to disable AWT before loading the package. Just execute \code{Sys.setenv(NOAWT=1)} before executing \code{library(RNetLogo)}.
+  If you want to run RNetLogo in GUI mode you have to start it from the JGR application (see \url{http://cran.r-project.org/web/packages/JGR/index.html} and the note at \url{http://groups.yahoo.com/group/netlogo-users/message/14817}). It can be necessary to run \code{Sys.setenv(NOAWT=1)} before loading the JGR package and run \code{Sys.unsetenv("NOAWT")} before starting JGR via \code{JGR()}.
+
+  \bold{Note for Linux users}: If you want to run RNetLogo in GUI mode you should start RNetLogo in the JGR application (see \url{http://cran.r-project.org/web/packages/JGR/index.html}).
+
+\bold{Note for Windows 32-bit users}: Starting RNetLogo (in GUI mode) on 32-bit Windows (not 64-bit Windows running in 32-bit mode) may fail in R version 2.15.2 (see description here: \url{https://stat.ethz.ch/pipermail/r-devel/2013-January/065576.html}). The reason could be the increased C stack size since 2.15.2. If you execute \code{Cstack_info()} you can see how large the C stack size is. 
+A workaround is to use R 2.15.1 or to start RNetLogo from JGR (see \url{http://cran.r-project.org/web/packages/JGR/index.html}) or RStudio (see \url{http://www.rstudio.com/}).
+
+  Avoid manually changing the working directory of R, because NetLogo needs to have the working directory pointed to its installation path. As 
 the R working directory and the Java working directory depend on each other, changing the R working directory can result in unexpected behavior of NetLogo.
-There, you should use absolute paths for I/O processes in R instead of submitting setwd(...). Note, that the RNetLogo package changes the working directory 
+Therefore, you should use absolute paths for I/O processes in R instead of submitting \code{setwd(...)}. 
+Note that the RNetLogo package changes the working directory 
 automatically when loading NetLogo and changes back to the former working directory when submitting NLQuit (doesn't work currently with custom \code{obj.name}).
-  2. It is currently not possible to quit NetLogo completly (because NetLogo quits itself via System.exit but executing System.exit will terminate the whole JVM which will terminate also rJava and finally R.).
-  It can happen that some memory is not released although you have executed NLQuit. Therefore, it is a good idea to start a new R session whenever it is possible (e.g. if you are going to load a new model).  
+
+  As mentioned in \code{NLQuit}, it is currently not possible to quit NetLogo completly. 
+
+  If you want to specify options for the underlying Java Virtual Machine (JVM), like increasing the Java Heap Space for large models, execute \code{options(java.parameters="...")} before loading the RNetLogo package with \code{library(RNetLogo} or \code{require(RNetLogo)}. For increasing the Java Heap Space it could be \code{options(java.parameters="-Xmx1024m")}, for example. Use a vector of strings for setting multiple options, for example \code{options(java.parameters=c("-server","-Xmx1300m"))}.
+  See also \url{http://ccl.northwestern.edu/netlogo/docs/faq.html#howbig} and \url{http://permalink.gmane.org/gmane.comp.lang.r.rosuda.devel/1284}. 
+
+  See the directory \code{examples} in the installation directory of the package for example codes to all RNetLogo functions.
+
+  See the document \code{tutorial.pdf} in directory \code{tutorial} in the installation directory of the package for a step-by-step usage tutorial.
+
+  See the vignette \code{performanceNotes.pdf} for performance notes.
+  
+  See the vignette \code{parallelProcessing.pdf} on how to run RNetLogo on multiple processors/clusters in parallel.
 }
 \value{
-  The function implicit returns an Java Object containing the reference to the Java controlling interface stored in a variable with the name given in 3rd function argument. 
-  This variable is needed for further transactions (like \code{\link{NLLoadModel}} or \code{\link{NLCommand}}). 
+  The function implicitly returns a Java Object containing the reference to the Java controlling interface, stored in a variable with the name given in the third argument. 
 }
 \author{
   Jan C. Thiele <jthiele@gwdg.de>
@@ -71,7 +85,7 @@ automatically when loading NetLogo and changes back to the former working direct
   NetLogo Window is blocked, because it would quit the whole R process. To close the NetLogo
   call \code{\link{NLQuit}}.
   If you use the headless mode you should first load a model with \code{\link{NLLoadModel}} 
-  before executing other commands and reporters.
+  before executing other commands and reporters. In GUI mode you can execute commands and reporters already with the inital empty model without loading a specific one.
 } 
 
 \seealso{
@@ -80,7 +94,7 @@ automatically when loading NetLogo and changes back to the former working direct
 \examples{
 \dontrun{
 library(RNetLogo)
-nl.path <- "C:/Program Files/NetLogo 5.0"
+nl.path <- "C:/Program Files/NetLogo 5.0.3"
 NLStart(nl.path)
 NLCommand("create-turtles 10")
 noturtles <- NLReport("count turtles")
@@ -109,5 +123,6 @@ burned2 <- NLDoReport(10, "go", c("ticks","burned-trees"),
 print(burned2)               
 }
 }
-\keyword{ ~NLStart }
-\keyword{ ~RNetLogo }
+\keyword{interface}
+\keyword{NLStart}
+\keyword{RNetLogo}

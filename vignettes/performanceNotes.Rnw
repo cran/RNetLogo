@@ -1,6 +1,8 @@
 \documentclass[article,nojss]{jss}
 \graphicspath{{images/}}
 
+%\VignetteIndexEntry{Performance Notes and Tests}
+
 %% almost as usual
 \author{
   Jan C. Thiele\\
@@ -65,7 +67,8 @@ individual based modelling, ibm, performance, execution time} %% without formatt
 \begin{document}
 \SweaveOpts{engine = R, eps = FALSE}
 \SweaveOpts{keep.source = TRUE}
-\SweaveOpts{prefix.string=C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/images/}
+%\SweaveOpts{prefix.string=C:/Program Files/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/images/}
+\SweaveOpts{prefix.string=images/}
 
 <<preliminaries, echo=FALSE, results=hide>>=
 options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
@@ -124,7 +127,7 @@ test_t6 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles", as.data.frame=F)
 @
 
 <<test_data_092_B, eval=FALSE, results=hide, echo=FALSE>>=
-save.image(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/testdata_RNetLogo092.RData")
+save.image(file="testdata_RNetLogo092.RData")
 @
 
 <<list_example_RN092_A, results=hide, echo=FALSE>>=
@@ -239,7 +242,7 @@ test_t6 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles", as.data.frame=F, a
 
 test_t7 <- NLGetAgentSet("who", "turtles", as.vector=T)
 
-save.image(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/testdata_RNetLogo093.RData")
+save.image(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/testdata_RNetLogo093.RData")
 
 #NLQuit()
 @
@@ -392,7 +395,7 @@ times_092_NL413 <- lapply(it, function(x) {f_GetAgentSet(x)})
 #NLQuit()
 @
 <<label=data_recording_092_413_save, eval=FALSE, results=hide, echo=FALSE>>=
-save.image(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL413_RNetLogo092.RData")
+save.image(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL413_RNetLogo092.RData")
 @
 <<load_data_recording_092_413, eval=TRUE, results=hide, echo=FALSE>>=
 load("NL413_RNetLogo092.RData")
@@ -782,7 +785,7 @@ NLQuit()
 @
 
 <<data_recording_093_50_B, eval=FALSE, echo=FALSE, results=hide>>=
-save.image(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL50_RNetLogo093.RData")
+save.image(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL50_RNetLogo093.RData")
 @
 
 
@@ -811,7 +814,7 @@ f_GetAgentSet <- function(x) {
 
 it <- c(100,200,400,800,1600,3200,6400,12800,25600,51200,102400,204800,409600)
 times_093_NL413 <- lapply(it, function(x) {f_GetAgentSet(x)})
-save.image(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL413_RNetLogo093.RData")
+save.image(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL413_RNetLogo093.RData")
 
 #NLQuit()
 @
@@ -842,7 +845,7 @@ f_GetAgentSet <- function(x) {
 
 it <- c(100,200,400,800,1600,3200,6400,12800,25600,51200,102400,204800,409600)
 times_093_NL405 <- lapply(it, function(x) {f_GetAgentSet(x)})
-save.image(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL405_RNetLogo093.RData")
+save.image(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL405_RNetLogo093.RData")
 
 #NLQuit()
 @
@@ -872,7 +875,7 @@ f_GetAgentSet <- function(x) {
 
 it <- c(100,200,400,800,1600,3200,6400,12800,25600,51200,102400,204800,409600)
 times_092_NL5 <- lapply(it, function(x) {f_GetAgentSet(x)})
-save.image(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL50_RNetLogo092.RData")
+save.image(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL50_RNetLogo092.RData")
 
 #NLQuit()
 @
@@ -900,7 +903,7 @@ f_GetAgentSet <- function(x) {
 
 it <- c(100,200,400,800,1600,3200,6400,12800,25600,51200,102400,204800,409600)
 times_092_NL413 <- lapply(it, function(x) {f_GetAgentSet(x)})
-save.image(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL413_RNetLogo092.RData")
+save.image(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL413_RNetLogo092.RData")
 
 #NLQuit()
 @
@@ -908,12 +911,12 @@ save.image(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst
 
 
 <<all_together, eval=FALSE, echo=FALSE, results=hide>>=
-load(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL50_RNetLogo093.RData")
-load(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL413_RNetLogo093.RData")
-load(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL405_RNetLogo093.RData")
+load(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL50_RNetLogo093.RData")
+load(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL413_RNetLogo093.RData")
+load(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL405_RNetLogo093.RData")
 
-load(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL50_RNetLogo092.RData")
-load(file="C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/performanceNotes/NL413_RNetLogo092.RData")
+load(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL50_RNetLogo092.RData")
+load(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL413_RNetLogo092.RData")
 
 t1_RN093_NL5 <- sapply(times_093_NL5, function(x) x$t1)
 t2_RN093_NL5 <- sapply(times_093_NL5, function(x) x$t2)

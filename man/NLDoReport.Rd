@@ -1,11 +1,11 @@
 \name{NLDoReport}
 \alias{NLDoReport}
 \title{
-  Repeated execution of a command and a reporter in the referenced NetLogo instance for a defined number of repetitions.
+  Repeats a command and a reporter in the referenced NetLogo instance a defined number of times.
 }
 \description{
-  \code{NLDoReport} function is used to execute a NetLogo command (submitted as a string)
-  in the NetLogo instance for more than one time and to execute the reporter after each iteration. 
+  \code{NLDoReport} executes a NetLogo command (submitted as a string)
+  in the NetLogo instance for more than one time, and executes the reporter after each iteration. 
   It works like a combination of \code{\link{NLReport}} and \code{\link{NLDoCommand}}.
 }
 \usage{
@@ -14,30 +14,29 @@ NLDoReport(iterations, command, reporter, as.data.frame=FALSE,
 }
 \arguments{
   \item{iterations}{
-  An interger defining the number of repetitions of the execution.
+  An integer defining how many times the command is repeated.
 }
   \item{command}{
   A string with the NetLogo command to be executed. 
 }
   \item{reporter}{
-  A string conataining a NetLogo reporter.
-  (Or a vector/list containing multiple strings with different reporters - but the same effect can be reached via \code{(list var1 var2 var3)}.) 
+  A string containing a NetLogo reporter.
+  This argument can also be an R vector containing multiple strings with different NetLogo reporters (separated by commas), like \code{c("count patches", "count turtles")}. (A similar effect can be reached by using a NetLogo reporter returning a NetLogo list, like \code{"(list count patches count agents)"} as a single string argument. But the result will not be an R list with a nested R lists but an R list with nested R vectors because NetLogo lists are converted to R vectors.)
 }
   \item{as.data.frame}{
-  (optional) If \code{TRUE} the function will return a data.frame instead a list. Default is \code{FALSE} which returns a list.
+  (optional) If \code{TRUE} the function will return a data.frame instead of a list. Default is \code{FALSE}, which returns a list.
 }
   \item{df.col.names}{
-  (optional) If \code{as.data.frame=TRUE} you can define the names of the columns of the returned data.frame via this parameter. 
-  Input should be a vector containing the names as strings in the same order as the submitted reporters. 
+  (optional) If \code{as.data.frame=TRUE}, contains the names of the columns of the returned data.frame. 
+  The argument is a vector containing the names as strings in the same order as the submitted reporters. 
 }
   \item{nl.obj}{
-  (optional) A variable holding a reference to a NetLogo instance created with \code{\link{NLStart}}.
+  (optional) A reference to a NetLogo instance instance created with \code{\link{NLStart}}.
 }
 }
 \details{
-  This function is used to execute a command for more than one time and report a value or a number of values after
-  each iteration. It is often used to call a procedure (e.g. "go") for a defined number of times and will save the value of
-  a state variable in each simulation step. 
+  This function is used to execute a command more than one time and report a value or a number of values after
+  each iteration. It is often used to call a procedure (e.g. "go") for a defined number of times and save the value of a state variable each time. 
 }
 \value{
   A list/nested list or data.frame with the value(s) of the reporter after each execution of the command.
@@ -52,7 +51,7 @@ NLDoReport(iterations, command, reporter, as.data.frame=FALSE,
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.0"
+nl.path <- "C:/Program Files/NetLogo 5.0.3"
 NLStart(nl.path)
 model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"
 NLLoadModel(paste(nl.path,model.path,sep=""))
@@ -62,5 +61,6 @@ initburned10 <- NLDoReport(10, "go", c("initial-trees","burned-trees"),
                 as.data.frame=TRUE, df.col.names=c("initial","burned"))
 }
 }
-\keyword{ ~NLDoReport }
-\keyword{ ~RNetLogo }
+\keyword{interface}
+\keyword{NLDoReport}
+\keyword{RNetLogo}

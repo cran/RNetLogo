@@ -23,6 +23,11 @@ function(nl.path, gui=TRUE, obj.name=NULL, nl.version=5, is3d=FALSE)
         stop("You can't use 2D and 3D NetLogo in one R session.")
     }
     
+    # turn off awt in headless mode
+    #if (!gui) Sys.setenv(NOAWT=1)
+    #else Sys.unsetenv("NOAWT")
+    
+    
     # NetLogo version check
     if (.rnetlogo$nlversion == 0)
     {
@@ -51,7 +56,7 @@ function(nl.path, gui=TRUE, obj.name=NULL, nl.version=5, is3d=FALSE)
   It isn't possible to start it again in this R session.")
      
   .rnetlogo$savedworkingdir <- Prepro(nl.path)
-
+    
   # use the connection for NetLogo version 4.x or 5.x
   if (nl.version == 4)
   {
