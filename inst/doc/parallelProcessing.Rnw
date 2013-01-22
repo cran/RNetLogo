@@ -129,7 +129,13 @@ library(parallel)
 
 # detect the number of cores available
 processors <- detectCores()
-
+@
+<<eval=TRUE, echo=FALSE, results=hide>>=
+if (processors > 2) {
+  processors <- 2
+}
+@
+<<eval=TRUE, echo=TRUE>>=
 # create a cluster
 cl <- makeCluster(processors)
 @
