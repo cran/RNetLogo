@@ -59,7 +59,7 @@ NetLogos' Mathematica Link \url{http://ccl.northwestern.edu/netlogo/docs/mathema
 \begin{document}
 \SweaveOpts{engine=R,eps=FALSE}
 \SweaveOpts{keep.source=TRUE}
-\SweaveOpts{prefix.string=C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/tutorial/images/}
+\SweaveOpts{prefix.string=C:/Users/jthiele/own_packages/rnetlogo/pkg/RNetLogo/inst/tutorial/images/}
 
 <<preliminaries,echo=FALSE,results=hide>>=
 options(prompt = "> ")
@@ -127,7 +127,7 @@ When loading \verb@RNetLogo@ it will automaticly try to load \verb@rJava@. If th
 without any error we are ready to start NetLogo (if not, see section~\ref{sec:Installation}). 
 To do so, we have to know where NetLogo is installed. What we need is the path 
 to the folder that contains the \verb@NetLogo.jar@ file. On Windows machines this 
-could be "C:/Program Files/NetLogo 5.0/".
+could be "C:/Program Files/NetLogo 5.0.4/".
 
 Now, we have to decide, whether we want to run NetLogo in the background 
 without seeing the Graphical User Interface (GUI) and control NetLogo completly 
@@ -142,11 +142,11 @@ Since the NetLogo Controlling API changes with the NetLogo version,
 you have to use an extra parameter \verb@nl.version@ to start RNetLogo for NetLogo 
 version 4 (nl.version=4 for NetLogo 4.1.x, nl.version=40 for NetLogo 4.0.x). 
 The default value of \verb@nl.version@ is 5, which means, that we don't have
-to submit this parameter when using NetLogo 5.0.
+to submit this parameter when using NetLogo 5.0.x.
 
 To keep it simple and comprehensible we start NetLogo with GUI by typing
 <<startGUI>>=
-nl.path <- "C:/Program Files/NetLogo 5.0"
+nl.path <- "C:/Program Files/NetLogo 5.0.4"
 NLStart(nl.path)
 @
 
@@ -163,7 +163,7 @@ if we submit the following examples.
 
 \begin{figure}
   \centering
-    \includegraphics{C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/tutorial/images/NLandR1}
+    \includegraphics{C:/Users/jthiele/own_packages/rnetlogo/pkg/RNetLogo/inst/tutorial/images/NLandR1}
   \caption{NetLogo (on the right) started and controlled from R (on the left).}
   \label{fig:NLandR1}
 \end{figure}
@@ -383,7 +383,7 @@ plot(cells, xlim=x.minmax, ylim=y.minmax, xlab="x", ylab="y")
 
 \begin{figure}
   \centering
-    \includegraphics{C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/tutorial/images/NLandR_GetAgentSet1}
+    \includegraphics{C:/Users/jthiele/own_packages/rnetlogo/pkg/RNetLogo/inst/tutorial/images/NLandR_GetAgentSet1}
   \caption{A visualization of the turtles by getting them via NLGetAgentSet. 
   On the right hand side the original NetLogo simulation and on the left hand 
   side the RGUI with the visualization of the reported turtles.}
@@ -414,7 +414,7 @@ life easier. We will test this function by using the Fur model about patterns on
 animals' skin self-organization and plot the result in a simple raster image (see figure~\ref{fig:getPatches1}).
 
 <<echo=FALSE, results=hide>>=
-NLCommand("random-seed 123456789")
+NLCommand("random-seed 2147483646")
 @
 
 <<label=getPatches1, fig=TRUE, include=FALSE>>=
@@ -517,7 +517,7 @@ NLSetPatches("pcolor", my.matrix)
 
 \begin{figure}
   \centering
-    \includegraphics{C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/tutorial/images/NLandR_SetPatches1}
+    \includegraphics{C:/Users/jthiele/own_packages/rnetlogo/pkg/RNetLogo/inst/tutorial/images/NLandR_SetPatches1}
   \caption{A screenshot while NLSetPatches is executed. The color of the NetLogo 
   patches on the right hand side are changed gradually from black to red.}
   \label{fig:setPatches1}
@@ -581,29 +581,32 @@ a new session, because, as mentioned above, you cannot start several NetLogo ses
 Please note that it is not possible to start more than one instance in GUI 
 mode. 
 
-This will save the NetLogo object reference in a variable \verb@nl.intern@ in the local environment \verb@.rnetlogo@. If 
+This will save the NetLogo object reference in a variable \verb@_nl.intern_@ in the local environment \verb@.rnetlogo@. If 
 we want to work with more than one NetLogo model/instance at once, we can 
 specify an own variable name (as a string) where to save the NetLogo instance 
-in the third argument of \verb@NLStart@ like this (variable will be created in global environment):
+in the third argument of \verb@NLStart@ like this:
 
 <<startHeadless1>>=
 # a first NetLogo instance 
-# (beside the one with the default variable name (nl.intern) )
+# (beside the one with the default variable name (_nl.intern_) )
+my.netlogo1 <- "my.netlogo1"
 NLStart(nl.path, 
         gui=FALSE, 
-        obj.name="my.netlogo1")
+        nl.obj=my.netlogo1)
 # a second NetLogo instance
+my.netlogo2 <- "my.netlogo2"
 NLStart(nl.path, 
         gui=FALSE, 
-        obj.name="my.netlogo2")
+        nl.obj=my.netlogo2)
 # a third instance
+my.netlogo3 <- "my.netlogo3"
 NLStart(nl.path, 
         gui=FALSE, 
-        obj.name="my.netlogo3")
+        nl.obj=my.netlogo3)
 @
 
-All functions, presented above, take as last (optional) argument the NetLogo 
-instance variable (obj.name/nl.obj). Therefore, we can specify which instance we want 
+All functions, presented above, take as last (optional) argument the referece name of 
+the NetLogo instance (nl.obj). Therefore, we can specify which instance we want 
 to use. When working in headless mode, the first thing to do is always to load a 
 model. Executing a command or reporter without loading a model in headless 
 model will result in an error. Let us load a model into all instances. 
@@ -648,6 +651,8 @@ NLQuit(nl.obj=my.netlogo3)
 NLQuit(nl.obj=my.netlogo2)
 NLQuit(nl.obj=my.netlogo1)
 NLQuit() # the standard session as well, if open
+# alternatively we can call:
+# NLQuit(all=TRUE)
 @
 
 \section{Pitfalls}
@@ -736,7 +741,7 @@ We start with the agent-based model simulation. Since this model is based on ran
 # load RNetLogo package (if not already done)
 library(RNetLogo)
 # path to NetLogo installation
-nl.path <- "C:/Program Files/NetLogo 5.0"
+nl.path <- "C:/Program Files/NetLogo 5.0.4"
 # initialize NetLogo (if not already done)
 NLStart(nl.path, gui=FALSE)
 @
@@ -838,7 +843,7 @@ We start with initialization of NetLogo.
 # load RNetLogo package (if not already done)
 library(RNetLogo)
 # path to NetLogo installation
-nl.path <- "C:/Program Files/NetLogo 5.0"
+nl.path <- "C:/Program Files/NetLogo 5.0.4"
 # initialize NetLogo (if not already done)
 NLStart(nl.path, gui=FALSE)
 @
@@ -943,7 +948,7 @@ In a first step we have to setup the connections to NetLogo (if not already done
 # load RNetLogo package (if not already done)
 library(RNetLogo)
 # path to NetLogo installation
-nl.path <- "C:/Program Files/NetLogo 5.0"
+nl.path <- "C:/Program Files/NetLogo 5.0.4"
 # initialize NetLogo (if not already done)
 NLStart(nl.path, gui=FALSE)
 @  
@@ -956,7 +961,7 @@ database.path = "C:/test_netlogo.db"
 @
 <<label=database2,echo=FALSE, results=hide>>==
 # a hidden overwrite of the path
-database.path = "C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/tutorial/test_netlogo.db"
+database.path = "C:/Users/jthiele/own_packages/rnetlogo/pkg/RNetLogo/inst/tutorial/test_netlogo.db"
 if (file.exists(database.path)) {
   file.remove(database.path)
 }
@@ -1045,7 +1050,7 @@ First, we initialize the simulation, run it for 150 time steps and collect the p
 # load RNetLogo package (if not already done)
 library(RNetLogo)
 # path to NetLogo installation
-nl.path <- "C:/Program Files/NetLogo 5.0"
+nl.path <- "C:/Program Files/NetLogo 5.0.4"
 # initialize NetLogo (if not already done)
 NLStart(nl.path, gui=FALSE)
 @
@@ -1055,7 +1060,7 @@ model.name <- "Urban Suite - Sprawl Effect.nlogo"
 NLLoadModel(paste(nl.path,model.path,model.name,sep="/"))
 @
 <<label=threedplot2, echo=FALSE, results=hide>>=
-NLCommand("random-seed 324534346123")
+NLCommand("random-seed 2147483646")
 @
 <<label=threedplot3>>=
 NLCommand("resize-world -20 20 -20 20 ")
@@ -1198,7 +1203,7 @@ In the third step, we initialize and run the NetLogo simulation and collect the 
 <<label=timeslider3, eval=FALSE>>=
 library(RNetLogo)
 # initialize NetLogo
-nl.path <- "C:/Program Files/NetLogo 5.0"
+nl.path <- "C:/Program Files/NetLogo 5.0.4"
 model.path <- "/models/Sample Models/Biology/Virus.nlogo"
 NLStart(nl.path)
 # load the Tumor model
@@ -1234,9 +1239,11 @@ plottimedata(timedata.list=timedata, x.var="xcor", y.var="ycor", xlab="x",
              mains=c("Sick","Immune","Stick-count","Age"),
              xlim=world.dim[[1]], ylim=world.dim[[2]])
 @
-
+<<label=quitall, echo=FALSE, results=hide>>=
+NLQuit(all=T)
+@
 \begin{figure}
-  \centering \includegraphics{C:/Programme/R/R-2.14.1/own_packages/rnetlogo/pkg/RNetLogo/inst/tutorial/images/NLandR_TimeSlider}
+  \centering \includegraphics{C:/Users/jthiele/own_packages/rnetlogo/pkg/RNetLogo/inst/tutorial/images/NLandR_TimeSlider}
   \caption{Timeslider example using the Virus model.}
   \label{fig:timeslider1}
 \end{figure}

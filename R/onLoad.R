@@ -1,11 +1,11 @@
 .rnetlogo <- new.env()
-.rnetlogo[["nl.intern"]] <- NULL
-.rnetlogo[["objectnames"]] <- c()
 .rnetlogo[["savedworkingdir"]] <- c()
 .rnetlogo[["libname"]] <- ""
 .rnetlogo[["pkgname"]] <- ""
 .rnetlogo[["nlversion"]] <- 0
 .rnetlogo[["nl3d"]] <- -1
+.rnetlogo[["guiobj"]] <- NULL
+.rnetlogo[["objects"]] <- list()
 
 .onLoad <-
 function(libname, pkgname)

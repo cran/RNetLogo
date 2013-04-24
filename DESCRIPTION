@@ -1,6 +1,6 @@
 Package: RNetLogo
-Version: 0.9.5
-Date: 2013-01-21
+Version: 0.9-6
+Date: 2013-04-24
 Title: Provides an interface to the agent-based modelling platform
         NetLogo
 Author: Jan C. Thiele
@@ -17,6 +17,7 @@ SystemRequirements: Java (>= 5.0), NetLogo (>= 4.0)
 License: GPL-2
 LazyLoad: yes
 URL: http://rnetlogo.r-forge.r-project.org/
-Packaged: 2013-01-21 15:28:27 UTC; jthiele
+Packaged: 2013-04-24 14:14:45 UTC; jthiele
+NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2013-01-22 11:42:03
+Date/Publication: 2013-04-25 15:41:34

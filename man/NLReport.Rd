@@ -15,7 +15,7 @@ NLReport(reporter, nl.obj=NULL)
   (Or a vector of strings.)
 }
   \item{nl.obj}{
-  (optional) A reference to a NetLogo instance created with \code{\link{NLStart}}.
+  (optional) A string identifying a reference to a NetLogo instance created with \code{\link{NLStart}}.
 }
 }
 \details{
@@ -36,13 +36,14 @@ NLReport(reporter, nl.obj=NULL)
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.0.3"
+nl.path <- "C:/Program Files/NetLogo 5.0.4"
 NLStart(nl.path)
 model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"
 NLLoadModel(paste(nl.path,model.path,sep=""))
 NLCommand("setup")
-NLDoCommandWhile("burned-trees < 2200", "go")
+NLDoCommand(10, "go")
 noburned <- NLReport("burned-trees")
+str(noburned)
 }
 }
 \keyword{interface}

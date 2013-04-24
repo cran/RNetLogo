@@ -14,7 +14,7 @@ NLLoadModel(model.path, nl.obj=NULL)
   A string containing either the absolute path to the model file (*.nlogo file) or a relative path to the model file starting from the NetLogo installation directory specified in \code{\link{NLStart}}. 
 }
   \item{nl.obj}{
-  (optional) A reference to a NetLogo instance created with \code{\link{NLStart}}.
+  (optional) A string identifying a reference to a NetLogo instance created with \code{\link{NLStart}}.
 }
 }
 \value{
@@ -29,11 +29,14 @@ NLLoadModel(model.path, nl.obj=NULL)
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.0.3"
+nl.path <- "C:/Program Files/NetLogo 5.0.4"
 NLStart(nl.path)
 model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"
 absolute.model.path <- paste(nl.path,model.path,sep="")
 NLLoadModel(absolute.model.path)
+
+relative.model.path <- "models/Sample Models/Earth Science/Fire.nlogo"
+NLLoadModel(relative.model.path)
 }
 }
 \keyword{interface}

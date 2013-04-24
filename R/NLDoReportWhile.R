@@ -1,8 +1,17 @@
 NLDoReportWhile <-
 function(condition, command, reporter, as.data.frame=FALSE, df.col.names=NULL, max.minutes=10, nl.obj=NULL)
 {
+  # get internal nl.obj if NULL
   if (is.null(nl.obj))
-    nl.obj <- .rnetlogo[["nl.intern"]]
+  {
+    nl.obj <- "_nl.intern_"
+  }
+  # get NetLogo reference
+  if (nl.obj %in% names(.rnetlogo$objects)) {
+    nl.obj <- .rnetlogo$objects[[nl.obj]]
+  } else {
+    stop(paste('There is no NetLogo reference stored under the name ',nl.obj,".", sep=""))
+  }   
     
   if (length(reporter) == 1) 
   {

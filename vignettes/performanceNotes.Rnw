@@ -67,11 +67,14 @@ individual based modelling, ibm, performance, execution time} %% without formatt
 \begin{document}
 \SweaveOpts{engine = R, eps = FALSE}
 \SweaveOpts{keep.source = TRUE}
-%\SweaveOpts{prefix.string=C:/Program Files/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/images/}
+%\SweaveOpts{prefix.string=C:/Users/jthiele/own_packages/rnetlogo/pkg/RNetLogo/vignettes/images/}
 \SweaveOpts{prefix.string=images/}
 
 <<preliminaries, echo=FALSE, results=hide>>=
 options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
+# ToDo: adapt this path
+#base.path <- "C:/Users/jthiele/own_packages/rnetlogo/pkg/RNetLogo/vignettes/"
+base.path <- ""
 @
 \fvset{listparameters={\setlength{\topsep}{0pt}}}
 \renewenvironment{Schunk}{\vspace{\topsep}}{\vspace{\topsep}}
@@ -127,11 +130,11 @@ test_t6 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles", as.data.frame=F)
 @
 
 <<test_data_092_B, eval=FALSE, results=hide, echo=FALSE>>=
-save.image(file="testdata_RNetLogo092.RData")
+save.image(file=paste(base.path, "testdata_RNetLogo092.RData", sep=""))
 @
 
 <<list_example_RN092_A, results=hide, echo=FALSE>>=
-load("testdata_RNetLogo092.RData")
+load(paste(base.path, "testdata_RNetLogo092.RData", sep=""))
 @
 
 <<list_example_RN092_B, eval=FALSE>>=
@@ -242,13 +245,13 @@ test_t6 <- NLGetAgentSet(c("who", "xcor", "ycor"), "turtles", as.data.frame=F, a
 
 test_t7 <- NLGetAgentSet("who", "turtles", as.vector=T)
 
-save.image(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/testdata_RNetLogo093.RData")
+save.image(file=paste(base.path, "testdata_RNetLogo093.RData", sep=""))
 
 #NLQuit()
 @
 
 <<list_example_RN093_A, results=hide, echo=FALSE>>=
-load("testdata_RNetLogo093.RData")
+load(paste(base.path, "testdata_RNetLogo093.RData", sep=""))
 @
 
 <<list_example_RN093_B, eval=FALSE>>=
@@ -395,10 +398,10 @@ times_092_NL413 <- lapply(it, function(x) {f_GetAgentSet(x)})
 #NLQuit()
 @
 <<label=data_recording_092_413_save, eval=FALSE, results=hide, echo=FALSE>>=
-save.image(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL413_RNetLogo092.RData")
+save.image(file=paste(base.path, "NL413_RNetLogo092.RData", sep=""))
 @
 <<load_data_recording_092_413, eval=TRUE, results=hide, echo=FALSE>>=
-load("NL413_RNetLogo092.RData")
+load(paste(base.path, "NL413_RNetLogo092.RData", sep=""))
 @
 
 The execution time for getting the agent variables within a plain list output (one list element for each agent) with one (t5) as well as three (t6) agent variables is shown in Figure~\ref{fig:plot_data_recording_092_413_t5}.
@@ -458,7 +461,7 @@ The data.frame output type with one requested agent variable (t1) is in all case
 Now, let us do the same with NetLogo 5.0. 
 
 <<load_data_recording_092_50, eval=TRUE, results=hide, echo=FALSE>>=
-load("NL50_RNetLogo092.RData")
+load(paste(base.path, "NL50_RNetLogo092.RData", sep=""))
 @
 
 The execution times for producing the plain list output (one list element for each agent) with one (t5) as well as three (t6) agent variables is given in Figure~\ref{fig:plot_data_recording_092_50_t5}.
@@ -577,7 +580,7 @@ times_093_NL5 <- lapply(it, function(x) {f_GetAgentSet(x)})
 Let us start with a comparison of the performance of the three different output types for requesting one agent variable as shown in Figure~\ref{fig:plot_data_recording_093_50_1av}.
 
 <<load_data_recording_093_50, eval=TRUE, results=hide, echo=FALSE>>=
-load("NL50_RNetLogo093.RData")
+load(paste(base.path, "NL50_RNetLogo093.RData", sep=""))
 @
 
 <<label=plot_data_recording_093_50_1av, eval=TRUE, echo=FALSE, include=FALSE, fig=TRUE, height=6, width=15>>=
@@ -645,9 +648,9 @@ The time for requesting three agent variables in the old list style takes approx
 Just for interest, we will compare also the performance of NetLogo 4.1.3 with the one of NetLogo 4.0.5, which is possible since RNetLogo 0.9.3, as well as with NetLogo 5.0.
 
 <<load_data_recording_093_405, eval=TRUE, results=hide, echo=FALSE>>=
-load("NL405_RNetLogo093.RData")
-load("NL413_RNetLogo093.RData")
-load("NL50_RNetLogo093.RData")
+load(paste(base.path, "NL405_RNetLogo093.RData", sep=""))
+load(paste(base.path, "NL413_RNetLogo093.RData", sep=""))
+load(paste(base.path, "NL50_RNetLogo093.RData", sep=""))
 @
 
 The results for only one agent variable are shown in Figure~\ref{fig:plot_data_recording_093_405_1av} 
@@ -785,7 +788,7 @@ NLQuit()
 @
 
 <<data_recording_093_50_B, eval=FALSE, echo=FALSE, results=hide>>=
-save.image(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL50_RNetLogo093.RData")
+save.image(file=paste(base.path, "NL50_RNetLogo093.RData", sep=""))
 @
 
 
@@ -814,7 +817,7 @@ f_GetAgentSet <- function(x) {
 
 it <- c(100,200,400,800,1600,3200,6400,12800,25600,51200,102400,204800,409600)
 times_093_NL413 <- lapply(it, function(x) {f_GetAgentSet(x)})
-save.image(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL413_RNetLogo093.RData")
+save.image(file=paste(base.path, "NL413_RNetLogo093.RData", sep=""))
 
 #NLQuit()
 @
@@ -845,7 +848,7 @@ f_GetAgentSet <- function(x) {
 
 it <- c(100,200,400,800,1600,3200,6400,12800,25600,51200,102400,204800,409600)
 times_093_NL405 <- lapply(it, function(x) {f_GetAgentSet(x)})
-save.image(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL405_RNetLogo093.RData")
+save.image(file=paste(base.path, "NL405_RNetLogo093.RData", sep=""))
 
 #NLQuit()
 @
@@ -875,7 +878,7 @@ f_GetAgentSet <- function(x) {
 
 it <- c(100,200,400,800,1600,3200,6400,12800,25600,51200,102400,204800,409600)
 times_092_NL5 <- lapply(it, function(x) {f_GetAgentSet(x)})
-save.image(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL50_RNetLogo092.RData")
+save.image(file=paste(base.path, "NL50_RNetLogo092.RData", sep=""))
 
 #NLQuit()
 @
@@ -903,7 +906,7 @@ f_GetAgentSet <- function(x) {
 
 it <- c(100,200,400,800,1600,3200,6400,12800,25600,51200,102400,204800,409600)
 times_092_NL413 <- lapply(it, function(x) {f_GetAgentSet(x)})
-save.image(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL413_RNetLogo092.RData")
+save.image(file=paste(base.path, "NL413_RNetLogo092.RData", sep=""))
 
 #NLQuit()
 @
@@ -911,12 +914,12 @@ save.image(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vign
 
 
 <<all_together, eval=FALSE, echo=FALSE, results=hide>>=
-load(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL50_RNetLogo093.RData")
-load(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL413_RNetLogo093.RData")
-load(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL405_RNetLogo093.RData")
+load(file=paste(base.path, "NL50_RNetLogo093.RData", sep=""))
+load(file=paste(base.path, "NL413_RNetLogo093.RData", sep=""))
+load(file=paste(base.path, "NL405_RNetLogo093.RData", sep=""))
 
-load(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL50_RNetLogo092.RData")
-load(file="C:/Programme/R/R-2.15.2/own_packages/rnetlogo/pkg/RNetLogo/vignettes/NL413_RNetLogo092.RData")
+load(file=paste(base.path, "NL50_RNetLogo092.RData", sep=""))
+load(file=paste(base.path, "NL413_RNetLogo092.RData", sep=""))
 
 t1_RN093_NL5 <- sapply(times_093_NL5, function(x) x$t1)
 t2_RN093_NL5 <- sapply(times_093_NL5, function(x) x$t2)

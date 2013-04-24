@@ -36,7 +36,7 @@ NLGetAgentSet(agent.var, agentset, as.data.frame=TRUE,
   By default \code{as.vector} is \code{FALSE}.
 } 
   \item{nl.obj}{
-  (optional) A reference to a NetLogo instance instance created with \code{\link{NLStart}}.
+  (optional) A string identifying a reference to a NetLogo instance instance created with \code{\link{NLStart}}.
 }
 }
 \details{
@@ -62,7 +62,7 @@ NLGetAgentSet(agent.var, agentset, as.data.frame=TRUE,
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.0.3"
+nl.path <- "C:/Program Files/NetLogo 5.0.4"
 NLStart(nl.path)
 # NLLoadModel(...)
 NLCommand("create-turtles 10")
@@ -86,6 +86,8 @@ str(colors.list2)
 # getting the ends of links is a little bit more tricky, because they store only the
 # reference to the turtles and turtles can not direcly be requested. 
 # A way to go is:
+# create some links
+NLCommand("ask turtles [ create-links-with n-of 2 other turtles ]")
 link.test <- NLGetAgentSet(c("[who] of end1","[who] of end2"),"links")
 str(link.test)
 }

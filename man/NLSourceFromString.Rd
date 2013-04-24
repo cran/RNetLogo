@@ -19,7 +19,7 @@ NLSourceFromString(..., append.model=TRUE, nl.obj=NULL)
   By default, all existing code will be appended.
 }
   \item{nl.obj}{
-  (optional) A variable holding a reference to an NetLogo instance created with \code{\link{NLStart}}.
+  (optional) A string identifying a reference to a NetLogo instance created with \code{\link{NLStart}}.
 }
 }
 \details{
@@ -39,7 +39,7 @@ NLSourceFromString(..., append.model=TRUE, nl.obj=NULL)
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.0.3"
+nl.path <- "C:/Program Files/NetLogo 5.0.4"
 NLStart(nl.path)
 setup <- "to setup\n ca\n crt 10\nend \n"
 go <- "to go\n ask turtles [\n  set xcor random-xcor\n  

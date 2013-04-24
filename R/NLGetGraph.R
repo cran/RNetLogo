@@ -1,8 +1,15 @@
 NLGetGraph <-
 function(link.agentset="links", nl.obj=NULL)
 {
+  # get internal nl.obj if NULL
   if (is.null(nl.obj))
-    nl.obj <- .rnetlogo[["nl.intern"]]
+  {
+    nl.obj <- "_nl.intern_"
+  }
+  # check for unknown nl.obj
+  if (!(nl.obj %in% names(.rnetlogo$objects))) {
+    stop(paste('There is no NetLogo reference stored under the name ',nl.obj,".", sep=""))
+  }  
  
   from <- NLReport(paste("map [[[who] of end1] of ?] sort ", link.agentset, collapse=""), nl.obj=nl.obj)        
   to <- NLReport(paste("map [[[who] of end2] of ?] sort ", link.agentset, collapse=""), nl.obj=nl.obj)

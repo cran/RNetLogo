@@ -31,7 +31,7 @@ NLDoReport(iterations, command, reporter, as.data.frame=FALSE,
   The argument is a vector containing the names as strings in the same order as the submitted reporters. 
 }
   \item{nl.obj}{
-  (optional) A reference to a NetLogo instance instance created with \code{\link{NLStart}}.
+  (optional) A string identifying a reference to a NetLogo instance instance created with \code{\link{NLStart}}.
 }
 }
 \details{
@@ -51,7 +51,7 @@ NLDoReport(iterations, command, reporter, as.data.frame=FALSE,
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.0.3"
+nl.path <- "C:/Program Files/NetLogo 5.0.4"
 NLStart(nl.path)
 model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"
 NLLoadModel(paste(nl.path,model.path,sep=""))
@@ -59,6 +59,7 @@ NLCommand("setup")
 burned10 <- NLDoReport(10, "go", "burned-trees")
 initburned10 <- NLDoReport(10, "go", c("initial-trees","burned-trees"), 
                 as.data.frame=TRUE, df.col.names=c("initial","burned"))
+str(initburned10)
 }
 }
 \keyword{interface}
