@@ -23,7 +23,7 @@ NLSetAgentSet(agentset, input, var.name=NULL, nl.obj=NULL)
   If \code{input} is a simple vector instead of a data.frame it gives the name of the agent variable as a string which should be set with the values of the vector submitted in \code{input}. With a vector you can only set one agent variable at a time. 
 }
   \item{nl.obj}{
-  (optional) A reference to a NetLogo instance created with \code{\link{NLStart}}.
+  (optional) A string identifying a reference to a NetLogo instance created with \code{\link{NLStart}}.
 }
 }
 \details{
@@ -44,7 +44,7 @@ NLSetAgentSet(agentset, input, var.name=NULL, nl.obj=NULL)
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.0.3"
+nl.path <- "C:/Program Files/NetLogo 5.0.4"
 NLStart(nl.path)
 # NLLoadModel(...)
 ag <- NLGetAgentSet(c("xcor","ycor"),"turtles")

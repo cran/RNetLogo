@@ -14,7 +14,7 @@ NLGetGraph(link.agentset="links", nl.obj=NULL)
   (optional) A string defining an agentset of NetLogo Links. Default is \code{"links"}, which are all links.
 }
   \item{nl.obj}{
-  (optional) A reference to a NetLogo instance created with \code{\link{NLStart}}.
+  (optional) A string identifying a reference to a NetLogo instance created with \code{\link{NLStart}}.
 }
 }
 \details{
@@ -31,7 +31,7 @@ NLGetGraph(link.agentset="links", nl.obj=NULL)
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.0.3"
+nl.path <- "C:/Program Files/NetLogo 5.0.4"
 NLStart(nl.path)
 model.path <- 
 "/models/Sample Models/Networks/Preferential Attachment.nlogo"

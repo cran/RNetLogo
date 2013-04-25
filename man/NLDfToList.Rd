@@ -16,7 +16,7 @@ NLDfToList(in.data.frame, nl.obj=NULL)
   The data.frame to fill the NetLogo lists.
 }
   \item{nl.obj}{
-  (optional) A reference to a NetLogo instance created with \code{\link{NLStart}}. 
+  (optional) A string identifying a reference to a NetLogo instance created with \code{\link{NLStart}}. 
 }
 }
 \details{
@@ -35,9 +35,12 @@ NLDfToList(in.data.frame, nl.obj=NULL)
 }
 \examples{
 \dontrun{
-NLStart("C:/Program Files/NetLogo 5.0.3")
-df1 <- data.frame(x=c(1,2,3,4),y=c(1,2,3,4))
-# the current NetLogo model must have lists with the names 'x' and 'y'
+NLStart("C:/Program Files/NetLogo 5.0.4")
+df1 <- data.frame(x=c(1,2,3,4),y=c(5,6,7,8))
+# the current NetLogo model must have two variables ('x' and 'y')
+# add the variables
+NLSourceFromString("globals [x y]", append.model=FALSE)
+# set the variables to the data.frame
 NLDfToList(df1)
 }
 }

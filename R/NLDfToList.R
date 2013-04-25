@@ -1,9 +1,16 @@
 NLDfToList <- 
 function(in.data.frame, nl.obj=NULL)
-{
+{    
+  # get internal nl.obj if NULL
   if (is.null(nl.obj))
-    nl.obj <- .rnetlogo[["nl.intern"]]
-    
+  {
+    nl.obj <- "_nl.intern_"
+  }
+  # check for unknown nl.obj
+  if (!(nl.obj %in% names(.rnetlogo$objects))) {
+    stop(paste('There is no NetLogo reference stored under the name ',nl.obj,".", sep=""))
+  }  
+  
   merge.key.values <- function(in.df, curr.name, nl.obj)
   {
     set.base <- paste(c('set',curr.name), collapse=" ")

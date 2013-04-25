@@ -1,11 +1,11 @@
 library(RNetLogo)
 
 # adapt the path
-nl.path <- "C:/Program Files/NetLogo 5.0"
+nl.path <- "C:/Program Files/NetLogo 5.0.4"
 NLStart(nl.path, gui=FALSE, nl.version=5)
 model.path <- "models/Curricular Models/Urban Suite/Urban Suite - Sprawl Effect.nlogo"
 NLLoadModel(paste(nl.path,model.path,sep="/"))
-NLCommand("random-seed 324534346123")
+NLCommand("random-seed 32453433")
 NLCommand("resize-world -20 20 -20 20 ")
 NLCommand("set smoothness 10",
           "set max-attraction 5",

@@ -1,12 +1,14 @@
 library(RNetLogo)
 
 # PLEASE FILL IN THE PATH TO YOUR NetLogo INSTALLATION FOLDER !!!!
-path.to.NetLogo <- "C:/Program Files/NetLogo 5.0"
+path.to.NetLogo <- "C:/Program Files/NetLogo 5.0.4"
 
 # start NetLogo, if it is not started yet
 if (!exists("nl.test1", -1)) 
 {
-  NLStart(path.to.NetLogo, nl.version=5, obj.name="nl.test1")
+  # an reference name
+  nl.test1 <- "nl.test1"
+  NLStart(path.to.NetLogo, gui=TRUE, nl.obj=nl.test1, nl.version=5)
 }
 
 # load a sample model
@@ -38,5 +40,3 @@ print(world.dims)
 
 
 # use NLQuit(nl.obj=nl.test1) to close the NetLogo Window
-
-

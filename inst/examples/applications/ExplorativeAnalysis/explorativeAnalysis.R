@@ -2,7 +2,7 @@
 library(RNetLogo)
 
 # initialization of NetLogo
-nl.path <- "C:/Program Files/NetLogo 5.0"
+nl.path <- "C:/Program Files/NetLogo 5.0.4"
 NLStart(nl.path, nl.version=5, gui=FALSE)
 model.path <- "models/Sample Models/Earth Science/Fire.nlogo"
 NLLoadModel(paste(nl.path,model.path,sep="/"))

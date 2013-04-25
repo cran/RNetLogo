@@ -2,18 +2,18 @@ library(RNetLogo)
 
 # path to NetLogo installation folder
 # PLEASE FILL IN THE PATH TO YOUR NetLogo INSTALLATION FOLDER !!!!
-path.to.NetLogo <- "C:/Program Files/NetLogo 5.0"
+path.to.NetLogo <- "C:/Program Files/NetLogo 5.0.4"
 # version of NetLogo 
 nl.version = 5
                                                                   
 # to start NetLogo without GUI (=headless mode, multiple instances possible)
 # and in own, user managed, object instance variable with the name "my.obj1" use: 
-NLStart(path.to.NetLogo, gui=FALSE, nl.version=nl.version, obj.name="my.obj1")
-# the name "my.obj1" can't be used again for another NetLogo instance variable in the same R session
-# after it was assigned once (even if the NetLogo instance was quitted via NLQuit)
+my.obj1 <- "my.obj1"
+NLStart(path.to.NetLogo, gui=FALSE, nl.version=5, nl.obj=my.obj1)
  
 # start another NetLogo instance into variable with the name "my.obj2" use: 
-NLStart(path.to.NetLogo, gui=FALSE, nl.version=nl.version, obj.name="my.obj2")
+my.obj2 <- "my.obj2"
+NLStart(path.to.NetLogo, gui=FALSE, nl.version=5, nl.obj=my.obj2)
 
 # relative path to a sample model
 model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"
@@ -38,5 +38,3 @@ print(name.var2)
 # quit both NetLogo instances
 NLQuit(my.obj1)
 NLQuit(my.obj2)
-
-

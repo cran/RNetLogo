@@ -43,7 +43,7 @@ NLGetPatches(patch.var, patchset="patches", as.matrix=FALSE,
   By default \code{as.vector} is \code{FALSE}.
 } 
   \item{nl.obj}{
-  (optional) A reference to a NetLogo instance created with \code{\link{NLStart}}.
+  (optional) A string identifying a reference to a NetLogo instance created with \code{\link{NLStart}}.
 }
 }
 \details{
@@ -68,7 +68,7 @@ NLGetPatches(patch.var, patchset="patches", as.matrix=FALSE,
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.0.3"
+nl.path <- "C:/Program Files/NetLogo 5.0.4"
 NLStart(nl.path)
 # NLLoadModel(...)
 

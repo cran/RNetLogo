@@ -29,7 +29,7 @@ library(RNetLogo)
 #----
 # TODO: adapt this path to your NetLogo installation folder
 #----
-nl.path <- "C:/Program Files/NetLogo 5.0"
+nl.path <- "C:/Program Files/NetLogo 5.0.4"
 # initialize NetLogo
 NLStart(nl.path, nl.version=5, gui=FALSE)
 # load Gas Lab model from model library

@@ -1,8 +1,15 @@
 NLSetAgentSet <-
 function(agentset, input, var.name=NULL, nl.obj=NULL) 
 {
+  # get internal nl.obj if NULL
   if (is.null(nl.obj))
-    nl.obj <- .rnetlogo[["nl.intern"]]
+  {
+    nl.obj <- "_nl.intern_"
+  }
+  # check for unknown nl.obj
+  if (!(nl.obj %in% names(.rnetlogo$objects))) {
+    stop(paste('There is no NetLogo reference stored under the name ',nl.obj,".", sep=""))
+  }  
   
   if (is.data.frame(input)) {
     if (length(input[[1]]) != NLReport(paste("count ",agentset,sep=" "), nl.obj=nl.obj)) {

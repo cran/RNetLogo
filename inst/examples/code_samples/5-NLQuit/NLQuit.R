@@ -2,12 +2,14 @@ library(RNetLogo)
 
 # path to NetLogo installation folder
 # PLEASE FILL IN THE PATH TO YOUR NetLogo INSTALLATION FOLDER !!!!
-path.to.NetLogo <- "C:/Program Files/NetLogo 5.0"
+path.to.NetLogo <- "C:/Program Files/NetLogo 5.0.4"
 
 # start NetLogo, if it is not started yet
 if (!exists("nl.test1", -1)) 
 {
-  NLStart(path.to.NetLogo, gui=TRUE, nl.version=5, obj.name="nl.test1")
+  # an reference name
+  nl.test1 <- "nl.test1"
+  NLStart(path.to.NetLogo, gui=TRUE, nl.obj=nl.test1, nl.version=5)
 }
 
 # load a sample model
@@ -18,9 +20,3 @@ NLLoadModel(paste(path.to.NetLogo,model.path,sep=""),nl.obj=nl.test1)
 # if it is a NetLogo instance with GUI, it can't be started again in the same R session. 
 # You have to restart the R session to start NetLogo with GUI again.
 NLQuit(nl.obj=nl.test1)
-
-
-
-
-
-

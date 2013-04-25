@@ -13,8 +13,8 @@ m <- dbDriver("SQLite")
 #----
 # TODO: adapt these paths
 #----
-nl.path = "C\\Program Files\\NetLogo 5.0"
-database.path = "C:\\Dokumente und Einstellungen\\jthiele\\Desktop\\WoodHoopoes\\test_netlogo.db"
+nl.path = "C:/Program Files/NetLogo 5.0.4"
+database.path = "C:/Users/jthiele/Documents/test_netlogo.db"
 
 # create connection to the database 
 # (if the database does not exist alredy, this will create a file test_netlogo.db)
@@ -23,7 +23,7 @@ con <- dbConnect(m, dbname = database.path)
 # start NetLogo session
 NLStart(nl.path, nl.version=5, gui=FALSE)
 # load a NetLogo Model
-NLLoadModel(paste(c(nlpath,"models/Sample Models/Earth Science/Fire.nlogo"),collapse="/"))
+NLLoadModel(paste(c(nl.path,"models/Sample Models/Earth Science/Fire.nlogo"),collapse="/"))
 # setup the model
 NLCommand("setup")
 

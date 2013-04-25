@@ -1,36 +1,73 @@
 NLQuit <-
-function(nl.obj=NULL)
+function(nl.obj=NULL, all=FALSE)
 {
-  if (is.null(nl.obj))
-    nl.obj <- .rnetlogo[["nl.intern"]]
-    
-  .jcall(nl.obj, "V", "KillWorkspace")
+  if (all) {
+    # object names
+    objs <- names(.rnetlogo$objects)
 
-  #print("jinit")
-  #.jinit(force.init=TRUE)
-  #print("detach RNetLogo")
-  #detach("package:RNetLogo")
-
-  # see http://osdir.com/ml/lang.r.rosuda.devel/2007-01/msg00052.html
-  #print("doneJVM")
-  #.Call("doneJVM")
-
-  #print("detach rJava")
-  #detach("package:rJava")
-
-  # free the instance
-  nl.obj <- NULL
-  # call the garbage collector
-  .jcall('java/lang/System', 'V', 'gc')
-  # java error handling
-  if (!is.null(e<-.jgetEx()))
-  {
-    if (.jcheck(silent=TRUE))
-    {
-      print(e)
-      stop()
+    # handle gui obj as last, to prevent java.lang.InterruptionException
+    guiobj <- NULL    
+    if ((!is.null(.rnetlogo$guiobj)) && (.rnetlogo$guiobj %in% objs)) {
+      objs <- objs[which(!objs == .rnetlogo$guiobj)]
+      guiobj <- .rnetlogo$guiobj
     }
-  } 
-  setwd(.rnetlogo$savedworkingdir[2])
+    
+    invisible(
+      lapply(objs, function(x) {NLQuit(nl.obj=x, all=F)})
+    )  
+    
+    # close gui obj
+    if (!is.null(guiobj)) {
+      NLQuit(nl.obj=guiobj, all=F)
+    }
+    
+  } else { 
+    obj.name <- nl.obj
+    if (is.null(obj.name))
+    {
+      obj.name = "_nl.intern_"
+    }
+    if (obj.name %in% names(.rnetlogo$objects)) {
+      nl.obj <- .rnetlogo$objects[[obj.name]]
+    } else {
+      stop(paste('There is no NetLogo reference stored under the name ',obj.name,".", sep=""))
+    }    
+    
+    .jcall(nl.obj, "V", "KillWorkspace")
+  
+    #print("jinit")
+    #.jinit(force.init=TRUE)
+    #print("detach RNetLogo")
+    #detach("package:RNetLogo")
+  
+    # see http://osdir.com/ml/lang.r.rosuda.devel/2007-01/msg00052.html
+    #print("doneJVM")
+    #.Call("doneJVM")
+  
+    #print("detach rJava")
+    #detach("package:rJava")
+  
+    # free the instance
+    # doesn't work for others than .rnetlogo[['nl.intern']]
+    nl.obj <- NULL
+    .rnetlogo$objects[obj.name] <- NULL
+    
+    # call the garbage collector
+    .jcall('java/lang/System', 'V', 'gc')
+    # java error handling
+    if (!is.null(e<-.jgetEx()))
+    {
+      if (.jcheck(silent=TRUE))
+      {
+        print(e)
+        stop()
+      }
+    } 
+    
+    # reset working directory after last NetLogo instance was closed
+    if (length(.rnetlogo$objects) == 0) {
+      setwd(.rnetlogo$savedworkingdir[1])
+    }
+  }
 }
 

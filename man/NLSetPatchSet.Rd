@@ -7,17 +7,17 @@
   \code{NLSetPatchSet} is an easy way to set the variable value of one or more patches to the values of a data.frame.
 }
 \usage{
-NLSetPatchSet(input, patch.var, nl.obj=NULL)
+NLSetPatchSet(patch.var, input, nl.obj=NULL)
 }
 \arguments{
-  \item{input}{
-  A data.frame with first columns giving the coordinates of a patch. For conventional 2D NetLogo they have to be the x- (first column) and the y-coordinate (second column), for NetLogo 3D they have to be the x- (first column), the y- (second column) and the z-coordinate (third column). The thrid or fourth column have to contain the new value for the patch variable defined in argument \code{patch.var}. 
-}
   \item{patch.var}{
   This argument gives the name of the patch variable as a string which should be set to the values of the thrid (for NetLogo 2D) or fourth column (for NetLogo 3D) of the data.frame submitted in \code{input}.
 }
+  \item{input}{
+  A data.frame with first columns giving the coordinates of a patch. For conventional 2D NetLogo they have to be the x- (first column) and the y-coordinate (second column), for NetLogo 3D they have to be the x- (first column), the y- (second column) and the z-coordinate (third column). The thrid or fourth column have to contain the new value for the patch variable defined in argument \code{patch.var}. 
+}
   \item{nl.obj}{
-  (optional) A reference to a NetLogo instance created with \code{\link{NLStart}}.
+  (optional) A string identifying a reference to a NetLogo instance created with \code{\link{NLStart}}.
 }
 }
 \details{
@@ -38,18 +38,20 @@ NLSetPatchSet(input, patch.var, nl.obj=NULL)
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.0.3"
+nl.path <- "C:/Program Files/NetLogo 5.0.4"
 NLStart(nl.path)
 # NLLoadModel(...)
 
 # for NetLogo 2D:
 input <- NLGetPatches(c("pxcor","pycor","pcolor"))
+str(input)
 # for NetLogo 3D:
 input <- NLGetPatches(c("pxcor","pycor","pzcor","pcolor"))
+str(input)
 
 input$pcolor <- floor(abs(rnorm(nrow(input))*100)) 
 patch.var <- "pcolor"
-NLSetPatchSet(input, patch.var)
+NLSetPatchSet(patch.var, input)
 }
 }
 \keyword{interface}

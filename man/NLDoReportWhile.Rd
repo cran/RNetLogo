@@ -35,7 +35,7 @@ NLDoReportWhile(condition, command, reporter, as.data.frame=FALSE,
   (optional) If \code{max.minutes > 0} the execution stops after the defined number of minutes (with an error and no return value). By default, all executions are stoped after 5 minutes, to prevent the execution of endless loops. If you need more time, increase the value. If you're sure what you do, you can set this value to 0. Then, it will run while the condition is true (i.e. endlessly when the condition is never met. In GUI mode, you can press "Tools --> Halt" in the NetLogo menu to interrupt a running process.). This can speed up the execution, because the time checking is not applied in this case. 
 }
   \item{nl.obj}{
-  (optional) A reference to a NetLogo instance created with \code{\link{NLStart}}.
+  (optional) A string identifying a reference to a NetLogo instance created with \code{\link{NLStart}}.
 }
 }
 \details{
@@ -57,13 +57,14 @@ NLDoReportWhile(condition, command, reporter, as.data.frame=FALSE,
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.0.3"
+nl.path <- "C:/Program Files/NetLogo 5.0.4"
 NLStart(nl.path)
 model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"
 NLLoadModel(paste(nl.path,model.path,sep=""))
 NLCommand("setup")
 burnedLower2200 <- NLDoReportWhile("burned-trees < 2200", "go", 
                                    "burned-trees")
+str(burnedLower2200)
 }
 }
 \keyword{interface}
