@@ -1,3 +1,9 @@
+Changes in version 0.9-7:
+	NEW FEATURES
+	*Massive performance improvements in NLSetAgentSet, NLSetPatches, NLSetPatchSet
+	*Change in NLSetPatchSet: identifies columns in the input data.frame by name. Expects pxcor, pycor (and, in case of 3D, pzcor) columns.
+
+
 Changes in version 0.9-6:
 	BUG FIXES
 	*NLStart(<nl.path>, ...) failed with: Error in .jnew	 ("nlcon/Preprocess") : java.lang.UnsupportedClassVersionError: 	 nlcon/Preprocess : Unsupported major.minor version 51.0}. This 	 happend when using Java versions before 7. The .jar files are 	 now compiled with support up to Java 5. 

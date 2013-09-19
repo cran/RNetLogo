@@ -12,7 +12,7 @@ NLSourceFromString(..., append.model=TRUE, nl.obj=NULL)
 \arguments{
   \item{...}{
   An undefined number of strings containing NetLogo model source code to be printed into the procedures tab.
-  Line breakes within a string can be represented as \code{\\n}.  
+  Line breaks within a string can be represented as \code{\\n}.  
 }
   \item{append.model}{
   (optional) Determines whether existing code in the procedures tab (i.e. a loaded model) will be appended by the new code or will be replaced.

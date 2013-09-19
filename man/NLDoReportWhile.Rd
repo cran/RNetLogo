@@ -22,7 +22,8 @@ NLDoReportWhile(condition, command, reporter, as.data.frame=FALSE,
 }
   \item{reporter}{
   A string containing a NetLogo reporter. 
-  This argument can also be an R vector containing multiple strings with different NetLogo reporters (separated by commas), like \code{c("count patches", "count turtles")}. (A similar effect can be reached by using a NetLogo reporter returning a NetLogo list, like \code{"(list count patches count agents)"} as a single string argument. But the result will not be an R list with a nested R lists but an R list with nested R vectors because NetLogo lists are converted to R vectors.)
+  This argument can also be an R vector containing multiple strings with different NetLogo reporters (separated by commas), like \code{c("count patches", "count turtles")}. (A similar effect can be reached by using a NetLogo reporter returning a NetLogo list, like \cr
+  \code{"(list count patches count agents)"} as a single string argument. But the result will not be an R list with nested R lists but an R list with nested R vectors because NetLogo lists are converted to R vectors.)
 }
   \item{as.data.frame}{
   (optional) If \code{TRUE} the function will return a data.frame instead a list. Default is \code{FALSE} which returns a list.
@@ -32,7 +33,7 @@ NLDoReportWhile(condition, command, reporter, as.data.frame=FALSE,
   The argument is a vector containing the names as strings in the same order as the reporters. 
 }
   \item{max.minutes}{
-  (optional) If \code{max.minutes > 0} the execution stops after the defined number of minutes (with an error and no return value). By default, all executions are stoped after 5 minutes, to prevent the execution of endless loops. If you need more time, increase the value. If you're sure what you do, you can set this value to 0. Then, it will run while the condition is true (i.e. endlessly when the condition is never met. In GUI mode, you can press "Tools --> Halt" in the NetLogo menu to interrupt a running process.). This can speed up the execution, because the time checking is not applied in this case. 
+  (optional) If \code{max.minutes > 0} the execution stops after the defined number of minutes (with an error and no return value). By default, all executions are stopped after 10 minutes, to prevent the execution of endless loops. If you need more time, increase the value. If you're sure what you do, you can set this value to 0. Then, it will run while the condition is true (i.e. endlessly when the condition is never met. In GUI mode, you can press "Tools --> Halt" in the NetLogo menu to interrupt a running process.). This can speed up the execution, because the time checking is not applied in this case. 
 }
   \item{nl.obj}{
   (optional) A string identifying a reference to a NetLogo instance created with \code{\link{NLStart}}.

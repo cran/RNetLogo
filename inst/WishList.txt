@@ -1,0 +1,4 @@
+- a warning mechanism when nested lists in data.frames are produced
+- a strategy to interrupt running NetLogo processes
+- a spell-checking for NetLogo code 
+

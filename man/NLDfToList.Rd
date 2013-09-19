@@ -1,7 +1,7 @@
 \name{NLDfToList}
 \alias{NLDfToList}
 \title{
-  Transforms a data.frame into a NetLogo list or multiple NetLogo list (one for each column of the data.frame).
+  Transforms a data.frame into a NetLogo list or multiple NetLogo lists (one for each column of the data.frame).
 }
 \description{
   \code{NLDfToList} pushes the values of a data.frame into NetLogo lists. 
