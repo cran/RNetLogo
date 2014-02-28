@@ -24,34 +24,55 @@ function(patch.var, input, nl.obj=NULL)
       # for NetLogo 3D:
     
       if (ncol(input) != 4) {
-        stop("Input must have four columns: x, y, z, <patch.var>")
+        stop("Input must have four columns: pxcor, pycor, pzcor, <patch.var>")
       }
       
-      set.patch.3D <- function(nl.obj, patch.var, value, pxcor, pycor, pzcor)
-      {
-        xindex <- pxcor
-        yindex <- pycor
-        zindex <- pzcor
-        NLCommand('ask patch',pxcor,pycor,pzcor,'[','set',patch.var,value,']',nl.obj=nl.obj)
-      }
-              
-      invisible(apply(input, 1, function(x) {set.patch.3D(nl.obj, patch.var, x[4], x[1], x[2], x[3])}))      
+      start_ <- "(foreach "
+      xcords_ <- paste("[", paste(input[['pxcor']], sep=" ", collapse=" "), "]")
+      ycords_ <- paste("[", paste(input[['pycor']], sep=" ", collapse=" "), "]")
+      zcords_ <- paste("[", paste(input[['pzcor']], sep=" ", collapse=" "), "]")
+      var_ <- paste("[", paste(input[[patch.var]], sep=" ", collapse=" "), "]")
+      ask_ <- paste("[ ask patch ?1 ?2 ?3 [ set ", patch.var," ?4", sep="") 
+      end_ <- " ]])"
+      merged_ <- paste(start_, xcords_, ycords_, zcords_, var_, ask_, end_, sep="") 
+      NLCommand(merged_, nl.obj=nl.obj)
+      
+# old version, till 0.9.6      
+#       set.patch.3D <- function(nl.obj, patch.var, value, pxcor, pycor, pzcor)
+#       {
+#         xindex <- pxcor
+#         yindex <- pycor
+#         zindex <- pzcor
+#         NLCommand('ask patch',pxcor,pycor,pzcor,'[','set',patch.var,value,']',nl.obj=nl.obj)
+#       }
+#               
+#       invisible(apply(input, 1, function(x) {set.patch.3D(nl.obj, patch.var, x[4], x[1], x[2], x[3])}))      
   }
   else {
     # for conventional 2D NetLogo:      
 
     if (ncol(input) != 3) {
-      stop("Input must have three columns: x, y, <patch.var>")
+      stop("Input must have three columns: pxcor, pycor, <patch.var>")
     }
+    start_ <- "(foreach "
+    xcords_ <- paste("[", paste(input[['pxcor']], sep=" ", collapse=" "), "]")
+    ycords_ <- paste("[", paste(input[['pycor']], sep=" ", collapse=" "), "]")
+    var_ <- paste("[", paste(input[[patch.var]], sep=" ", collapse=" "), "]")
+    ask_ <- paste("[ ask patch ?1 ?2 [ set ", patch.var," ?3", sep="") 
+    end_ <- " ]])"
+    merged_ <- paste(start_, xcords_, ycords_, var_, ask_, end_, sep="")  
+    NLCommand(merged_, nl.obj=nl.obj)
     
-    set.patch.2D <- function(nl.obj, patch.var, value, pxcor, pycor)
-    {
-      xindex <- pxcor
-      yindex <- pycor
-      NLCommand('ask patch',pxcor,pycor,'[','set',patch.var,value,']',nl.obj=nl.obj)
-    }
-    
-    invisible(apply(input, 1, function(x) {set.patch.2D(nl.obj, patch.var, x[3], x[1], x[2])}))      
+# old version, till 0.9.6
+#     
+#     set.patch.2D <- function(nl.obj, patch.var, value, pxcor, pycor)
+#     {
+#       xindex <- pxcor
+#       yindex <- pycor
+#       NLCommand('ask patch',pxcor,pycor,'[','set',patch.var,value,']',nl.obj=nl.obj)
+#     }
+#     
+#     invisible(apply(input, 1, function(x) {set.patch.2D(nl.obj, patch.var, x[3], x[1], x[2])}))      
   }
     
 }

@@ -21,7 +21,8 @@ NLDoReport(iterations, command, reporter, as.data.frame=FALSE,
 }
   \item{reporter}{
   A string containing a NetLogo reporter.
-  This argument can also be an R vector containing multiple strings with different NetLogo reporters (separated by commas), like \code{c("count patches", "count turtles")}. (A similar effect can be reached by using a NetLogo reporter returning a NetLogo list, like \code{"(list count patches count agents)"} as a single string argument. But the result will not be an R list with a nested R lists but an R list with nested R vectors because NetLogo lists are converted to R vectors.)
+  This argument can also be an R vector containing multiple strings with different NetLogo reporters (separated by commas), like \code{c("count patches", "count turtles")}. (A similar effect can be reached by using a NetLogo reporter returning a NetLogo list, like \cr
+  \code{"(list count patches count agents)"} as a single string argument. But the result will not be an R list with nested R lists but an R list with nested R vectors because NetLogo lists are converted to R vectors.)
 }
   \item{as.data.frame}{
   (optional) If \code{TRUE} the function will return a data.frame instead of a list. Default is \code{FALSE}, which returns a list.
@@ -31,7 +32,7 @@ NLDoReport(iterations, command, reporter, as.data.frame=FALSE,
   The argument is a vector containing the names as strings in the same order as the submitted reporters. 
 }
   \item{nl.obj}{
-  (optional) A string identifying a reference to a NetLogo instance instance created with \code{\link{NLStart}}.
+  (optional) A string identifying a reference to a NetLogo instance created with \code{\link{NLStart}}.
 }
 }
 \details{

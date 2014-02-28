@@ -22,7 +22,7 @@ NLSetPatches(patch.var, in.matrix, nl.obj=NULL)
 }
 \details{
   The matrix must have the same x- and y-dimensions as the NetLogo world, indices beginning with (1,1). 
-  The upper-left cell (1,1) of the matrix represents the upper-left patch of the NetLogo World, no matter where the origin of the NetLogo World is set.
+  The upper-left cell (1,1) of the matrix represents the upper-left patch of the NetLogo world, no matter where the origin of the NetLogo  world is set.
   This function is not available when running NetLogo 3D. Use \code{\link{NLSetPatchSet}} instead.
 }
 \value{

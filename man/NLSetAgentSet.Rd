@@ -1,10 +1,10 @@
 \name{NLSetAgentSet}
 \alias{NLSetAgentSet}
 \title{
-  Sets a variable of one or more agents to value(s) in a data.frame or vector. 
+  Sets a variable of one or more agent(s) to value(s) in a data.frame or vector. 
 }
 \description{
-  \code{NLSetAgentSet} is an easy way to set the variable value(s) of one or more agents (by specifying the name of the agent or the name of an agentset containing the agents) to the value(s) of a data.frame or vector.
+  \code{NLSetAgentSet} is an easy way to set the variable value(s) of one or more agent(s) (by specifying the name of the agent or the name of an agentset containing the agents) to the value(s) of a data.frame or vector.
 }
 \usage{
 NLSetAgentSet(agentset, input, var.name=NULL, nl.obj=NULL)
@@ -15,7 +15,7 @@ NLSetAgentSet(agentset, input, var.name=NULL, nl.obj=NULL)
 }
   \item{input}{
   A data.frame or vector.
-  If a data.frame, it must have one column with the corresponding agent agent variable name for each agent variable to be set and one row for each agent.
+  If a data.frame, it must have one column with the corresponding agent variable name for each agent variable to be set and one row for each agent.
   The rows have to be sorted in the order NetLogo is processing the agentset with \code{sort agentset} (e.g. turtles are sorted by their who value). 
   If a vector, only one agent variable can be set and the name has to be given by the optional argument \code{var.name}.
 }
@@ -27,7 +27,7 @@ NLSetAgentSet(agentset, input, var.name=NULL, nl.obj=NULL)
 }
 }
 \details{
-  The agent variable values contained as columns in the input data.frame are changed. The columns of the data.frame have to be named exacly like the 
+  The agent variable values contained as columns in the input data.frame are changed. The columns of the data.frame have to be named exactly like the 
   agent variable which should get the values. The rows have to be sorted as NetLogo would process the agentset using the \code{sort} reporter. 
 }
 \value{

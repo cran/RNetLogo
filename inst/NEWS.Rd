@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 
 
-%\section{Changes in version 0.9-7}{
+%\section{Changes in version 0.9-8}{
 %
 %  \subsection{BUG FIXES}{
 %
@@ -31,11 +31,31 @@
 %  } % installation and building
 %  
 %
-%} % version 0.9-7
+%} % version 0.9-8
 
 
 %------------------------------------------------------------------------------------------------------
 %------------------------------------------------------------------------------------------------------
+
+\section{Changes in version 0.9-7}{
+  
+  \subsection{NEW FEATURES}{
+  
+  \itemize{
+  
+    \item Massive performance improvements in NLSetAgentSet, NLSetPatches, NLSetPatchSet
+    \item Change in NLSetPatchSet: identifies columns in the input data.frame by name. Expects pxcor, pycor (and, in case of 3D, pzcor) columns.
+ 
+    }
+
+  } % new features
+
+} % version 0.9-7
+
+
+%------------------------------------------------------------------------------------------------------
+%------------------------------------------------------------------------------------------------------
+
 
 \section{Changes in version 0.9-6}{
 

@@ -1,10 +1,10 @@
 \name{NLGetAgentSet}
 \alias{NLGetAgentSet}
 \title{
-  Reports variable values of one or more agents as a data.frame (optional as a list or vector)
+  Reports variable value(s) of one or more agent(s) as a data.frame (optional as a list or vector)
 }
 \description{
-  \code{NLGetAgentSet} is an easy way to access variable values of one or more agents (in a sorted way) by specifying the name of the agent or the name of an agentset containing the agents. An agent is a turtle, breed, patch, or link. An agentset is a collection of agents. 
+  \code{NLGetAgentSet} is an easy way to access variable value(s) of one or more agent(s) (in a sorted way) by specifying the name of the agent or the name of an agentset containing the agents. An agent is a turtle, breed, patch, or link. An agentset is a collection of agents. 
 }
 \usage{
 NLGetAgentSet(agent.var, agentset, as.data.frame=TRUE, 
@@ -21,22 +21,23 @@ NLGetAgentSet(agent.var, agentset, as.data.frame=TRUE,
   (optional) If \code{TRUE} (default) the function will return a data.frame with a column for each \code{agent.var} and a row for each agent. 
   The column names are taken from the names of the \code{agent.var} argument.
   If \code{FALSE} the function will return a list instead of a data.frame 
-  (a little bit faster when not using \code{agents.by.row=TRUE}) . 
+  (little bit faster when not using \code{agents.by.row=TRUE}). 
 }
   \item{agents.by.row}{
-  (optional) This argument has an effect only in combination with \code{as.data.frame=FALSE}, i.e. when a list is returned.  
+  (optional) This argument has an effect only in combination with \cr 
+  \code{as.data.frame=FALSE}, i.e. when a list is returned.  
   If \code{agents.by.row=FALSE} (default) the returned list contains one list element for each \code{agent.var}. Each list element contains a vector with the values of the different agents (\code{agentset}).
-  If \code{agents.by.row=TRUE} the returned list contains one list element for each agent. Each list element contains a vector with the values of the different requested agent variables (\code{agent.var}).
-  Attention: \code{agents.by.row=TRUE} makes the function very slow, especially when many agents are requested.
+  If \code{agents.by.row=TRUE} the returned list contains one list element for each agent. Each list element contains a vector with the values of the different requested agent variables \cr
+  (\code{agent.var}). Attention: \code{agents.by.row=TRUE} makes the function very slow, especially when many agents are requested.
 } 
   \item{as.vector}{
   (optional) Set this argument to \code{TRUE} for getting the result as a simple vector in case of requesting only one agent variable.
   This is the fastest way to access one agent variable. It does not make sense to set this variable to \code{TRUE} together with \code{as.data.frame=TRUE}, 
-  but \code{as.vector} is processed first and will win the race if you accidently set \code{as.data.frame} to \code{TRUE} as well. 
+  but \code{as.vector} is processed first and will win the race if you accidentally set \code{as.data.frame} to \code{TRUE} as well. 
   By default \code{as.vector} is \code{FALSE}.
 } 
   \item{nl.obj}{
-  (optional) A string identifying a reference to a NetLogo instance instance created with \code{\link{NLStart}}.
+  (optional) A string identifying a reference to a NetLogo instance created with \code{\link{NLStart}}.
 }
 }
 \details{
@@ -50,7 +51,8 @@ NLGetAgentSet(agent.var, agentset, as.data.frame=TRUE,
   One row for each agent and one column for each agent variable.
   The result is sorted in the same manner as using \code{sort agentset} in NetLogo, i.e. turtles are sorted by their \code{who} variable and patches from upper left to lower right.
 
-  To get the same result as with default settings until RNetLogo version 0.9.2 use: \code{as.data.frame=FALSE} and \code{agents.by.row=TRUE}.
+  To get the same result as with default settings until RNetLogo version 0.9.2 use: \cr
+  \code{as.data.frame=FALSE} and \code{agents.by.row=TRUE}.
 }
 \author{
   Jan C. Thiele <jthiele@gwdg.de>
@@ -84,7 +86,7 @@ colors.list2 <- NLGetAgentSet(c("who","xcor","ycor","color"),
 str(colors.list2)
                         
 # getting the ends of links is a little bit more tricky, because they store only the
-# reference to the turtles and turtles can not direcly be requested. 
+# reference to the turtles and turtles cannot directly be requested. 
 # A way to go is:
 # create some links
 NLCommand("ask turtles [ create-links-with n-of 2 other turtles ]")

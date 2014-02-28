@@ -11,7 +11,7 @@ NLReport(reporter, nl.obj=NULL)
 }
 \arguments{
   \item{reporter}{
-  A string conataining a NetLogo reporter.
+  A string containing a NetLogo reporter.
   (Or a vector of strings.)
 }
   \item{nl.obj}{

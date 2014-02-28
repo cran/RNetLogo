@@ -28,18 +28,19 @@ NLGetPatches(patch.var, patchset="patches", as.matrix=FALSE,
   (optional) If \code{TRUE} (default) the function returns a data.frame with one column for each \code{patch.var} and one row for each patch. 
   The column names are taken from the names of the \code{patch.var} argument. 
   If \code{FALSE} the function will return a list instead of a data.frame 
-  (a little bit faster, when not using \code{patches.by.row=TRUE}) .   
+  (little bit faster, when not using \code{patches.by.row=TRUE}).   
 }
   \item{patches.by.row}{
-  (optional) This argument has an effect only in combination with \code{as.data.frame=FALSE}, i.e. when a list is returned.  
+  (optional) This argument has an effect only in combination with \cr
+  \code{as.data.frame=FALSE}, i.e. when a list is returned.  
   If \code{patches.by.row=FALSE} (default) the returned list contains one list element for each \code{patch.var}. Each list element contains a vector with the values of the different patches (\code{patchset}).
-  If \code{patches.by.row=TRUE} the returned list contains one list element for each patch. Each list element contains a vector with the values of the different requested patch variables (\code{patch.var}).
-  Attention: \code{patches.by.row=TRUE} makes the function very slow, especially when many patches are requested.
+  If \code{patches.by.row=TRUE} the returned list contains one list element for each patch. Each list element contains a vector with the values of the different requested patch variables \cr
+  (\code{patch.var}). Attention: \code{patches.by.row=TRUE} makes the function very slow, especially when many patches are requested.
 } 
   \item{as.vector}{
   (optional) Set this argument to \code{TRUE} for getting the result as a simple vector in case of requesting only one patch variable.
   This is the fastest way to access one patch variable. It does not make sense to set this variable to \code{TRUE} together with \code{as.data.frame=TRUE} or
-  \code{as.matrix=TRUE}, but \code{as.vector} is processed first and will win the race if you accidently set \code{as.data.frame} or \code{as.matrix} to \code{TRUE} as well. 
+  \code{as.matrix=TRUE}, but \code{as.vector} is processed first and will win the race if you accidentally set \code{as.data.frame} or \code{as.matrix} to \code{TRUE} as well. 
   By default \code{as.vector} is \code{FALSE}.
 } 
   \item{nl.obj}{
@@ -54,9 +55,10 @@ NLGetPatches(patch.var, patchset="patches", as.matrix=FALSE,
 \value{
   Returns a data.frame (optional a list) with the variable value(s) of a patch/patches of a patchset. 
   One row for each patch and one column for each patch variable.
-  The result is sorted (like using \code{sort patchset} in NetLogo, e.g. patches are sorted from upper left to lower right.
+  The result is sorted (like using \code{sort patchset} in NetLogo), e.g. patches are sorted from upper left to lower right.
   
-  To get the same result as with default settings until RNetLogo version 0.9.2 use: \code{as.data.frame=FALSE} and \code{patches.by.row=TRUE}.
+  To get the same result as with default settings until RNetLogo version 0.9.2 use: \cr
+  \code{as.data.frame=FALSE} and \code{patches.by.row=TRUE}.
 }
 \author{
   Jan C. Thiele <jthiele@gwdg.de>

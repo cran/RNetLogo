@@ -25,7 +25,7 @@ citEntry(entry	="article",
 	author 	= personList(
 			person(given="Jan C.", 	family="Thiele",	email="jthiele@gwdg.de")
 		),
-	year 	= "submitted",
+	year 	= "accepted",
 	journal = "Journal of Statistical Software",
 	volume 	= "??",
 	number 	= "??",
@@ -33,7 +33,7 @@ citEntry(entry	="article",
 	url   	= "??",
 	
 	textVersion = 
-	paste("Thiele, J.C. (submitted): ",
+	paste("Thiele, J.C. (accepted): ",
 	      "R Marries NetLogo: Introduction to the RNetLogo Package, ",
 	      "Journal of Statistical Software.", sep="")
 	)
