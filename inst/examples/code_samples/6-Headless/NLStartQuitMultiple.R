@@ -2,7 +2,7 @@ library(RNetLogo)
 
 # path to NetLogo installation folder
 # PLEASE FILL IN THE PATH TO YOUR NetLogo INSTALLATION FOLDER !!!!
-path.to.NetLogo <- "C:/Program Files/NetLogo 5.0.4"
+path.to.NetLogo <- "C:/Program Files/NetLogo 5.0.5"
 # version of NetLogo 
 nl.version = 5
                                                                   

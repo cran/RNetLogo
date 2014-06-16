@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 
 
-%\section{Changes in version 0.9-8}{
+%\section{Changes in version 1.0-1}{
 %
 %  \subsection{BUG FIXES}{
 %
@@ -31,8 +31,27 @@
 %  } % installation and building
 %  
 %
-%} % version 0.9-8
+%} % version 1.0-1
 
+%------------------------------------------------------------------------------------------------------
+%------------------------------------------------------------------------------------------------------
+
+\section{Changes in version 1.0-0}{
+  \subsection{NEW FEATURES}{
+  
+    \itemize{  
+      \item Official release in together with the publication in Journal of Statistical Software  
+    }
+ }
+ 
+  \subsection{BUG FIXES}{
+
+    \itemize{
+      \item Update of manual pages and code examples.
+      }
+  }
+	
+} % version 1.0-0
 
 %------------------------------------------------------------------------------------------------------
 %------------------------------------------------------------------------------------------------------

@@ -37,7 +37,7 @@ NLSetPatchSet(patch.var, input, nl.obj=NULL)
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.0.4"
+nl.path <- "C:/Program Files/NetLogo 5.0.5"
 NLStart(nl.path)
 # NLLoadModel(...)
 

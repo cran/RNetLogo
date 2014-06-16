@@ -6,7 +6,7 @@
 Provides an interface to the agent-based modelling platform NetLogo
 }
 \description{
-Interface to use and access Wilensky's NetLogo (Wilensky 1999) from R (R Core Team 2013)
+Interface to use and access Wilensky's NetLogo (Wilensky 1999) from R (R Core Team 2014)
 using either headless (no GUI) or interactive GUI mode. Provides functions to load
 models, execute commands, and get values from reporters. 
 Mostly analogous to the NetLogo Mathematica Link 
@@ -16,8 +16,8 @@ Mostly analogous to the NetLogo Mathematica Link
 \tabular{ll}{
 Package: \tab RNetLogo\cr
 Type: \tab Package\cr
-Version: \tab 0.9-6\cr
-Date: \tab 2013-04-24\cr
+Version: \tab 1.0-0\cr
+Date: \tab 2014-06-10\cr
 License: \tab GNU GPL v2\cr
 LazyLoad: \tab yes\cr
 }
@@ -36,19 +36,27 @@ A workaround is to use R 2.15.1 or 3.x or to start RNetLogo from JGR (see \url{h
 
 If you want to increase the Java Heap Space and set other parameters of the Java Virtual Machine (JVM) see notes at \code{NLStart}.
 
-See the paper located in folder "tutorial" in the installation path of the package for an introduction. Example codes for all functions can be found in the folder "\bold{examples}" in the installation path of the package. For \bold{performance notes} see the vignette "performanceNotes.pdf" and for an introduction how to \bold{run RNetLogo in parallel} on multicore computers or clusters/grids see the vignette "parallelProcessing.pdf".
+See the tutorial published as Thiele (2014) for an introduction. Example codes for all functions can be found in the folder "\bold{examples}" in the installation path of the package. For \bold{performance notes} see the vignette "performanceNotes.pdf" and for an introduction how to \bold{run RNetLogo in parallel} on multicore computers or clusters/grids see the vignette "parallelProcessing.pdf".
 }
 \author{
   Jan C. Thiele <jthiele@gwdg.de>
 }
 \references{
   For NetLogo see \url{http://ccl.northwestern.edu/netlogo}.
+  
   For R Extension for NetLogo see \url{http://r-ext.sourceforge.net/}.
+  
   For Rserve Extension for NetLogo see \url{http://rserve-ext.sourceforge.net/}.
-  The RNetLogo package is analogous to (and inspired by) the NetLogo Mathematica Link \url{http://ccl.northwestern.edu/netlogo/docs/mathematica.html}.
+  
+  The RNetLogo package is analogous to (and inspired by) the NetLogo Mathematica Link \url{http://ccl.northwestern.edu/netlogo/docs/mathematica.html}.  
+  
+  Thiele, J. (2014) R Marries NetLogo: Introduction to the RNetLogo Package. Journal of Statistical Software 58(2) 1-41. \url{http://www.jstatsoft.org/v58/i02/}  
+  
+  Thiele, J., Kurth, W., Grimm, V. (2012) RNetLogo: An R Package for Running and Exploring Individual-Based Models Implemented in NetLogo. Methods in Ecology and Evolution 3(3) 480-483.
+  
+  R Core Team (2014) R: A Language and Environment for Statistical. R Foundation for Statistical Computing.Vienna, Austria. \url{http://www.R-project.org}.    
+  
   Wilensky, U. (1999) NetLogo. \url{http://ccl.northwestern.edu/netlogo/}. Center for Connected Learning and Computer-Based Modeling, Northwestern University. Evanston, IL.  
-  R Core Team (2013) R: A Language and Environment for Statistical. R Foundation for Statistical Computing.Vienna, Austria.
-  \url{http://www.R-project.org}.  
 }
 \keyword{NetLogo}
 \keyword{agent-based}
@@ -63,7 +71,7 @@ See the paper located in folder "tutorial" in the installation path of the packa
 \examples{
 \dontrun{
 library(RNetLogo)
-nl.path <- "C:/Program Files/NetLogo 5.0.4"
+nl.path <- "C:/Program Files/NetLogo 5.0.5"
 NLStart(nl.path, nl.version=5)
 model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"
 NLLoadModel(paste(nl.path,model.path,sep=""))

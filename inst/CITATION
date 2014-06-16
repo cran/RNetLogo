@@ -1,39 +1,43 @@
-citHeader("To cite the R package RNetLogo in publications please use:")
+citHeader("To cite RNetLogo in publications use:")
 
-citEntry(entry	="article",
-	title 	= "RNetLogo: an R package for running and exploring individual-based models implemented in NetLogo",
-	author 	= personList(
-			person(given="Jan C.", 	family="Thiele",	email="jthiele@gwdg.de"),
-			person(given="Winfried",family="Kurth",	email="wk@informatik.uni-goettingen.de"),
-			person(given="Volker", 	family="Grimm",	email="volker.grimm@ufz.de")
-		),
-	year 	= "2012",
-	journal = "Methods in Ecology and Evolution",
-	volume 	= "3",
-	number 	= "3",
-	pages 	= "480-483",
-	url   	= "http://onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2011.00180.x/abstract",
-	
-	textVersion = 
-	paste("Thiele, J.C., Kurth, W., and Grimm, V. (2012): ",
-	      "RNetLogo: an R package for running and exploring individual-based models implemented in NetLogo, ",
-	      "Methods in Ecology and Evolution 3 (3): 480-483.", sep="")
-	)
 
-citEntry(entry	="article",
-	title 	= "R Marries NetLogo: Introduction to the RNetLogo Package",
-	author 	= personList(
-			person(given="Jan C.", 	family="Thiele",	email="jthiele@gwdg.de")
-		),
-	year 	= "accepted",
-	journal = "Journal of Statistical Software",
-	volume 	= "??",
-	number 	= "??",
-	pages 	= "??",
-	url   	= "??",
-	
-	textVersion = 
-	paste("Thiele, J.C. (accepted): ",
-	      "R Marries NetLogo: Introduction to the RNetLogo Package, ",
-	      "Journal of Statistical Software.", sep="")
-	)
+citEntry(entry = "Article",
+  title        = "{R} Marries {NetLogo}: Introduction to the {RNetLogo} Package",
+  author       = personList(as.person("Jan C. Thiele")),
+  journal      = "Journal of Statistical Software",
+  year         = "2014",
+  volume       = "58",
+  number       = "2",
+  pages        = "1--41",
+  url          = "http://www.jstatsoft.org/v58/i02/",
+
+  textVersion  =
+  paste("Jan C. Thiele (2014).",
+        "R Marries NetLogo: Introduction to the RNetLogo Package.",
+        "Journal of Statistical Software, 58(2), 1-41.",
+        "URL http://www.jstatsoft.org/v58/i02/.")
+)
+
+
+citEntry(entry ="Article",
+  title        = "{RNetLogo}: An {R} Package for Running and Exploring Individual-Based Models Implemented in {NetLogo}",
+  author       = personList(
+      			as.person("Jan C. Thiele"),
+      			as.person("Winfried Kurth"),
+      			as.person("Volker Grimm")
+    		 ),
+  journal      = "Methods in Ecology and Evolution",
+  year         = "2012",
+  volume       = "3",
+  number       = "3",
+  pages        = "480--483",
+  url          = "http://onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2011.00180.x/abstract",
+  
+  textVersion = 
+  paste("Jan C. Thiele, Winfried Kurth, and Volker Grimm (2012).",
+        "RNetLogo: An R Package for Running and Exploring Individual-Based Models Implemented in NetLogo.",
+        "Methods in Ecology and Evolution 3 (3), 480-483.", 
+	"URL http://onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2011.00180.x/abstract/.")
+  )
+
+

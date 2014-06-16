@@ -6,10 +6,10 @@
 		> library(RNetLogo)
 
 2. Open NetLogo session:
-		> NLStart("C:/Program Files/NetLogo 5.0", nl.version=5)
+		> NLStart("C:/Program Files/NetLogo 5.0.5", nl.version=5)
 
 3. Load a model
-		> NLLoadModel("C:/Program Files/NetLogo 5.0/models/Sample Models/Earth Science/Fire.nlogo")
+		> NLLoadModel("C:/Program Files/NetLogo 5.0.5/models/Sample Models/Earth Science/Fire.nlogo")
 
 4. Submit a command:
 		> NLCommand("setup")

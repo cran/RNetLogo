@@ -44,7 +44,7 @@ NLSetAgentSet(agentset, input, var.name=NULL, nl.obj=NULL)
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.0.4"
+nl.path <- "C:/Program Files/NetLogo 5.0.5"
 NLStart(nl.path)
 # NLLoadModel(...)
 ag <- NLGetAgentSet(c("xcor","ycor"),"turtles")

@@ -31,7 +31,7 @@ NLGetGraph(link.agentset="links", nl.obj=NULL)
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.0.4"
+nl.path <- "C:/Program Files/NetLogo 5.0.5"
 NLStart(nl.path)
 model.path <- 
 "/models/Sample Models/Networks/Preferential Attachment.nlogo"

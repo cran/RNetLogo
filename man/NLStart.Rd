@@ -68,7 +68,7 @@ automatically when loading NetLogo and changes back to the former working direct
 
   See the directory \code{examples} in the installation directory of the package for example codes to all RNetLogo functions.
 
-  See the paper in directory \code{tutorial} in the installation directory of the package for a step-by-step usage tutorial.
+  See Thiele (2014) (also included in directory \code{tutorial} in the installation directory of the package) for a step-by-step usage tutorial.
 
   See the vignette \code{performanceNotes.pdf} for performance notes.
   
@@ -79,6 +79,10 @@ automatically when loading NetLogo and changes back to the former working direct
 }
 \author{
   Jan C. Thiele <jthiele@gwdg.de>
+}
+
+\references{
+  Thiele, J. (2014) R Marries NetLogo: Introduction to the RNetLogo Package. Journal of Statistical Software 58(2) 1-41. \url{http://www.jstatsoft.org/v58/i02/}    
 }
 
 \section{Warning }{
@@ -95,7 +99,7 @@ automatically when loading NetLogo and changes back to the former working direct
 \examples{
 \dontrun{
 library(RNetLogo)
-nl.path <- "C:/Program Files/NetLogo 5.0.4"
+nl.path <- "C:/Program Files/NetLogo 5.0.5"
 NLStart(nl.path)
 NLCommand("create-turtles 10")
 noturtles <- NLReport("count turtles")
