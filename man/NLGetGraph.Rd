@@ -24,14 +24,14 @@ NLGetGraph(link.agentset="links", nl.obj=NULL)
   Returns a graph object of package igraph.
 }
 \author{
-  Jan C. Thiele <jthiele@gwdg.de>
+  Jan C. Thiele <rnetlogo@gmx.de>
 }
 \seealso{
   \code{\link{NLGetAgentSet}}
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.0.5"
+nl.path <- "C:/Program Files/NetLogo 5.1.0"
 NLStart(nl.path)
 model.path <- 
 "/models/Sample Models/Networks/Preferential Attachment.nlogo"

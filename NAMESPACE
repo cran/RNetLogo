@@ -1,5 +1,7 @@
 importFrom("rJava", ".jarray", ".jcall", ".jevalArray",
-           ".jinit", ".jnew", ".jpackage")
+           ".jinit", ".jnew", ".jpackage", ".jgetEx", 
+           ".jcheck")
+importFrom("igraph", "graph.data.frame")
 
 export("NLStart", "NLLoadModel", "NLSourceFromString", "NLCommand", "NLDoCommand", 
 	 "NLDoCommandWhile", "NLReport", "NLDoReport", "NLDoReportWhile", 

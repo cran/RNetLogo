@@ -49,7 +49,7 @@ NLDoReportWhile(condition, command, reporter, as.data.frame=FALSE,
   A list/nested list with the value(s) of the reporter after each execution of the command.
 }
 \author{
-  Jan C. Thiele <jthiele@gwdg.de>
+  Jan C. Thiele <rnetlogo@gmx.de>
 }
 \seealso{
   \code{\link{NLDoCommandWhile}},
@@ -58,7 +58,7 @@ NLDoReportWhile(condition, command, reporter, as.data.frame=FALSE,
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.0.5"
+nl.path <- "C:/Program Files/NetLogo 5.1.0"
 NLStart(nl.path)
 model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"
 NLLoadModel(paste(nl.path,model.path,sep=""))

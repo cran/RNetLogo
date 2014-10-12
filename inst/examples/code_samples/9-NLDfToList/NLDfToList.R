@@ -2,19 +2,19 @@ library(RNetLogo)
 
 # path to NetLogo installation folder
 # PLEASE FILL IN THE PATH TO YOUR NetLogo INSTALLATION FOLDER !!!!
-path.to.NetLogo <- "C:/Program Files/NetLogo 5.0.5"
+path.to.NetLogo <- "C:/Program Files/NetLogo 5.1.0"
 
 # start NetLogo, if it is not started yet
 if (!exists("nl.test1", -1)) 
 {
   # an reference name
   nl.test1 <- "nl.test1"
-  NLStart(path.to.NetLogo, gui=TRUE, nl.obj=nl.test1, nl.version=5)
+  NLStart(path.to.NetLogo, gui=TRUE, nl.obj=nl.test1)
 }
 
 # load a sample model
 # PLEASE FILL IN THE PATH TO THE SAMPLE NetLogo FILE !!!!
-path.to.local.file <- 'C:/Users/jthiele/Documents/R/win-library/3.0/RNetLogo/examples/code_samples/9-NLDfToList/dftest.nlogo'
+path.to.local.file <- 'C:/Users/jthiele/Documents/R/win-library/3.1/RNetLogo/examples/code_samples/9-NLDfToList/dftest.nlogo'
 NLLoadModel(path.to.local.file, nl.obj=nl.test1)
 
 # submit a single command

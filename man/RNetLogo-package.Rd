@@ -16,8 +16,8 @@ Mostly analogous to the NetLogo Mathematica Link
 \tabular{ll}{
 Package: \tab RNetLogo\cr
 Type: \tab Package\cr
-Version: \tab 1.0-0\cr
-Date: \tab 2014-06-10\cr
+Version: \tab 1.0-1\cr
+Date: \tab 2014-10-12\cr
 License: \tab GNU GPL v2\cr
 LazyLoad: \tab yes\cr
 }
@@ -39,7 +39,7 @@ If you want to increase the Java Heap Space and set other parameters of the Java
 See the tutorial published as Thiele (2014) for an introduction. Example codes for all functions can be found in the folder "\bold{examples}" in the installation path of the package. For \bold{performance notes} see the vignette "performanceNotes.pdf" and for an introduction how to \bold{run RNetLogo in parallel} on multicore computers or clusters/grids see the vignette "parallelProcessing.pdf".
 }
 \author{
-  Jan C. Thiele <jthiele@gwdg.de>
+  Jan C. Thiele <rnetlogo@gmx.de>
 }
 \references{
   For NetLogo see \url{http://ccl.northwestern.edu/netlogo}.
@@ -71,8 +71,8 @@ See the tutorial published as Thiele (2014) for an introduction. Example codes f
 \examples{
 \dontrun{
 library(RNetLogo)
-nl.path <- "C:/Program Files/NetLogo 5.0.5"
-NLStart(nl.path, nl.version=5)
+nl.path <- "C:/Program Files/NetLogo 5.1.0"
+NLStart(nl.path)
 model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"
 NLLoadModel(paste(nl.path,model.path,sep=""))
 NLCommand("setup")

@@ -26,7 +26,7 @@ NLDfToList(in.data.frame, nl.obj=NULL)
   No return value.
 }
 \author{
-  Jan C. Thiele <jthiele@gwdg.de>
+  Jan C. Thiele <rnetlogo@gmx.de>
 }
 \seealso{
   \code{\link{NLDoCommand}},
@@ -35,7 +35,7 @@ NLDfToList(in.data.frame, nl.obj=NULL)
 }
 \examples{
 \dontrun{
-NLStart("C:/Program Files/NetLogo 5.0.5")
+NLStart("C:/Program Files/NetLogo 5.1.0")
 df1 <- data.frame(x=c(1,2,3,4),y=c(5,6,7,8))
 # the current NetLogo model must have two variables ('x' and 'y')
 # add the variables

@@ -9,11 +9,11 @@
   or GUI mode. 
 }
 \usage{
-NLStart(nl.path, gui=TRUE, nl.obj=NULL, nl.version=5, is3d=FALSE)
+NLStart(nl.path, gui=TRUE, nl.obj=NULL, is3d=FALSE)
 }
 \arguments{
   \item{nl.path}{
-  An absolute path to your NetLogo installation (the folder where the NetLogo.jar is) starting from the root. On Windows, for example, something like "C:/Program Files/NetLogo 5.0.4".
+  An absolute path to your NetLogo installation (the folder where the NetLogo.jar is) starting from the root. On Windows, for example, something like "C:/Program Files/NetLogo 5.1.0".
 }
   \item{gui}{
   (optional) A boolean value: if \code{TRUE}, NetLogo will be started with GUI (only one instance with GUI can be created currently!). 
@@ -21,18 +21,6 @@ NLStart(nl.path, gui=TRUE, nl.obj=NULL, nl.version=5, is3d=FALSE)
 }
   \item{nl.obj}{
   (optional) A string which is used to identify the created NetLogo instance reference internally (in \code{.rnetlogo} environment). To refer to this instance just use the same name in the other functions of this package. If \code{nl.obj=NULL} (default), the internal name to the reference is \code{_nl.intern_} and is not needed to be submitted to the other functions of this package. After using NLQuit, the identical name can be used again for a new instance.
-}
-  \item{nl.version}{
-  (optional) An integer value specifying the (major) version of NetLogo being started.
-  Don't try to start a NetLogo version 4.x with nl.version=5 and vice versa.
-  It is not possible to mix NetLogo versions in one R session. Please use different R sessions if you want to start RNetLogo
-  with version 4 and version 5.
-  The default is \code{nl.version=5} for NetLogo 5.0.
-  For NetLogo 4.1.x use \code{nl.version=4}.
-  For NetLogo 4.0.x use \code{nl.version=40}.
-  Please note, that the data transformation is much faster in NetLogo 5.0 than in NetLogo 4.x. Therefore, using NetLogo 5 is strongly recommended.
-  See the vignette \cr
-  \code{performanceNotes.pdf} for performance details.
 }
   \item{is3d}{
   (optional) A boolean value: if \code{TRUE}, NetLogo 3D will be started. \code{FALSE} will start the conventional 2D NetLogo. This functionality is experimental. All RNetLogo functions should work in NetLogo 3D as they do in conventional 2D NetLogo except NLSetPatches, which is currently not implemented to work in NetLogo 3D properly.
@@ -78,7 +66,7 @@ automatically when loading NetLogo and changes back to the former working direct
   No return value. 
 }
 \author{
-  Jan C. Thiele <jthiele@gwdg.de>
+  Jan C. Thiele <rnetlogo@gmx.de>
 }
 
 \references{
@@ -99,7 +87,7 @@ automatically when loading NetLogo and changes back to the former working direct
 \examples{
 \dontrun{
 library(RNetLogo)
-nl.path <- "C:/Program Files/NetLogo 5.0.5"
+nl.path <- "C:/Program Files/NetLogo 5.1.0"
 NLStart(nl.path)
 NLCommand("create-turtles 10")
 noturtles <- NLReport("count turtles")

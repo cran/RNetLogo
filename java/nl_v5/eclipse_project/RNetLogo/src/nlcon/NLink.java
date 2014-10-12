@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 import java.lang.Thread;
 
 
-public class NLink_v4 {
+public class NLink {
 	private org.nlogo.workspace.Controllable workspace = null;
 	private java.io.IOException caughtEx = null;
 	private boolean isGUIworkspace;
@@ -46,6 +46,7 @@ public class NLink_v4 {
 	    }
 	};
 	
+	@SuppressWarnings("static-access")
 	public void KillWorkspace()
 	{
 		try
@@ -58,8 +59,8 @@ public class NLink_v4 {
 			// currently the only way I can see. I include the risk, that not everything
 			// is cleaned up.
 			if (isGUIworkspace) {
-				for (int i=0; i<((App)workspace).frame.getFrames().length; i++) {
-					java.awt.Frame frame = ((App)workspace).frame.getFrames()[i];
+				for (int i=0; i<((App)workspace).frame().getFrames().length; i++) {
+					java.awt.Frame frame = ((App)workspace).frame().getFrames()[i];
 					//if (frame instanceof org.nlogo.gl.view.ObserverView) {
 						frame.dispose();
 					//}
@@ -72,7 +73,7 @@ public class NLink_v4 {
 			}
 			else {
 				((HeadlessWorkspace)workspace).dispose();
-			}			
+			}
 		}
 		catch (Exception ex) {
 			JOptionPane.showMessageDialog(null, "Error in killing workspace:"+ex, "Error", JOptionPane.OK_CANCEL_OPTION);
@@ -84,17 +85,17 @@ public class NLink_v4 {
 			System.setProperty("user.dir", userdir);
 	}
 	
-	public NLink_v4(Boolean isGUImode, Boolean is3d, String _userdir)
+	public NLink(Boolean isGUImode, Boolean is3d, String _userdir)
 	{
 		userdir = _userdir;
 		try
 		{
 			System.setSecurityManager(securityManager1);
-			System.setProperty("org.nlogo.is3d" , is3d.toString());
+			System.setProperty("org.nlogo.is3d", is3d.toString());
 			isGUIworkspace = isGUImode.booleanValue();
 			if( isGUIworkspace ) {
 				App.main( new String[] { } ) ;
-				workspace = App.app;
+				workspace = App.app();
 				org.nlogo.util.Exceptions.setHandler
 					( new org.nlogo.util.Exceptions.Handler() {
 							public void handle( Throwable t ) {
@@ -119,7 +120,7 @@ public class NLink_v4 {
 						new Runnable() {
 							public void run() {
 								try
-								{ App.app.open(path); }
+								{ App.app().open(path); }
 								catch( java.io.IOException ex)
 								{ caughtEx = ex; }
 							} } );
@@ -163,14 +164,14 @@ public class NLink_v4 {
 							{ 
 								if (addProcedure)
 								{
-									App.app.setProcedures(App.app.getProcedures()+"\n"+source);
+									App.app().setProcedures(App.app().getProcedures()+"\n"+source);
 								}
 								else
 								{
-									App.app.setProcedures(source);
+									App.app().setProcedures(source);
 								}
 								
-								App.app.compile();
+								App.app().compile();
 							}
 							catch( Exception ex)
 							{ 
@@ -261,7 +262,9 @@ public class NLink_v4 {
 				command(s);
 			}
 		}
-	}	
+	}
+
+	
 
 	/* returns the value of a reporter.  if it is a LogoList, it will be
 	recursively converted to an array of Objects */
@@ -317,7 +320,8 @@ public class NLink_v4 {
 
 
 
-	/* Repeats a command and returns a reporter until a condition is met */
+/* Repeats a command and returns a reporter until a condition is met */
+	@SuppressWarnings("unused")
 	public Object[] doReportWhile(final String s, final String var, final String condition, Integer maxMinutes)
 		throws LogoException, CompilerException, Exception
 	{
@@ -346,6 +350,7 @@ public class NLink_v4 {
 
 	
 /* Repeats a command and returns a list of reporters until a condition is met */
+	@SuppressWarnings("unused")
 	public Object[] doReportWhile(final String s, final String[] vars, final String condition, Integer maxMinutes)
 		throws LogoException, CompilerException, Exception
 	{
@@ -371,6 +376,7 @@ public class NLink_v4 {
 		Object[] objArray = varList.toArray();
 		return objArray;
 	}
+	
 }
 
 	

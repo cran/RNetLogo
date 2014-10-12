@@ -2,18 +2,16 @@ library(RNetLogo)
 
 # path to NetLogo installation folder
 # PLEASE FILL IN THE PATH TO YOUR NetLogo INSTALLATION FOLDER !!!!
-path.to.NetLogo <- "C:/Program Files/NetLogo 5.0.5"
-# version of NetLogo 
-nl.version = 5
+path.to.NetLogo <- "C:/Program Files/NetLogo 5.1.0"
                                                                   
 # to start NetLogo without GUI (=headless mode, multiple instances possible)
 # and in own, user managed, object instance variable with the name "my.obj1" use: 
 my.obj1 <- "my.obj1"
-NLStart(path.to.NetLogo, gui=FALSE, nl.version=5, nl.obj=my.obj1)
+NLStart(path.to.NetLogo, gui=FALSE, nl.obj=my.obj1)
  
 # start another NetLogo instance into variable with the name "my.obj2" use: 
 my.obj2 <- "my.obj2"
-NLStart(path.to.NetLogo, gui=FALSE, nl.version=5, nl.obj=my.obj2)
+NLStart(path.to.NetLogo, gui=FALSE, nl.obj=my.obj2)
 
 # relative path to a sample model
 model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"

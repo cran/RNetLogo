@@ -26,7 +26,6 @@ If you modify this library, you may extend this exception to your version of the
 If you do not wish to do so, delete this exception statement from your version.
 */ 
 
-import java.util.LinkedHashMap;
 import java.text.ParseException;
 import org.nlogo.api.LogoList;
 
@@ -34,8 +33,6 @@ public class NLResult {
 
 	private String type = null;
 	private Object resultValue = null;
-	private Integer NumberNestedLists = null;
-	private String[] NestedTypes = null;
 	
 	public void setResultValue(Object o) throws Exception {
 		logoToType(o);
@@ -127,8 +124,7 @@ public class NLResult {
     		if (logolist.get(0) instanceof LogoList)
     		{ 
     			Object[] lilist = new Object[logolist.size()];
-    			NestedTypes = new String[logolist.size()];
-				for (int i=0; i<logolist.size(); i++)
+    			for (int i=0; i<logolist.size(); i++)
 				{
 					NLResult nestedResult = new NLResult();
 					nestedResult.setResultValue(logolist.get(i));

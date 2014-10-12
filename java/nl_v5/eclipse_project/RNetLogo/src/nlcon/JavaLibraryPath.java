@@ -77,6 +77,7 @@ public class JavaLibraryPath
 		usr_pathsField.set(null, newUsr_paths);
 	}
 	
+	@SuppressWarnings("rawtypes")
 	private static final Class[] parameters = new Class[]{URL.class};
 
 	public static void addFile(String s) throws IOException {
@@ -84,10 +85,12 @@ public class JavaLibraryPath
 		addFile(f);
 	}//end method
  
+	@SuppressWarnings("deprecation")
 	public static void addFile(File f) throws IOException {
 		addURL(f.toURL());
 	}//end method
  
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static void addURL(URL u) throws IOException {
 		URLClassLoader sysloader = (URLClassLoader)ClassLoader.getSystemClassLoader();
 		Class sysclass = URLClassLoader.class;

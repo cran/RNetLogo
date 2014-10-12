@@ -66,7 +66,7 @@ stopCluster(cl)
 # the initialization function
 prepro <- function(dummy, gui, nl.path, model.path) {
   library(RNetLogo)
-  NLStart(nl.path, nl.version=5, gui=gui)
+  NLStart(nl.path, gui=gui)
   NLLoadModel(model.path)
 }
 
@@ -96,7 +96,7 @@ postpro <- function(x) {
 # the initialization function
 prepro <- function(dummy, gui, nl.path, model.path) {
   library(RNetLogo)
-  NLStart(nl.path, nl.version=5, gui=FALSE)
+  NLStart(nl.path, gui=FALSE)
   NLLoadModel(model.path)
 }
 

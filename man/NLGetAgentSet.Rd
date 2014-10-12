@@ -44,18 +44,14 @@ NLGetAgentSet(agent.var, agentset, as.data.frame=TRUE,
   It's possible to use all variables of an agent, which can be found in NetLogo's Agent Monitors.
   It isn't possible to get values from different types of agents (i.e. turtles, patches, links) with one
   call of \code{NLGetAgentSet}.
-  See the vignette \code{performanceNotes.pdf} for performance details and notes on changes since version 0.9.3.
 }
 \value{
   Returns a data.frame (optional a list) with the variable value(s) of an agent/agents of an agentset. 
   One row for each agent and one column for each agent variable.
   The result is sorted in the same manner as using \code{sort agentset} in NetLogo, i.e. turtles are sorted by their \code{who} variable and patches from upper left to lower right.
-
-  To get the same result as with default settings until RNetLogo version 0.9.2 use: \cr
-  \code{as.data.frame=FALSE} and \code{agents.by.row=TRUE}.
 }
 \author{
-  Jan C. Thiele <jthiele@gwdg.de>
+  Jan C. Thiele <rnetlogo@gmx.de>
 }
 \seealso{
   \code{\link{NLReport}},
@@ -64,7 +60,7 @@ NLGetAgentSet(agent.var, agentset, as.data.frame=TRUE,
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.0.5"
+nl.path <- "C:/Program Files/NetLogo 5.1.0"
 NLStart(nl.path)
 # NLLoadModel(...)
 NLCommand("create-turtles 10")

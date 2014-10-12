@@ -1,5 +1,5 @@
 \documentclass[article,nojss]{jss}
-\graphicspath{{images/}}
+%\graphicspath{{images/}}
 
 %\VignetteIndexEntry{Parallel Processing with RNetLogo}
 
@@ -49,7 +49,7 @@ individual based modelling, ibm, modelling} %% without formatting
   University of G\"ottingen\\
   B\"usgenweg 4\\
   37077 G\"ottingen, Germany\\
-  E-mail: \email{jthiele@gwdg.de}\\
+  E-mail: \email{rnetlogo@gmx.de}\\
   URL: \url{http://www.uni-goettingen.de/en/72779.html}\\
 }
 
@@ -164,7 +164,7 @@ These functions can look like the following (if you want to test these, don't fo
 # the initialization function
 prepro <- function(dummy, gui, nl.path, model.path) {
   library(RNetLogo)
-  NLStart(nl.path, nl.version=5, gui=gui)
+  NLStart(nl.path, gui=gui)
   NLLoadModel(model.path)
 }
 
@@ -193,7 +193,7 @@ postpro <- function(x) {
 # the initialization function
 prepro <- function(dummy, gui, nl.path, model.path) {
   library(RNetLogo)
-  NLStart(nl.path, nl.version=5, gui=FALSE)
+  NLStart(nl.path, gui=FALSE)
   NLLoadModel(model.path)
 }
 @

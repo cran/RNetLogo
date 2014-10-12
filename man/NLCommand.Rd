@@ -29,7 +29,7 @@ NLCommand(..., nl.obj=NULL)
   No return value.
 }
 \author{
-  Jan C. Thiele <jthiele@gwdg.de>
+  Jan C. Thiele <rnetlogo@gmx.de>
 }
 \seealso{
   \code{\link{NLDoCommand}},
@@ -38,7 +38,7 @@ NLCommand(..., nl.obj=NULL)
 }
 \examples{
 \dontrun{
-NLStart("C:/Program Files/NetLogo 5.0.5")
+NLStart("C:/Program Files/NetLogo 5.1.0")
 NLCommand("create-turtles 10")
 }
 }

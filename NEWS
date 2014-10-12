@@ -1,4 +1,14 @@
-Changes in version 0.9-7:
+Changes in version 1.0-1:
+	NEW FEATURES
+	  *Removing support for NetLogo 4.x (no nl.version argument in NLStart anymore).
+	  *Removing performanceNotes vignette.
+	  
+	BUG FIXES
+	  *Fixing CRAN policy violation.
+	  *Update of manual pages and code examples.
+
+
+Changes in version 1.0-0:
 	NEW FEATURES
       *Official release in together with the publication in Journal of Statistical Software.  
 	

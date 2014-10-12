@@ -35,23 +35,24 @@ public class Preprocess {
 		String savedUserDir = System.getProperty("user.dir");
 		// resolve NetLogo dependencies at runtime...
 		String seperator = "/";
-		String libpath = "lib";
-		//String windowsdllpath = "Windows";
 		try {
 			// extend classpath with NetLogo.jar and dependencies
 			//JavaLibraryPath.addFile(nl_path);
 			//JavaLibraryPath.addFile(nl_path+seperator+"models");
 			JavaLibraryPath.addFile(nl_path+seperator+"NetLogo.jar");
-			/*JavaLibraryPath.addFile(nl_path+seperator+libpath+seperator+"asm-3.0.jar");
-			JavaLibraryPath.addFile(nl_path+seperator+libpath+seperator+"asm-commons-3.0.jar");
-			JavaLibraryPath.addFile(nl_path+seperator+libpath+seperator+"asm-util-3.0.jar");
+			/*JavaLibraryPath.addFile(nl_path+seperator+libpath+seperator+"asm-3.1.jar");
+			JavaLibraryPath.addFile(nl_path+seperator+libpath+seperator+"asm-commons-3.1.jar");
+			JavaLibraryPath.addFile(nl_path+seperator+libpath+seperator+"asm-util-3.1.jar");
+			JavaLibraryPath.addFile(nl_path+seperator+libpath+seperator+"BehaviorSpace.jar");
 			JavaLibraryPath.addFile(nl_path+seperator+libpath+seperator+"gluegen-rt.jar");
 			JavaLibraryPath.addFile(nl_path+seperator+libpath+seperator+"jhotdraw.jar");
 			JavaLibraryPath.addFile(nl_path+seperator+libpath+seperator+"jmf.jar");
 			JavaLibraryPath.addFile(nl_path+seperator+libpath+seperator+"jogl.jar");
 			JavaLibraryPath.addFile(nl_path+seperator+libpath+seperator+"log4j-1.2.14.jar");
 			JavaLibraryPath.addFile(nl_path+seperator+libpath+seperator+"MRJAdapter.jar");
+			JavaLibraryPath.addFile(nl_path+seperator+libpath+seperator+"picocontainer.jar");
 			JavaLibraryPath.addFile(nl_path+seperator+libpath+seperator+"quaqua.jar");
+			JavaLibraryPath.addFile(nl_path+seperator+libpath+seperator+"scala-library.jar");
 			JavaLibraryPath.addFile(nl_path+seperator+libpath+seperator+"swing-layout.jar");
 			*/
 			// if os is windows, then load dlls for jogl...

@@ -1,21 +1,13 @@
 NLStart <-
-function(nl.path, gui=TRUE, nl.obj=NULL, nl.version=5, is3d=FALSE)
-{
+function(nl.path, gui=TRUE, nl.obj=NULL, is3d=FALSE)
+  {
   if (is.null(nl.obj))
   {
     nl.obj = "_nl.intern_"
   }
   
-  # get RNetLogo jar corresponding to NetLogo version
-  localjar <- 'RNetLogov4.jar'
-  if (nl.version==5)
-  {
-    localjar <- 'RNetLogov5.jar'
-  }
-  else if (nl.version==40)
-  {
-    localjar <- 'RNetLogov40.jar'
-  }  
+  # get RNetLogo jar
+  localjar <- 'RNetLogo.jar'
   
   # check for 3D/2D session
   if (.rnetlogo$nl3d == -1)
@@ -40,19 +32,14 @@ function(nl.path, gui=TRUE, nl.obj=NULL, nl.version=5, is3d=FALSE)
   # NetLogo version check
   if (.rnetlogo$nlversion == 0)
   {
-      .rnetlogo$nlversion <- nl.version
+      .rnetlogo$nlversion <- 5
       # load the RNetLogo jar
       .jpackage(
           .rnetlogo$pkgname,
           lib.loc = .rnetlogo$libname,
           jars=localjar
       ) 
-  }    
-  else
-  {
-    if (.rnetlogo$nlversion != nl.version)
-      stop("You can't use different NetLogo version in one R session.")
-  }   
+  }       
           
   if ((gui) && (.rnetlogo$startedGUI)) stop("RNetLogo was already started with GUI. 
   It isn't possible to start it again in this R session.")
@@ -62,39 +49,13 @@ function(nl.path, gui=TRUE, nl.obj=NULL, nl.version=5, is3d=FALSE)
     .rnetlogo$savedworkingdir <- Prepro(nl.path)
   }    
   
-  # use the connection for NetLogo version 4.x or 5.x
-  if (nl.version == 4)
-  {
-    nlo <- tryCatch(
-  			.jnew("nlcon/NLink_v4",.jnew("java/lang/Boolean",gui),.jnew("java/lang/Boolean",is3d),.jnew("java/lang/String",.rnetlogo$savedworkingdir[2])),
-  			error = function(e) {
-  				e$printStackTrace()
-        }
-  	)
-	}
-	else if (nl.version == 40)
-  {
-      nlo <- tryCatch(
-    			.jnew("nlcon/NLink_v40",.jnew("java/lang/Boolean",gui),.jnew("java/lang/Boolean",is3d),.jnew("java/lang/String",.rnetlogo$savedworkingdir[2])),
-    			error = function(e) {
-    				e$printStackTrace()
-          }
-    	)	
-  } 
-	else if (nl.version == 5)
-  {
-      nlo <- tryCatch(
-    			.jnew("nlcon/NLink_v5",.jnew("java/lang/Boolean",gui),.jnew("java/lang/Boolean",is3d),.jnew("java/lang/String",.rnetlogo$savedworkingdir[2])),
-    			error = function(e) {
-    				e$printStackTrace()
-          }
-    	)	
-  } 
-  else 
-  {
-    print("NetLogo version number unknown. Supported versions are 4 and 5.")
-    stop()
-  }
+  # use the connection for NetLogo version
+  nlo <- tryCatch(
+			.jnew("nlcon/NLink",.jnew("java/lang/Boolean",gui),.jnew("java/lang/Boolean",is3d),.jnew("java/lang/String",.rnetlogo$savedworkingdir[2])),
+			error = function(e) {
+				e$printStackTrace()
+      }
+	)	
 	
   if (gui) {
     .rnetlogo$startedGUI <- TRUE

@@ -36,6 +36,28 @@
 %------------------------------------------------------------------------------------------------------
 %------------------------------------------------------------------------------------------------------
 
+\section{Changes in version 1.0-1}{
+  \subsection{NEW FEATURES}{
+  
+    \itemize{  
+      \item Removing support for NetLogo 4.x (no nl.version argument in NLStart anymore)
+	  \item Removing performanceNotes vignette
+    }
+ }
+ 
+  \subsection{BUG FIXES}{
+
+    \itemize{
+      \item Fixing CRAN policy violation.
+      \item Update of manual pages and code examples.
+      }
+  }
+  
+} % version 1.0-1
+
+%------------------------------------------------------------------------------------------------------
+%------------------------------------------------------------------------------------------------------
+
 \section{Changes in version 1.0-0}{
   \subsection{NEW FEATURES}{
   

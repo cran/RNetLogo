@@ -2,14 +2,14 @@ library(RNetLogo)
 
 # path to NetLogo installation folder
 # PLEASE FILL IN THE PATH TO YOUR NetLogo INSTALLATION FOLDER !!!!
-path.to.NetLogo <- "C:/Program Files/NetLogo 5.0.5"
+path.to.NetLogo <- "C:/Program Files/NetLogo 5.1.0"
 
 # start NetLogo, if it is not started yet
 if (!exists("nl.test1", -1)) 
 {
   # an reference name
   nl.test1 <- "nl.test1"
-  NLStart(path.to.NetLogo, gui=TRUE, nl.obj=nl.test1, nl.version=5)
+  NLStart(path.to.NetLogo, gui=TRUE, nl.obj=nl.test1)
 }
 
 # with NLSourceFromText we can create or append NetLogo Model source from R.

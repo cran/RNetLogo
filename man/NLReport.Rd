@@ -26,7 +26,7 @@ NLReport(reporter, nl.obj=NULL)
   A vector of length one if only one value is returned. Otherwise it is a list or, if necessary, a nested list with the reported values.
 }
 \author{
-  Jan C. Thiele <jthiele@gwdg.de>
+  Jan C. Thiele <rnetlogo@gmx.de>
 }
 \seealso{
   \code{\link{NLDoReport}},
@@ -36,7 +36,7 @@ NLReport(reporter, nl.obj=NULL)
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.0.5"
+nl.path <- "C:/Program Files/NetLogo 5.1.0"
 NLStart(nl.path)
 model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"
 NLLoadModel(paste(nl.path,model.path,sep=""))

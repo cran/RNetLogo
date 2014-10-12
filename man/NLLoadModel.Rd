@@ -21,7 +21,7 @@ NLLoadModel(model.path, nl.obj=NULL)
   No return value.
 }
 \author{
-  Jan C. Thiele <jthiele@gwdg.de>
+  Jan C. Thiele <rnetlogo@gmx.de>
 }
 \seealso{
  \code{\link{NLStart}},
@@ -29,7 +29,7 @@ NLLoadModel(model.path, nl.obj=NULL)
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.0.5"
+nl.path <- "C:/Program Files/NetLogo 5.1.0"
 NLStart(nl.path)
 model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"
 absolute.model.path <- paste(nl.path,model.path,sep="")
