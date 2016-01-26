@@ -8,7 +8,7 @@ function(patch.var, patchset="patches", as.matrix=FALSE, as.data.frame=TRUE, pat
     nl.obj <- "_nl.intern_"
   }
   # check for unknown nl.obj
-  if (!(nl.obj %in% names(.rnetlogo$objects))) {
+  if (!(nl.obj %in% .rnetlogo$objects)) {
     stop(paste('There is no NetLogo reference stored under the name ',nl.obj,".", sep=""))
   }  
 
@@ -66,48 +66,6 @@ function(patch.var, patchset="patches", as.matrix=FALSE, as.data.frame=TRUE, pat
     }
   }
   
-# old version (until 0.9.2) 
-#  if (length(patch.var) == 1) {
-#    pvar <- c("map [[",patch.var,"] of ?] sort ", patchset)
-#  }
-#  else {
-#    if (as.data.frame == TRUE)
-#    {
-#      pvar <- lapply(patch.var, function(x) {paste(c("map [[",x,"] of ?] sort", patchset), collapse=" ")})
-#      pvar <- paste(c("(list",pvar,")"), collapse=" ")
-#    }
-#    else
-#    {
-#      pvar <- lapply(patch.var, function(x) {paste(c("[",x,"] of ?"), collapse="")} )
-#      pvar <- c("map [(list ",pvar,")] sort ", patchset)
-#    }
-#  }
-#  pvar <- paste(pvar, collapse="")
-#  resobj <- NLReport(pvar, nl.obj=nl.obj)
-#  
-#  if ((patchset == "patches") && (as.matrix == TRUE))
-#  {
-#    resobj <- matrix(resobj, NLReport('world-width',nl.obj=nl.obj))
-#    resobj <- t(resobj)
-#  }
-#  # transform result to data.frame
-#  if ((as.data.frame == TRUE) && (is.list(resobj)))
-#  {
-#    if (length(patch.var) == 1)
-#    {
-#      resobj <- data.frame(do.call("rbind",resobj))
-#      length.of.col <- lapply(resobj, function(x) {length(x[[1]])})
-#      resobj[c(which(length.of.col==1))] <- as.data.frame(lapply(resobj[c(which(length.of.col==1))], function(x) { unlist(x) })) 
-#    }
-#    else
-#    {
-#      resobj <- as.data.frame(resobj)
-#    }
-#    if (length(df.col.names) > 0)
-#    {
-#      names(resobj) <- df.col.names
-#    }
-#  }  
   return (resobj)
 }
 

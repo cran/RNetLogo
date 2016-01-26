@@ -13,7 +13,7 @@ m <- dbDriver("SQLite")
 #----
 # TODO: adapt these paths
 #----
-nl.path = "C:/Program Files/NetLogo 5.1.0"
+nl.path = "C:/Program Files/NetLogo 5.3/app"
 database.path = "C:/Users/jthiele/Documents/test_netlogo.db"
 
 # create connection to the database 

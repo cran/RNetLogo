@@ -7,7 +7,7 @@ function(agentset, input, var.name=NULL, nl.obj=NULL)
     nl.obj <- "_nl.intern_"
   }
   # check for unknown nl.obj
-  if (!(nl.obj %in% names(.rnetlogo$objects))) {
+  if (!(nl.obj %in% .rnetlogo$objects)) {
     stop(paste('There is no NetLogo reference stored under the name ',nl.obj,".", sep=""))
   }  
   
@@ -31,27 +31,7 @@ function(agentset, input, var.name=NULL, nl.obj=NULL)
                   ), collapse="")    
     end_ <- "] ])"
     merged_ = paste(prev_, inp_, ask_, sets_, end_, sep="", collapse="")
-    NLCommand(merged_, nl.obj=nl.obj)
-    
-# old version, till 0.9.6 (very slow)
-#     if (length(input[[1]]) != NLReport(paste("count ",agentset,sep=" "), nl.obj=nl.obj)) {
-#       stop("Length of agentset not equal to length of input.")
-#     }
-#     # get agent variable names
-#     vars <- names(input)
-#     # construct processing string
-#     prev <- paste("(foreach sort ", agentset, sep="")
-#     ask <- "[ask ?1 ["
-#     sets <- paste(lapply(1:length(vars), 
-#                          function(x) 
-#                            paste("set ",vars[x]," ?",x+1," ", sep="")),collapse=" ")
-#     end <- "]])"
-#     inp <- paste(lapply(1:length(vars), 
-#                          function(x) 
-#                            paste("input[[\"",vars[x],"\"]]",sep="")),collapse=", ")
-#     str <- paste("NLCommand(\"",prev,"\",",inp,",\"",ask,sets,end,"\", nl.obj=nl.obj)", collapse="")
-#     # exec string
-#     eval(parse(text=str))  
+    NLCommand(merged_, nl.obj=nl.obj)    
   }
   else if (is.vector(input)) {
     if (length(input) != NLReport(paste("count ",agentset,sep=" "), nl.obj=nl.obj)) {
@@ -65,12 +45,7 @@ function(agentset, input, var.name=NULL, nl.obj=NULL)
     inp_ <- paste("[",paste(input, collapse=" "), "]", collapse=" ")
     ask_ <- paste(" [ask ?1 [set ",var.name," ?2]])", sep="")
     merged_ <- paste(start_, inp_, ask_, sep=" ")
-    NLCommand(merged_, nl.obj=nl.obj)
-    
-# old version, till 0.9.6   
-#     str <- paste("NLCommand(\" (foreach sort ", agentset, " \",input,\" [ask ?1 [set ",var.name," ?2]])\", nl.obj=nl.obj)", sep="")    
-#     # exec string
-#     eval(parse(text=str)) 
+    NLCommand(merged_, nl.obj=nl.obj)    
   }
   else {
     stop("Input has to be a data.frame or vector.")  

@@ -1,7 +1,7 @@
 library(RNetLogo)
 
 # adapt the path
-nl.path <- "C:/Program Files/NetLogo 5.1.0"
+nl.path <- "C:/Program Files/NetLogo 5.3/app"
 NLStart(nl.path, gui=FALSE)
 model.path <- "models/Curricular Models/Urban Suite/Urban Suite - Sprawl Effect.nlogo"
 NLLoadModel(paste(nl.path,model.path,sep="/"))

@@ -3,7 +3,7 @@ library(RNetLogo)
 
 # path to the NetLogo installation folder
 # PLEASE FILL IN THE PATH TO YOUR NetLogo INSTALLATION FOLDER !!!!
-path.to.NetLogo <- "C:/Program Files/NetLogo 5.1.0"
+path.to.NetLogo <- "C:/Program Files/NetLogo 5.3/app"
 
 # start NetLogo using the path to NetLogo
 # with GUI (=Graphical User Interface) (default)

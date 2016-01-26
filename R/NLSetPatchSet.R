@@ -7,7 +7,7 @@ function(patch.var, input, nl.obj=NULL)
     nl.obj <- "_nl.intern_"
   }
   # check for unknown nl.obj
-  if (!(nl.obj %in% names(.rnetlogo$objects))) {
+  if (!(nl.obj %in% .rnetlogo$objects)) {
     stop(paste('There is no NetLogo reference stored under the name ',nl.obj,".", sep=""))
   }  
   
@@ -36,17 +36,6 @@ function(patch.var, input, nl.obj=NULL)
       end_ <- " ]])"
       merged_ <- paste(start_, xcords_, ycords_, zcords_, var_, ask_, end_, sep="") 
       NLCommand(merged_, nl.obj=nl.obj)
-      
-# old version, till 0.9.6      
-#       set.patch.3D <- function(nl.obj, patch.var, value, pxcor, pycor, pzcor)
-#       {
-#         xindex <- pxcor
-#         yindex <- pycor
-#         zindex <- pzcor
-#         NLCommand('ask patch',pxcor,pycor,pzcor,'[','set',patch.var,value,']',nl.obj=nl.obj)
-#       }
-#               
-#       invisible(apply(input, 1, function(x) {set.patch.3D(nl.obj, patch.var, x[4], x[1], x[2], x[3])}))      
   }
   else {
     # for conventional 2D NetLogo:      
@@ -62,17 +51,6 @@ function(patch.var, input, nl.obj=NULL)
     end_ <- " ]])"
     merged_ <- paste(start_, xcords_, ycords_, var_, ask_, end_, sep="")  
     NLCommand(merged_, nl.obj=nl.obj)
-    
-# old version, till 0.9.6
-#     
-#     set.patch.2D <- function(nl.obj, patch.var, value, pxcor, pycor)
-#     {
-#       xindex <- pxcor
-#       yindex <- pycor
-#       NLCommand('ask patch',pxcor,pycor,'[','set',patch.var,value,']',nl.obj=nl.obj)
-#     }
-#     
-#     invisible(apply(input, 1, function(x) {set.patch.2D(nl.obj, patch.var, x[3], x[1], x[2])}))      
   }
     
 }

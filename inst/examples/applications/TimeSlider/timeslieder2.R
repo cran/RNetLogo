@@ -49,7 +49,7 @@ plottimedata <- function(timedata.list,x.var,y.var,boxplot.var1,
 }
 
 # initialize NetLogo
-nl.path <- "C:/Program Files/NetLogo 5.1.0"
+nl.path <- "C:/Program Files/NetLogo 5.3/app"
 model.path <- "/models/Sample Models/Biology/Virus.nlogo"
 NLStart(nl.path)
 # load the Tumor model

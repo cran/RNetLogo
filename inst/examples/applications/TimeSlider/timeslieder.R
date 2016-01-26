@@ -42,7 +42,7 @@ plottimedata <- function(timedata.list,x.var,y.var,color.var=NULL, ...) {
 }
 
 
-nl.path <- "C:/Program Files/NetLogo 5.1.0"
+nl.path <- "C:/Program Files/NetLogo 5.3/app"
 model.path <- "/models/Sample Models/Biology/Tumor.nlogo"
 NLStart(nl.path)
 NLLoadModel(paste(nl.path,model.path,sep=""))

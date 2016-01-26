@@ -3,7 +3,8 @@ function(nl.obj=NULL, all=FALSE)
 {
   if (all) {
     # object names
-    objs <- names(.rnetlogo$objects)
+    #objs <- names(.rnetlogo$objects)
+    objs <- .rnetlogo$objects
 
     # handle gui obj as last, to prevent java.lang.InterruptionException
     guiobj <- NULL    
@@ -27,8 +28,8 @@ function(nl.obj=NULL, all=FALSE)
     {
       obj.name = "_nl.intern_"
     }
-    if (obj.name %in% names(.rnetlogo$objects)) {
-      nl.obj <- .rnetlogo$objects[[obj.name]]
+    if (obj.name %in% .rnetlogo$objects) {
+	  nl.obj <- get(obj.name, envir=.rnetlogo)
     } else {
       stop(paste('There is no NetLogo reference stored under the name ',obj.name,".", sep=""))
     }    
@@ -50,8 +51,9 @@ function(nl.obj=NULL, all=FALSE)
     # free the instance
     # doesn't work for others than .rnetlogo[['nl.intern']]
     nl.obj <- NULL
-    .rnetlogo$objects[obj.name] <- NULL
-    
+    #.rnetlogo$objects[obj.name] <- NULL
+    .rnetlogo$objects <- .rnetlogo$objects[-which(.rnetlogo$objects %in% obj.name)]
+	
     # call the garbage collector
     .jcall('java/lang/System', 'V', 'gc')
     # java error handling

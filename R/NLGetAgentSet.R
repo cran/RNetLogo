@@ -8,7 +8,7 @@ function(agent.var, agentset, as.data.frame=TRUE, agents.by.row=FALSE, as.vector
     nl.obj <- "_nl.intern_"
   }
   # check for unknown nl.obj
-  if (!(nl.obj %in% names(.rnetlogo$objects))) {
+  if (!(nl.obj %in% .rnetlogo$objects)) {
     stop(paste('There is no NetLogo reference stored under the name ',nl.obj,".", sep=""))
   }  
   
@@ -54,44 +54,6 @@ function(agent.var, agentset, as.data.frame=TRUE, agents.by.row=FALSE, as.vector
       }
     }
   }  
-# old version (until 0.9.2)   
-#  if (length(agent.var) == 1) {
-#    avar <- c("map [[",agent.var,"] of ?] sort ", agentset)
-#  }
-#  else {
-#    if (as.data.frame == TRUE)
-#    {
-#      avar <- lapply(agent.var, function(x) {paste(c("map [[",x,"] of ?] sort", agentset), collapse=" ")})
-#      avar <- paste(c("(list",avar,")"), collapse=" ")
-#    }
-#    else
-#    {
-#      avar <- lapply(agent.var, function(x) {paste(c("[",x,"] of ?"), collapse="")} )
-#      avar <- c("map [(list ",avar,")] sort ", agentset)
-#    }
-#  }
-#  
-#  avar <- paste(avar, collapse="")
-#  resobj <- NLReport(avar, nl.obj=nl.obj)
-#  
-#  # transform result to data.frame
-#  if ((as.data.frame == TRUE) && (is.list(resobj)))
-#  {
-#    if (length(agent.var) == 1)
-#    {
-#      resobj <- data.frame(do.call("rbind",resobj))
-#      length.of.col <- lapply(resobj, function(x) {length(x[[1]])})
-#      resobj[c(which(length.of.col==1))] <- as.data.frame(lapply(resobj[c(which(length.of.col==1))], function(x) { unlist(x) })) 
-#    }
-#    else
-#    {
-#      resobj <- as.data.frame(resobj)
-#    }
-#    if (length(df.col.names) > 0)
-#    {
-#      names(resobj) <- df.col.names
-#    }
-#  }  
   return (resobj)
 }
 

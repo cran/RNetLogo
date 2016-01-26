@@ -5,7 +5,7 @@ function(nl.path, gui=TRUE, nl.obj=NULL, is3d=FALSE)
   {
     nl.obj = "_nl.intern_"
   }
-  
+    
   # get RNetLogo jar
   localjar <- 'RNetLogo.jar'
   
@@ -73,6 +73,7 @@ function(nl.path, gui=TRUE, nl.obj=NULL, is3d=FALSE)
   }
 
   # store NetLogo instance reference internally under the defined/submitted name
-  .rnetlogo$objects[nl.obj] <- nlo
+  assign(nl.obj, nlo, envir=.rnetlogo)
+  .rnetlogo$objects <- c(.rnetlogo$objects, nl.obj)    
 }
 

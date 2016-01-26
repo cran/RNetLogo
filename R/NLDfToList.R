@@ -7,7 +7,7 @@ function(in.data.frame, nl.obj=NULL)
     nl.obj <- "_nl.intern_"
   }
   # check for unknown nl.obj
-  if (!(nl.obj %in% names(.rnetlogo$objects))) {
+  if (!(nl.obj %in% .rnetlogo$objects)) {
     stop(paste('There is no NetLogo reference stored under the name ',nl.obj,".", sep=""))
   }  
   

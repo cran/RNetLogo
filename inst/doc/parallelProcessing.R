@@ -116,7 +116,7 @@ prepro <- function(dummy, gui, nl.path, model.path) {
 ## # set variables for the start up process
 ## # adapt path appropriate (or set an environment variable NETLOGO_PATH)
 ## gui <- TRUE
-## nl.path <- Sys.getenv("NETLOGO_PATH", "C:/Program Files/NetLogo 5.0.4")
+## nl.path <- Sys.getenv("NETLOGO_PATH", "C:/Program Files/NetLogo 5.3/app")
 ## model.path <- "models/Sample Models/Earth Science/Fire.nlogo"
 ## 
 ## # load NetLogo in each processor/core

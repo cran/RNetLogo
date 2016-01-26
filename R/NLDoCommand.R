@@ -7,9 +7,9 @@ function(iterations, ..., nl.obj=NULL)
     nl.obj <- "_nl.intern_"
   }
   # get NetLogo reference
-  if (nl.obj %in% names(.rnetlogo$objects)) {
-    nl.obj <- .rnetlogo$objects[[nl.obj]]
-  } else {
+  if (nl.obj %in% .rnetlogo$objects) {
+	nl.obj <- get(nl.obj, envir=.rnetlogo)
+	} else {
     stop(paste('There is no NetLogo reference stored under the name ',nl.obj,".", sep=""))
   }  
     

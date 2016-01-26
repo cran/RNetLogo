@@ -2,7 +2,7 @@ library(RNetLogo)
 
 # path to NetLogo installation folder
 # PLEASE FILL IN THE PATH TO YOUR NetLogo INSTALLATION FOLDER !!!!
-path.to.NetLogo <- "C:/Program Files/NetLogo 5.1.0"
+path.to.NetLogo <- "C:/Program Files/NetLogo 5.3/app"
                                                                   
 # to start NetLogo without GUI (=headless mode, multiple instances possible)
 # and in own, user managed, object instance variable with the name "my.obj1" use: 

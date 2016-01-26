@@ -2,7 +2,7 @@ library(RNetLogo)
 
 # path to NetLogo installation folder
 # PLEASE FILL IN THE PATH TO YOUR NetLogo INSTALLATION FOLDER !!!!
-path.to.NetLogo <- "C:/Program Files/NetLogo 5.1.0"
+path.to.NetLogo <- "C:/Program Files/NetLogo 5.3/app"
 
 # start NetLogo, if it is not started yet
 if (!exists("nl.test1", -1)) 
@@ -17,7 +17,7 @@ if (!exists("nl.test1", -1))
 
 # load a sample model
 # PLEASE FILL IN THE PATH TO THE SAMPLE NetLogo FILE !!!!
-path.to.local.file <- 'C:/Users/jthiele/Documents/R/win-library/3.1/RNetLogo/examples/code_samples/16-NLSourceFromText/samplemodel.nlogo'
+path.to.local.file <- 'C:/Users/jthiele/Documents/R/win-library/3.2/RNetLogo/examples/code_samples/16-NLSourceFromText/samplemodel.nlogo'
 NLLoadModel(path.to.local.file, nl.obj=nl.test1)
 
 # append the model by a new procedure called "go2" (there is no way to change the current model)
