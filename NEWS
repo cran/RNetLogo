@@ -1,6 +1,13 @@
+Changes in version 1.0-3:
+	NEW FEATURES
+	  *Update to NetLogo 6.0
+	  *Adding optional parameter in NLStart to specify name of netlogo.jar file as the name contains the version number in the name since NetLogo 6.0.0.
+
 Changes in version 1.0-2:
 	NEW FEATURES
 	  *Update to NetLogo 5.3
+	  *Changes in internal architecture of holding S4 class object for conformity to CRAN policy 
+	  *Supporting older Java version again (addressing "Unsupported major.minor version" error, however, using Java version before 8.0 is deprecated)
 
 Changes in version 1.0-1:
 	NEW FEATURES

@@ -38,7 +38,7 @@ NLDoCommand(iterations, ..., nl.obj=NULL)
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.3/app"
+nl.path <- "C:/Program Files/NetLogo 6.0/app"
 NLStart(nl.path)
 model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"
 NLLoadModel(paste(nl.path,model.path,sep=""))

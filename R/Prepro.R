@@ -1,5 +1,5 @@
 Prepro <-
-function(nl.path)
+function(nl.path, jarname)
 {
   # save current R working directory
   workingdir <- c(getwd())
@@ -7,7 +7,7 @@ function(nl.path)
   setwd(nl.path)
 	preobj <- .jnew("nlcon/Preprocess")
 	# return value: (system wide) user working directory
-	userworkingdir <- .jcall(preobj, "S", "cpsettings", .jnew("java/lang/String", nl.path))
+	userworkingdir <- .jcall(preobj, "S", "cpsettings", .jnew("java/lang/String", nl.path), .jnew("java/lang/String", jarname))
   workingdir <- append(workingdir, userworkingdir)
   return (workingdir)
 }

@@ -38,7 +38,7 @@ NLCommand(..., nl.obj=NULL)
 }
 \examples{
 \dontrun{
-NLStart("C:/Program Files/NetLogo 5.3/app")
+NLStart("C:/Program Files/NetLogo 6.0/app")
 NLCommand("create-turtles 10")
 }
 }

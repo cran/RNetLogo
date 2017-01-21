@@ -9,11 +9,11 @@
   or GUI mode. 
 }
 \usage{
-NLStart(nl.path, gui=TRUE, nl.obj=NULL, is3d=FALSE)
+NLStart(nl.path, gui=TRUE, nl.obj=NULL, is3d=FALSE, nl.jarname='netlogo-6.0.0.jar')
 }
 \arguments{
   \item{nl.path}{
-  An absolute path to your NetLogo installation (the folder where the NetLogo.jar is) starting from the root. On Windows, for example, something like "C:/Program Files/NetLogo 5.3/app".
+  An absolute path to your NetLogo installation (the folder where the NetLogo.jar is) starting from the root. On Windows, for example, something like "C:/Program Files/NetLogo 6.0/app".
 }
   \item{gui}{
   (optional) A boolean value: if \code{TRUE}, NetLogo will be started with GUI (only one instance with GUI can be created currently!). 
@@ -24,6 +24,9 @@ NLStart(nl.path, gui=TRUE, nl.obj=NULL, is3d=FALSE)
 }
   \item{is3d}{
   (optional) A boolean value: if \code{TRUE}, NetLogo 3D will be started. \code{FALSE} will start the conventional 2D NetLogo. This functionality is experimental. All RNetLogo functions should work in NetLogo 3D as they do in conventional 2D NetLogo except NLSetPatches, which is currently not implemented to work in NetLogo 3D properly.
+}
+  \item{nl.jarname}{
+  (optional) The name of the NetLogo jar file. Since NetLogo 6.0 the jar file includes the version number. Default value is netlogo-6.0.0.jar. For other version the name has to be set here.
 }
 }
 \details{
@@ -51,8 +54,7 @@ automatically when loading NetLogo and changes back to the former working direct
   If you want to specify options for the underlying Java Virtual Machine (JVM), like increasing the Java Heap Space for large models, execute \code{options(java.parameters="...")} before loading the RNetLogo package with \code{library(RNetLogo)} or \code{require(RNetLogo)}. For increasing the Java Heap Space it can be \code{options(java.parameters="-Xmx1024m")}, for example. Use a vector of strings for setting multiple options, for example \cr
   \code{options(java.parameters=c("-server","-Xmx1300m"))}.
   See also \cr
-  \url{http://ccl.northwestern.edu/netlogo/docs/faq.html#howbig} and \cr
-  \url{http://permalink.gmane.org/gmane.comp.lang.r.rosuda.devel/1284}. 
+  \url{http://ccl.northwestern.edu/netlogo/docs/faq.html#howbig} and rJava manual. 
 
   See the directory \code{examples} in the installation directory of the package for example codes to all RNetLogo functions.
 
@@ -87,7 +89,7 @@ automatically when loading NetLogo and changes back to the former working direct
 \examples{
 \dontrun{
 library(RNetLogo)
-nl.path <- "C:/Program Files/NetLogo 5.3/app"
+nl.path <- "C:/Program Files/NetLogo 6.0/app"
 NLStart(nl.path)
 NLCommand("create-turtles 10")
 noturtles <- NLReport("count turtles")

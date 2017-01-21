@@ -39,7 +39,7 @@ NLSourceFromString(..., append.model=TRUE, nl.obj=NULL)
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.3/app"
+nl.path <- "C:/Program Files/NetLogo 6.0/app"
 NLStart(nl.path)
 setup <- "to setup\n ca\n crt 10\nend \n"
 go <- "to go\n ask turtles [\n  set xcor random-xcor\n  

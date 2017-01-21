@@ -7,7 +7,7 @@ package nlcon;
 
 
 import org.nlogo.headless.HeadlessWorkspace;
-import org.nlogo.api.CompilerException;
+import org.nlogo.core.CompilerException;
 import org.nlogo.api.LogoException;
 import org.nlogo.app.App;
 import java.awt.EventQueue;
@@ -18,7 +18,7 @@ import java.lang.Thread;
 
 
 public class NLink {
-	private org.nlogo.workspace.Controllable workspace = null;
+	private org.nlogo.workspace.Controllable workspace = null;	
 	private java.io.IOException caughtEx = null;
 	private boolean isGUIworkspace;
 	private static boolean blockExit = true;
@@ -96,8 +96,8 @@ public class NLink {
 			if( isGUIworkspace ) {
 				App.main( new String[] { } ) ;
 				workspace = App.app();
-				org.nlogo.util.Exceptions.setHandler
-					( new org.nlogo.util.Exceptions.Handler() {
+				org.nlogo.api.Exceptions.setHandler
+					( new org.nlogo.api.Exceptions.Handler() {
 							public void handle( Throwable t ) {
 								throw new RuntimeException(t.getMessage());
 							} } );

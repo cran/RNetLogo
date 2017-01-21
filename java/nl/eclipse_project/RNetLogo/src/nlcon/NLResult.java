@@ -4,7 +4,7 @@ package nlcon;
 This file is part of RNetLogo.
 Contact: jthiele at gwdg.de
 
-Copyright (C) 2011-2013 Jan C. Thiele
+Copyright (C) 2011-2017 Jan C. Thiele
 
 RNetLogo is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -27,7 +27,8 @@ If you do not wish to do so, delete this exception statement from your version.
 */ 
 
 import java.text.ParseException;
-import org.nlogo.api.LogoList;
+//jct import org.nlogo.api.LogoList;
+import org.nlogo.core.LogoList;
 
 public class NLResult {
 
@@ -84,7 +85,7 @@ public class NLResult {
 		if(o instanceof LogoList)
 		{
 			type = "LogoList";
-			org.nlogo.api.LogoList loli = (org.nlogo.api.LogoList)o;
+			org.nlogo.core.LogoList loli = (org.nlogo.core.LogoList)o;
 			resultValue = cast_logolist(loli, false);
 		}
 		else if (o instanceof String) {

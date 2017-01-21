@@ -1,5 +1,5 @@
 NLStart <-
-function(nl.path, gui=TRUE, nl.obj=NULL, is3d=FALSE)
+function(nl.path, gui=TRUE, nl.obj=NULL, is3d=FALSE, nl.jarname='netlogo-6.0.0.jar')
   {
   if (is.null(nl.obj))
   {
@@ -46,7 +46,7 @@ function(nl.path, gui=TRUE, nl.obj=NULL, is3d=FALSE)
   
   # store working directory, if this is the first NetLogo instance/there are no others
   if (length(.rnetlogo$objects) == 0) {
-    .rnetlogo$savedworkingdir <- Prepro(nl.path)
+    .rnetlogo$savedworkingdir <- Prepro(nl.path, nl.jarname)
   }    
   
   # use the connection for NetLogo version

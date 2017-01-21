@@ -39,7 +39,7 @@ NLSetPatches(patch.var, in.matrix, nl.obj=NULL)
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.3/app"
+nl.path <- "C:/Program Files/NetLogo 6.0/app"
 NLStart(nl.path)
 m1 <- matrix(1:1089 , 33)
 NLSetPatches("pcolor", m1)

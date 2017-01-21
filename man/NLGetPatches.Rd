@@ -65,7 +65,7 @@ NLGetPatches(patch.var, patchset="patches", as.matrix=FALSE,
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.3/app"
+nl.path <- "C:/Program Files/NetLogo 6.0/app"
 NLStart(nl.path)
 # NLLoadModel(...)
 

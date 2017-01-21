@@ -16,8 +16,8 @@ Mostly analogous to the NetLogo Mathematica Link
 \tabular{ll}{
 Package: \tab RNetLogo\cr
 Type: \tab Package\cr
-Version: \tab 1.0-2\cr
-Date: \tab 2016-01-25\cr
+Version: \tab 1.0-3\cr
+Date: \tab 2017-01-21\cr
 License: \tab GNU GPL v2\cr
 LazyLoad: \tab yes\cr
 }
@@ -54,7 +54,7 @@ See the tutorial published as Thiele (2014) for an introduction. Example codes f
   
   Thiele, J., Kurth, W., Grimm, V. (2012) RNetLogo: An R Package for Running and Exploring Individual-Based Models Implemented in NetLogo. Methods in Ecology and Evolution 3(3) 480-483.
   
-  R Core Team (2014) R: A Language and Environment for Statistical. R Foundation for Statistical Computing.Vienna, Austria. \url{http://www.R-project.org}.    
+  R Core Team (2014) R: A Language and Environment for Statistical. R Foundation for Statistical Computing.Vienna, Austria. \url{https://www.r-project.org}.    
   
   Wilensky, U. (1999) NetLogo. \url{http://ccl.northwestern.edu/netlogo/}. Center for Connected Learning and Computer-Based Modeling, Northwestern University. Evanston, IL.  
 }
@@ -71,8 +71,9 @@ See the tutorial published as Thiele (2014) for an introduction. Example codes f
 \examples{
 \dontrun{
 library(RNetLogo)
-nl.path <- "C:/Program Files/NetLogo 5.3/app"
-NLStart(nl.path)
+nl.path <- "C:/Program Files/NetLogo 6.0/app"
+nl.jarname <- "netlogo-6.0.0.jar"
+NLStart(nl.path, nl.jarname=nl.jarname)
 model.path <- "/models/Sample Models/Earth Science/Fire.nlogo"
 NLLoadModel(paste(nl.path,model.path,sep=""))
 NLCommand("setup")

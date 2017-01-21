@@ -60,7 +60,7 @@ NLGetAgentSet(agent.var, agentset, as.data.frame=TRUE,
 }
 \examples{
 \dontrun{
-nl.path <- "C:/Program Files/NetLogo 5.3/app"
+nl.path <- "C:/Program Files/NetLogo 6.0/app"
 NLStart(nl.path)
 # NLLoadModel(...)
 NLCommand("create-turtles 10")
