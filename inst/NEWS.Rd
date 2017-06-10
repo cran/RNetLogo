@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 
 
-%\section{Changes in version 1.0-3}{
+%\section{Changes in version 1.0-5}{
 %
 %  \subsection{BUG FIXES}{
 %
@@ -31,8 +31,22 @@
 %  } % installation and building
 %  
 %
-%} % version 1.0-3
+%} % version 1.0-5
 
+%------------------------------------------------------------------------------------------------------
+%------------------------------------------------------------------------------------------------------
+
+\section{Changes in version 1.0-4}{
+  \subsection{BUG FIXES}{
+
+    \itemize{
+	  \item Errors in NLGetAgentSet, NLGetGraph, NLGetPatches, NLSetAgentSet, NLSetPatches, NLSetPatchSet sind language update in NetLogo 6.0 fixed
+      }
+  }
+  
+} % version 1.0-4
+
+	  
 %------------------------------------------------------------------------------------------------------
 %------------------------------------------------------------------------------------------------------
 

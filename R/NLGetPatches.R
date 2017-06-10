@@ -24,14 +24,18 @@ function(patch.var, patchset="patches", as.matrix=FALSE, as.data.frame=TRUE, pat
     if (length(patch.var) != 1) {
       stop("as.vector=TRUE makes only sense if you request just one patch variable.")
     }
-    pvar <- c("map [[",patch.var,"] of ?] sort ", patchset)
+    # since NL 6.0:
+    pvar <- c("map [ [?] -> [",patch.var,"] of ?] sort  ", patchset)
+    #pvar <- c("map [ [x] -> [",patch.var,"] of x] sort ", patchset)
     pvar <- paste(pvar, collapse="")
     resobj <- NLReport(pvar, nl.obj=nl.obj)  
   }
   else {
     # create a data.frame
     if ((as.data.frame == TRUE) || (as.matrix == TRUE)) { 
-      str <- lapply(patch.var, function(x) {paste("NLReport(\"map [[",x,"] of ?] sort ",patchset,"\",nl.obj=nl.obj)",sep="")})
+      # since NL 6.0:
+      str <- lapply(patch.var, function(x) {paste("NLReport(\"map [[?] -> [",x,"] of ?] sort ",patchset,"\",nl.obj=nl.obj)",sep="")})
+      #str <- lapply(patch.var, function(x) {paste("NLReport(\"map [[",x,"] of ?] sort ",patchset,"\",nl.obj=nl.obj)",sep="")})
       str <- paste(str, collapse=",")
       str <- paste("resobj <- data.frame(",str,")",sep=" ")
       eval(parse(text=str))  
@@ -52,10 +56,14 @@ function(patch.var, patchset="patches", as.matrix=FALSE, as.data.frame=TRUE, pat
     else {
       if (patches.by.row == TRUE) {
         avar <- lapply(patch.var, function(x) {paste(c("[",x,"] of ?"), collapse="")} )
-        avar <- c("map [(list ",avar,")] sort ", patchset)
+        # since NL 6.0:
+        avar <- c("map [[?] -> (list ",avar,")] sort ", patchset)
+        #avar <- c("map [(list ",avar,")] sort ", patchset)
       } 
       else {
-        avar <- lapply(patch.var, function(x) {paste(c("map [[",x,"] of ?] sort", patchset), collapse=" ")})
+        # since NL 6.0:
+        avar <- lapply(patch.var, function(x) {paste(c("map [[?] -> [",x,"] of ?] sort", patchset), collapse=" ")})
+        #avar <- lapply(patch.var, function(x) {paste(c("map [[",x,"] of ?] sort", patchset), collapse=" ")})
         avar <- paste(c("(list",avar,")"), collapse=" ")
       }
       avar <- paste(avar, collapse="")

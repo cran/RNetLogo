@@ -16,21 +16,42 @@ function(agentset, input, var.name=NULL, nl.obj=NULL)
     if (length(input[[1]]) != agentset.len) {
       stop("Length of agentset not equal to length of input.")
     }    
-    # get agent variable names
-    vars_ <- names(input)
-    prev_ <- paste("(foreach sort ",agentset, " ", sep="")
-    ask_ <- "[ask ?1 ["
-    cnt = 1
-    inp_ <- paste(lapply(input,
-                         function(x) 
-                           paste("[",paste(x, collapse=" "), "]", collapse=" ")
-                  ), " ", collapse=" ")                                                  
-    sets_ <- paste(lapply(1:length(vars_),
-                        function(x) 
-                          paste("set ", vars_[x], " ?",cnt+x," ", sep="")
-                  ), collapse="")    
-    end_ <- "] ])"
-    merged_ = paste(prev_, inp_, ask_, sets_, end_, sep="", collapse="")
+	# get agent variable names
+	# since NL 6.0:
+	vars_ <- names(input)
+	prev_ <- paste("(foreach sort ",agentset, " ", sep="")
+	cnt = 1
+	qst_ <- paste("[ [", paste(lapply(0:length(vars_),
+						  function(x) 
+							paste(" ?",cnt+x, sep="")
+	), collapse=""),"]", sep="")
+
+	ask_ <- " -> ask ?1 ["
+	cnt = 1
+	inp_ <- paste(lapply(input,
+						 function(x) 
+						   paste("[",paste(x, collapse=" "), "]", collapse=" ")
+	), " ", collapse=" ")                                                  
+	sets_ <- paste(lapply(1:length(vars_),
+						  function(x) 
+							paste("set ", vars_[x], " ?",cnt+x," ", sep="")
+	), collapse="")    
+	end_ <- "] ])"
+	merged_ = paste(prev_, inp_, qst_, ask_, sets_, end_, sep="", collapse="")
+    #vars_ <- names(input)
+    #prev_ <- paste("(foreach sort ",agentset, " ", sep="")
+    #ask_ <- "[ask ?1 ["
+    #cnt = 1
+    #inp_ <- paste(lapply(input,
+    #                     function(x) 
+    #                       paste("[",paste(x, collapse=" "), "]", collapse=" ")
+    #              ), " ", collapse=" ")                                                  
+    #sets_ <- paste(lapply(1:length(vars_),
+    #                    function(x) 
+    #                      paste("set ", vars_[x], " ?",cnt+x," ", sep="")
+    #              ), collapse="")    
+    #end_ <- "] ])"
+    #merged_ = paste(prev_, inp_, ask_, sets_, end_, sep="", collapse="")
     NLCommand(merged_, nl.obj=nl.obj)    
   }
   else if (is.vector(input)) {
@@ -41,10 +62,15 @@ function(agentset, input, var.name=NULL, nl.obj=NULL)
       stop("For vector input you have to submit one agent variable name with argument var.name")
     }
     # construct processing string    
-    start_ <- paste("(foreach sort ", agentset, sep="")
-    inp_ <- paste("[",paste(input, collapse=" "), "]", collapse=" ")
-    ask_ <- paste(" [ask ?1 [set ",var.name," ?2]])", sep="")
-    merged_ <- paste(start_, inp_, ask_, sep=" ")
+	# since NL 6.0
+	start_ <- paste("(foreach sort ", agentset, sep="")
+	inp_ <- paste("[",paste(input, collapse=" "), "]", collapse=" ")
+	ask_ <- paste(" [[?1 ?2] -> ask ?1 [set ",var.name," ?2]])", sep="")
+	merged_ <- paste(start_, inp_, ask_, sep=" ")
+    #start_ <- paste("(foreach sort ", agentset, sep="")
+    #inp_ <- paste("[",paste(input, collapse=" "), "]", collapse=" ")
+    #ask_ <- paste(" [ask ?1 [set ",var.name," ?2]])", sep="")
+    #merged_ <- paste(start_, inp_, ask_, sep=" ")
     NLCommand(merged_, nl.obj=nl.obj)    
   }
   else {

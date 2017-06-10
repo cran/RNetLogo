@@ -29,6 +29,6 @@ some.patches$pcolor <- floor(abs(rnorm(nrow(some.patches))*100))
 # send the updated pcolor values for the selected pathces 
 # to NetLogo 
 patch.var <- "pcolor"
-NLSetPatchSet(some.patches, patch.var, nl.obj=nl.test1)
+NLSetPatchSet( patch.var, some.patches, nl.obj=nl.test1)
              
 # use NLQuit(nl.obj=nl.test1) to close the NetLgogo Window

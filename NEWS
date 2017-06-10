@@ -1,3 +1,7 @@
+Changes in version 1.0-4:
+	BUG FIXES
+	  *Errors in NLGetAgentSet, NLGetGraph, NLGetPatches, NLSetAgentSet, NLSetPatches, NLSetPatchSet sind language update in NetLogo 6.0 fixed
+
 Changes in version 1.0-3:
 	NEW FEATURES
 	  *Update to NetLogo 6.0

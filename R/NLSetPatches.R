@@ -36,8 +36,8 @@ function(patch.var, in.matrix, nl.obj=NULL)
   prev_ <- "(foreach sort patches ["  
   inp_ <- paste(t(in.matrix), collapse=" ")                 
   between_ <- "] "
-  ask_ <- "[ask ?1 [ "
-  set_ <- paste(" set ", patch.var, " ?2", sep="")
+  ask_ <- "[[?1 ?2] -> ask ?1 [ "  
+  set_ <- paste(" set ", patch.var, " ?2", sep="")  
   end_ <- "]])"
   
   merged_ <- paste(prev_, inp_, between_, ask_, set_, end_, sep="")

@@ -16,8 +16,8 @@ Mostly analogous to the NetLogo Mathematica Link
 \tabular{ll}{
 Package: \tab RNetLogo\cr
 Type: \tab Package\cr
-Version: \tab 1.0-3\cr
-Date: \tab 2017-01-21\cr
+Version: \tab 1.0-4\cr
+Date: \tab 2017-06-10\cr
 License: \tab GNU GPL v2\cr
 LazyLoad: \tab yes\cr
 }

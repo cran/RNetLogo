@@ -62,7 +62,7 @@ nruns <- 100
 timedata <- list()
 for(i in 1:nruns) {
   NLCommand("go")
-  timedata[[i]] <- NLGetAgentSet(c("who","xcor","ycor","age","sick?","immune?","sick-count"),
+  timedata[[i]] <- NLGetAgentSet(c("who","xcor","ycor","age","sick?","immune?","sick-time"),
                                  "turtles")
 }
 # get the world dimension to use for the plot
@@ -74,9 +74,9 @@ colors2 <- c("red","green")
 # call the plottimedata function to brwose through the timedata list
 plottimedata(timedata.list=timedata, x.var="xcor", y.var="ycor", xlab="x",
              ylab="y", color.var1="sick?", color.var2="immune?",
-             boxplot.var1="sick-count", boxplot.var2="age",
+             boxplot.var1="sick-time", boxplot.var2="age",
              colors1=colors1, colors2=colors2,
-             mains=c("Sick","Immune","Stick-count","Age"),
+             mains=c("Sick","Immune","Stick-time","Age"),
              xlim=world.dim[[1]], ylim=world.dim[[2]])
              
 # close NetLogo     
